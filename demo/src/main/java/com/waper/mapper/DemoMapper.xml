@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.waper.mapper.DemoMapper">
+    <resultMap id="baseResultMap" type="com.waper.model.Demo">
+        <id column="ID" property="id"/>
+        <result column="NAME" property="name"/>
+        <result column="CREATEDATE" property="createDate"/>
+    </resultMap>
+    <select id="selectDemo" resultType="map">
+      select * from TEST
+    </select>
+</mapper>
