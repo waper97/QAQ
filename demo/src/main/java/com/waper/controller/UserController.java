@@ -1,6 +1,6 @@
 package com.waper.controller;
 
-import com.waper.model.User;
+import com.waper.model.Users;
 import com.waper.service.UserService;
 import com.waper.util.CommUtil;
 import com.waper.util.TokenUtil;
@@ -47,7 +47,7 @@ public class UserController extends BaseController {
                 || password == null && "".equals(password)){
            return "用户名或密码不能为空";
         }
-        User userInfo =  userService.getUserInfo(userName,password);
+        Users userInfo =  userService.getUserInfo(userName,password);
         if(userInfo != null){
             String token = TokenUtil.signature("123456",userInfo.getId(),15,userName);
             WebUtils.setSessionAttribute(request,"userInfo",userInfo);
@@ -68,7 +68,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/updateUserByPrimaryKey",method = RequestMethod.POST)
-    public Object updateUserByPrimaryKey(User user){
+    public Object updateUserByPrimaryKey(Users user){
         if(user.getAddress() == null && "".equals(user.getAddress())){
             return new WebExecptionResolve(false,"参数不能为空",400);
         }
@@ -79,7 +79,7 @@ public class UserController extends BaseController {
         return new WebExecptionResolve(false,"系统异常删除失败",2333);
     }
     @RequestMapping("/addUser")
-    public Object addUser(User user){
+    public Object addUser(Users user){
         if(user.getAddress() == null||user.getAge() == null || user.getPassword()== null ||
         user.getUsername() == null){
             return new WebExecptionResolve(false,"必填信息不能为空",400);

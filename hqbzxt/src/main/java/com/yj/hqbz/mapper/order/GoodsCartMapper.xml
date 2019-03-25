@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.order.GoodsCartMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.order.GoodsCart" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FK_SCID" property="scid" jdbcType="VARCHAR" />
+    <result column="ADDTIME" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="DELETESTATUS" property="deleteStatus" jdbcType="DECIMAL" />
+    <result column="COUNT" property="count" jdbcType="DECIMAL" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="SKUID" property="skuid" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userid" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, FK_SCID, ADDTIME, DELETESTATUS, COUNT, PRICE, SKUID,VERSION
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from GOODSCART
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="checkGoodsCartExist" resultMap="BaseResultMap"  parameterType="java.util.Map">
+  	select g.ID,g.COUNT,g.version
+    from GOODSCART g left join STORECART s
+  	on g.FK_SCID = s.ID 
+  	where g.SKUID=#{skuid,jdbcType=VARCHAR} 
+  	and s.USER_ID=#{userid,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="update" parameterType="com.yj.hqbz.model.order.GoodsCart">
+  	update GOODSCART 
+  	<set>
+  		<if test="count!=null">
+  			COUNT = #{count,jdbcType=DECIMAL},
+  		</if>
+  		<if test="skuid!=null and skuid!=''">
+  			SKUID = #{skuid,jdbcType=VARCHAR},
+  		</if>
+  		<if test="price!=null">
+  			PRICE = #{price,jdbcType=DECIMAL},
+  		</if>
+  		VERSION = VERSION+1
+  	</set>  	
+  	where ID = #{id,jdbcType=VARCHAR} and VERSION=#{version,jdbcType=DECIMAL}
+  </update>
+  
+  <insert id="addGoodsCart" parameterType="com.yj.hqbz.model.order.GoodsCart">
+  	insert into GOODSCART 
+  	(<include refid="Base_Column_List" />)   	
+  	select #{id,jdbcType=VARCHAR},#{scid,jdbcType=VARCHAR},sysdate,0,#{count,jdbcType=DECIMAL},#{price,jdbcType=DECIMAL},#{skuid,jdbcType=VARCHAR},0 
+  	from dual 
+  	where not exists(
+  	  select 1 from storecart s left join goodscart g on s.id=g.fk_scid 
+  	  where g.skuid=#{skuid,jdbcType=VARCHAR} and s.user_id=#{userid,jdbcType=VARCHAR}
+  	)
+  </insert>
+  
+  <delete id="deleteGoodsCart" parameterType="java.lang.String">
+  	delete from GOODSCART where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <select id="getLastGoodsCart" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from GOODSCART where FK_SCID=#{scid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getGoodsCartListByUserid" parameterType="java.lang.String" resultType="java.util.Map">
+  	select sc.id as "cartid",os.fk_orgid as "orgid",org.name as "orgName",gc.id as "gcid",s.skuid as "goodsid" ,
+    os.id as "orgSkuid",g.goodsname as "goodsName",g.aliasname as "aliasName",
+    gt.businessattr as "businessAttr",g.unit as "unit",os.price as "price",
+    gc.count as "qty",os.price_basic as "priceBasic",os.unit as "auixUnit",
+    os.rate as "auixRate",sp.pic_url as "picUrl",sp.thumbnail_url as "thumbnailUrl",
+    os.status as "status",s.property as "goodsSpec",os.spec_info as "spec_info"
+    from goodscart gc left join org_sku os on gc.skuid=os.id
+    left join storecart sc on sc.store_id=os.fk_orgid
+    left join SKU s on s.skuid=os.fk_skuid
+    left join goods g on s.fk_goodsid=g.goodsid 
+    left join ORGANIZATION org on org.orgid=os.fk_orgid
+    left join skupic sp on s.skuid=sp.fk_skuid 
+    left join goodstype gt on gt.typeid=os.fk_goodstypeid   
+    where sc.user_id=#{userid,jdbcType=VARCHAR} and sc.id=gc.fk_scid 
+  </select>
+  
+  <select id="getGoodsCartListByUseridAndGcid" resultType="java.util.Map" parameterType="java.util.Map">
+  	select sc.id as "cartid",os.fk_orgid as "orgid",org.name as "orgName",gc.id as "gcid",s.skuid as "goodsid" ,
+    os.id as "orgSkuid",g.goodsname as "goodsName",g.aliasname as "aliasName",
+    gt.businessattr as "businessAttr",g.unit as "unit",os.price as "price",
+    gc.count as "qty",os.price_basic as "priceBasic",os.unit as "auixUnit",
+    os.rate as "auixRate",sp.pic_url as "picUrl",sp.thumbnail_url as "thumbnailUrl",
+    os.status as "status",s.property as "goodsSpec", os.spec_info as "spec_info"
+    from goodscart gc left join org_sku os on gc.skuid=os.id
+    left join storecart sc on sc.store_id=os.fk_orgid
+    left join SKU s on s.skuid=os.fk_skuid
+    left join goods g on s.fk_goodsid=g.goodsid 
+    left join ORGANIZATION org on org.orgid=os.fk_orgid
+    left join skupic sp on s.skuid=sp.fk_skuid   
+    left join goodstype gt on gt.typeid=os.fk_goodstypeid 
+    where sc.user_id=#{userid,jdbcType=VARCHAR} and sc.id=gc.fk_scid and gc.id in 
+    <foreach collection="gcList" open="(" separator="," close=")" item="item">
+	  	#{item}
+	 </foreach>
+  </select>
+  
+  
+  
+</mapper>

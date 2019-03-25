@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.sporadic.SporadicGoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.sporadic.SporadicGoods" >
+    <id column="GOODSID" property="goodsid" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="FK_GOODSTYPEID" property="goodsTypeid" jdbcType="DECIMAL" />
+    <result column="GOODSNAME" property="goodsName" jdbcType="VARCHAR" />
+    <result column="NAMEPY" property="namepy" jdbcType="VARCHAR" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
+    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    GOODSID, CODE, FK_GOODSTYPEID, GOODSNAME, NAMEPY, UNIT, FK_ORGID, CREATOR, CREATEDATE, 
+    LASTOPUSER, LASTOPDATE
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from SPORADIC_GOODS
+    where GOODSID = #{goodsid,jdbcType=DECIMAL}
+  </select>
+  
+  <insert id="addGoods" parameterType="com.yj.hqbz.model.sporadic.SporadicGoods">
+  	insert into SPORADIC_GOODS(<include refid="Base_Column_List" />)
+  	select #{goodsid,jdbcType=DECIMAL},#{code,jdbcType=VARCHAR}||trim(to_char(to_number(nvl(substr(g.CODE,3),0))+1,'00000009')),
+  		   #{goodsTypeid,jdbcType=DECIMAL},#{goodsName,jdbcType=VARCHAR},#{namepy,jdbcType=VARCHAR},
+  		   #{unit,jdbcType=VARCHAR},#{orgid,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},
+  		   #{createDate,jdbcType=TIMESTAMP},#{lastOpUser,jdbcType=VARCHAR},#{lastOpDate,jdbcType=TIMESTAMP}
+  	from SPORADIC_GOODS g
+  </insert>
+  
+  <select id="getGoodsByIndexid" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select g.*
+  	from SPORADIC_DETAIL d,SPORADIC_GOODS g
+  	where d.FK_GOODSID=g.GOODSID and d.FK_INDEXID=#{indexid,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateGoods" parameterType="com.yj.hqbz.model.sporadic.SporadicGoods">
+  	update SPORADIC_GOODS
+  	set FK_GOODSTYPEID=#{goodsTypeid,jdbcType=DECIMAL}, 
+  		GOODSNAME=#{goodsName,jdbcType=VARCHAR}, 
+  		NAMEPY=#{namepy,jdbcType=VARCHAR}, 
+  		UNIT=#{unit,jdbcType=VARCHAR}, 
+    	LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR}, 
+    	LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+    where GOODSID = #{goodsid,jdbcType=DECIMAL}
+  </update>
+</mapper>

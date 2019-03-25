@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 Vue.use(Router)
 
 export default new Router({
+  mode:'history',
   routes: [
     {
       path: '/',
@@ -11,10 +12,9 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/Index',
-      name: 'index',
-      component: ()=>import('../views/index'),
-      meta: {title: 'index'}
+      path: '/test',
+      name: 'test',
+      component : ()=>  import('../views/index')
       }
   ]
 })

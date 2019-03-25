@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.trace.GoodsTracePicMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.trace.GoodsTracePic" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FK_TRACEID" property="traceid" jdbcType="VARCHAR" />
+    <result column="PICTYPE" property="picType" jdbcType="DECIMAL" />
+    <result column="PIC_URL" property="picUrl" jdbcType="VARCHAR" />
+    <result column="THUMBNAIL_URL" property="thumbnailUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, FK_TRACEID, PICTYPE, PIC_URL, THUMBNAIL_URL
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from GOODS_TRACE_PIC
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getPicByTraceid" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+    from GOODS_TRACE_PIC
+    where FK_TRACEID = #{traceid,jdbcType=VARCHAR}
+    order by PICTYPE desc
+  </select>
+  
+  <insert id="addTracePic" parameterType="com.yj.hqbz.model.trace.GoodsTracePic">
+  	insert into GOODS_TRACE_PIC(<include refid="Base_Column_List" />)
+  	values (#{id,jdbcType=VARCHAR},#{traceid,jdbcType=VARCHAR},#{picType,jdbcType=DECIMAL},
+  			#{picUrl,jdbcType=VARCHAR},#{thumbnailUrl,jdbcType=VARCHAR}
+  			)
+  </insert>
+  
+  <delete id="deletePicByTraceid" parameterType="java.lang.String">
+  	delete from GOODS_TRACE_PIC
+  	where  FK_TRACEID = #{traceid,jdbcType=VARCHAR}
+  </delete>
+  
+   <select id="getGoodsPicByTraceid" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+    from GOODS_TRACE_PIC
+    where PICTYPE=2 and FK_TRACEID = #{traceid,jdbcType=VARCHAR}
+  </select>
+</mapper>

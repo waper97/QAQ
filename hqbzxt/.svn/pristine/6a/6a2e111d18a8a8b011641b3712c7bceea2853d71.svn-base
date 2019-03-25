@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<script type="text/javascript" src="../../../js/datepicker/WdatePicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../../easyui/themes/bootstrap/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../../easyui/themes/icon1.css">
+	<link rel="stylesheet" type="text/css"  href="../../../css/yj.css">
+	<script type="text/javascript" src="../../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../easyui/jquery.easyui.min.js"></script>	
+	<script type="text/javascript" src="../../../js/datagrid.js"></script>
+	<script type="text/javascript" src="../../../js/common.js"></script>
+	<script type="text/javascript" src="../../../layui/layui.js"></script>	
+	<script type="text/javascript" src="env.js"></script>
+  </head>
+  
+<body>
+	<input type="hidden" id="pid" name="pid" value='0'/>
+	<input type="hidden" id="pname" name="pname"/>
+	<input type="hidden" id="ptype" name="ptype"/>
+	<div class="easyui-layout" data-options="fit:true" style="padding:10px">
+		<div id="p" data-options="region:'west'" title="资源树" style="width:300px">
+			<ul id="tt" class="easyui-tree" data-options="'state':'closed',method:'get',
+						animate:false,onClick:function(node){clickTreeNode(node)}"></ul>
+		</div>
+		<div data-options="region:'center'" data-options="fit:true">
+		<table id="gridFrm" class="easyui-datagrid" title="资源列表" style="height:100%;"
+			data-options="rownumbers:true,singleSelect:true,url:'',method:'post',toolbar:'#ft',queryParams:{}">
+		<thead>
+			<tr>
+				<th data-options="field:'fk',checkbox:true"></th>
+				<th data-options="field:'name',width:100">资源名称</th>
+				<th data-options="field:'rightType',width:100,formatter : showResTypeFormatter">资源类型</th>
+				<th data-options="field:'htmlUrl',width:200">链接地址</th>
+				<th data-options="field:'apiUrl',width:200">组件ID</th>
+				<th data-options="field:'code',width:100">功能号</th>
+				<th data-options="field:'icon',width:100">图标</th>
+				<th data-options="field:'visitScope',width:100,formatter:showVisitScopeFormatter">访问权限</th>
+				<th data-options="field:'sortno',width:100">排序号</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+	<div id="ft" style="padding:2px 5px;">
+		<a class="easyui-linkbutton cls_yj_add" iconCls="icon-add" plain="true" >增加</a>
+		<a class="easyui-linkbutton cls_yj_edit" iconCls="icon-edit" plain="true">修改</a>
+		<a class="easyui-linkbutton cls_yj_delete" iconCls="icon-remove" plain="true">删除</a>
+	</div>
+	<div id="MyPopWindow"></div>
+</div>
+<script>
+	function showResTypeFormatter(value,row,index){
+		if(value==0){
+			return '菜单/页面';
+		}
+		else if(value==1){
+			return '按钮/元素';
+		}
+	}
+	
+	function showVisitScopeFormatter(value,row,index){
+		if(value==0){
+			return '后台';
+		}
+		else if(value == 1){
+			return '卖家';
+		}
+		else if(value == 2){
+			return '买家';
+		}
+		else if(value == 3){
+			return '食药监';
+		}
+		else {
+			return '通用';
+		}		
+	}
+
+	var grid = $('#gridFrm');
+</script>
+</body>
+</html>

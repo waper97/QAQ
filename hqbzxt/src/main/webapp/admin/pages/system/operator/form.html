@@ -1,0 +1,44 @@
+<form class="easyui-form" style="width:500px;margin-top:20px;" id='frm'>
+	<input type='hidden' id='userid' name='userid'/>
+	<div class="form-row must">
+		<input id="orgId" class="easyui-combobox" name="orgId" style='width:100%' data-options="
+	valueField: 'orgid',
+	textField: 'name',
+	editable:false,
+	label: '所属机构:'
+">
+	</div>	
+	<div class="form-row must">
+		<input class="easyui-textbox" id='userName' name='userName' style="width:100%" data-options="label:'用户名:',required:true,validType:['maxLength[15]','englishCheckSub']">
+	</div>
+	<div class="form-row must">
+		<input class="easyui-textbox" id='trueName' name='trueName' style="width:100%" data-options="label:'姓名:',required:true,validType:'maxLength[15]'">
+	</div>
+	<div class="form-row must">
+		<select id='sex' name='sex' class="easyui-combobox" data-options="prompt:'性别',label:'性别:',required:true,panelHeight:'auto'" style="width:100%;" editable="false">
+			<option value="0">男</option>
+          	<option value="1">女</option>
+		</select>
+	</div>
+	<div class="form-row must">
+		<input class="easyui-textbox" id='mobile' name='mobile' style="width:100%" data-options="prompt:'联系电话',label:'手机号码:',required:true,validType:['maxNumerLength[11]','mobile']">
+	</div>	
+	<div class='form-row'>	
+		<label class="textbox-label textbox-label-before" style="text-align: left;">出生日期：</label><input id='birthday' name='birthday' class="easyui-datebox" data-options="required:true,validType:'maxLength[10]'">
+	</div>	
+</form>
+<script>
+	function loadUserInfo(id){
+		$('#frm #userName').textbox({disabled:true});
+		YJGet('/manage/system/user/getUserById',{userid:id},function(data){
+			if(data.success){
+				$("#frm").form('load', data.data);
+			}
+			else{
+				error(data.message,function(){
+					$('#MyPopWindow').dialog('close');
+				});
+			}
+		})
+	}
+</script>

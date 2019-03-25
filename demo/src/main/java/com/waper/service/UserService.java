@@ -1,7 +1,8 @@
 package com.waper.service;
 
-import com.waper.model.User;
 import com.github.pagehelper.PageInfo;
+import com.waper.model.Users;
+import org.apache.catalina.User;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public interface UserService {
      * @param PageSize
      * @return
      */
-    PageInfo<User> getUserList(int pageNum, int pageSize, Map<String,Object> paramMap);
+    PageInfo<Users> getUserList(int pageNum, int pageSize, Map<String,Object> paramMap);
 
     /**
      * 条件查询用信息
@@ -25,19 +26,19 @@ public interface UserService {
      * @param password
      * @return
      */
-   User getUserInfo(String userName,String password);
+   Users getUserInfo(String userName, String password);
 
 
     int deleteByPrimaryKey(String id);
 
-    int insert(User record);
+    int insert(Users record);
 
-    int insertSelective(User record);
+    int insertSelective(Users record);
 
-    User selectByPrimaryKey(String id);
+    Users selectByPrimaryKey(String id);
 
-    int updateByPrimaryKeySelective(User record);
+    int updateByPrimaryKeySelective(Users record);
 
-    int updateByPrimaryKey(User record);
+    int updateByPrimaryKey(Users record);
 
 }

@@ -1,10 +1,11 @@
 package com.waper.service.impl;
 
-import com.waper.mapper.UserMapper;
-import com.waper.model.User;
+import com.waper.mapper.UsersMapper;
+import com.waper.model.Users;
 import com.waper.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 public class UseServiceImpl implements UserService {
 
     @Autowired
-    UserMapper userMapper;
+    UsersMapper userMapper;
 
     public UseServiceImpl() {
         super();
@@ -31,41 +32,46 @@ public class UseServiceImpl implements UserService {
     }
 
     @Override
-    public int insert(User record) {
+    public int insert(Users record) {
+        record.setStatus(1);
         return userMapper.insert(record);
     }
 
     @Override
-    public int insertSelective(User record) {
-        return userMapper.insertSelective(record);
+    public int insertSelective(Users record) {
+        return 0;
     }
 
     @Override
-    public User selectByPrimaryKey(String id) {
-        return userMapper.selectByPrimaryKey(id);
+    public Users selectByPrimaryKey(String id) {
+        return null;
     }
 
     @Override
-    public int updateByPrimaryKeySelective(User record) {
-        return userMapper.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(Users record) {
+        return 0;
     }
 
     @Override
-    public int updateByPrimaryKey(User record) {
-        return userMapper.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(Users record) {
+        return 0;
     }
 
-    @Override
-    public User getUserInfo(String userName, String password) {
-        return userMapper.getUserInfo(userName,password);
-    }
+
+
+
 
     @Override
-    public PageInfo<User> getUserList(int pageNum, int pageSize, Map<String,Object> paramMap) {
+    public PageInfo<Users> getUserList(int pageNum, int pageSize, Map<String,Object> paramMap) {
         PageHelper.startPage(pageNum,pageSize);
 
-        List<User> user = userMapper.getUserList(paramMap);
-        PageInfo<User> pg = new PageInfo<>(user);
+        List<Users> user = userMapper.getUserList(paramMap);
+        PageInfo<Users> pg = new PageInfo<>(user);
         return pg;
+    }
+
+    @Override
+    public Users getUserInfo(String userName, String password) {
+        return null;
     }
 }

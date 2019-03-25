@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.menu.MenuMainMaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.menu.MenuMainMaterial" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FK_MENUID" property="menuid" jdbcType="VARCHAR" />
+    <result column="FK_DISHID" property="dishid" jdbcType="VARCHAR" />
+    <result column="MATERIALNAME" property="materialName" jdbcType="VARCHAR" />
+    <result column="COUNT" property="count" jdbcType="DECIMAL" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+    <result column="BUYDATE" property="buyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, FK_MENUID, FK_DISHID, MATERIALNAME, COUNT, UNIT, PRICE, TOTAL, BUYDATE
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" />
+    from MENU_MAIN_MATERIAL
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getMaterialByDish" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" />
+    from MENU_MAIN_MATERIAL
+    where FK_DISHID = #{dishid,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="addMaterial" parameterType="com.yj.hqbz.model.menu.MenuMainMaterial">
+  	insert into MENU_MAIN_MATERIAL(<include refid="Base_Column_List" />)
+  	values (#{id,jdbcType=VARCHAR},#{menuid,jdbcType=VARCHAR},#{dishid,jdbcType=VARCHAR},
+  			#{materialName,jdbcType=VARCHAR},#{count,jdbcType=DECIMAL},#{unit,jdbcType=VARCHAR},
+  			#{price,jdbcType=DECIMAL},#{total,jdbcType=DECIMAL},#{buyDate,jdbcType=TIMESTAMP}
+  			)
+  </insert>
+  
+  <delete id="deleteMaterialByMenu" parameterType="java.lang.String">
+  	delete from MENU_MAIN_MATERIAL where FK_MENUID=#{menuid,jdbcType=VARCHAR}
+  </delete>
+</mapper>

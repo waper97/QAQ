@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.goods.GoodsPicMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.goods.GoodsPic" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="FK_GOODSID" property="goodsid" jdbcType="VARCHAR" />
+    <result column="FK_SKUID" property="skuid" jdbcType="VARCHAR" />
+    <result column="PIC_URL" property="picUrl" jdbcType="VARCHAR" />
+    <result column="THUMBNAIL_URL" property="thumbnailUrl" jdbcType="VARCHAR" />
+    <result column="STORAGE_LOCATION" property="storageLocation" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, FK_GOODSID, FK_SKUID, PIC_URL, THUMBNAIL_URL, STORAGE_LOCATION
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from SKUPIC
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <insert id="addGoodsPicInfo" parameterType="com.yj.hqbz.model.goods.GoodsPic">
+  	insert into SKUPIC (
+  	<include refid="Base_Column_List" />
+  	)
+  	values(SKUPIC_SEQ_ID.NEXTVAL,
+  	#{goodsid,jdbcType=VARCHAR},#{skuid,jdbcType=VARCHAR},#{picUrl,jdbcType=VARCHAR},
+  	#{thumbnailUrl,jdbcType=VARCHAR},#{storageLocation,jdbcType=VARCHAR}
+  	)
+  </insert>
+  <update id="updateGoodsPicInfo" parameterType="com.yj.hqbz.model.goods.GoodsPic">
+  	update SKUPIC t
+  	set t.PIC_URL=#{picUrl,jdbcType=VARCHAR},
+  	t.THUMBNAIL_URL=#{thumbnailUrl,jdbcType=VARCHAR}
+  	where t.ID=#{id}
+  </update>
+  <delete id="deletePic" parameterType="map">
+  	delete from SKUPIC
+  	where 0=0
+  	<choose>
+  		<when test="skuid != null">
+  			and FK_GOODSID=#{goodsid,jdbcType=VARCHAR} and FK_SKUID=#{skuid,jdbcType=VARCHAR}
+  		</when>
+  		<otherwise>
+  			and FK_GOODSID=#{goodsid,jdbcType=VARCHAR} and FK_SKUID is null
+  		</otherwise>
+  	</choose>
+  </delete>
+  <select id="getGoodsPicByGoodsidAndSkuid" parameterType="map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from SKUPIC
+    where 0=0
+  	<choose>
+  		<when test="skuid != null">
+  			and FK_GOODSID=#{goodsid,jdbcType=VARCHAR} and FK_SKUID=#{skuid,jdbcType=VARCHAR}
+  		</when>
+  		<otherwise>
+  			and FK_GOODSID=#{goodsid,jdbcType=VARCHAR} and FK_SKUID is null
+  		</otherwise>
+  	</choose>
+  </select>
+</mapper>

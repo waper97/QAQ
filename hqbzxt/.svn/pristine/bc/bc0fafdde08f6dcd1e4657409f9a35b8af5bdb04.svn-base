@@ -1,0 +1,17 @@
+log4j.rootLogger=INFO, stdout
+######################### logger ##############################
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.conversionPattern = %d [%t] %-5p %c - %m%n
+#日志级别是INFO,标签是extProfile
+log4j.logger.log4j=INFO, log4j 
+log4j.additivity.log4j=false;
+        
+log4j.appender.log4j=org.apache.log4j.RollingFileAppender
+#输出到resin根目录的logs文件夹,log4j会自动生成目录和文件
+log4j.appender.log4j.File=target/log4j.log
+#超过20M就重新创建一个文件
+log4j.appender.log4j.MaxFileSize=20480KB 
+log4j.appender.log4j.MaxBackupIndex=10
+log4j.appender.log4j.layout=org.apache.log4j.PatternLayout
+log4j.appender.log4j.layout.ConversionPattern=%d [%t] %-5p %c - %m%n

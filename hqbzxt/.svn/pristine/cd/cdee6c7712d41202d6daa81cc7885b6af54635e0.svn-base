@@ -1,0 +1,176 @@
+<form id='frm'>	
+	<input type='hidden' id='orgid' name='orgid'/>
+	<input type='hidden' id='orgStyle' name='orgStyle'/>
+	<input type='hidden' id='openSeller' name='openSeller'/>
+	<input type='hidden' id='licensePic' name='licensePic'/>
+	<input type='hidden' id='licensekeyPic' name='licensekeyPic'/>
+	<input type='hidden' id='tradeMark' name='tradeMark'/>
+	<input type='hidden' id='area' name='area'/>
+	<div class='tableDiv '>
+		<div class='cos-3-2 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">商家名称：</label>
+			<input class="easyui-textbox" id='name' name='name' style='width:300px' data-options="required:true,validType:'maxLength[100]'" >
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">所属分类：</label>
+			<!--# include file="/admin/pages/pub/sellerType.html"-->
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">性质：</label>
+			<select id='orgNature' name='orgNature' class="easyui-combobox" data-options="required:true,panelHeight:'auto'" style="width:150px" editable="false">
+				<option value='自营'>自营</option>
+				<option value='三方卖家'>三方卖家</option>
+			</select>
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">经营状态：</label>
+			<select id='businessState' name='businessState' class="easyui-combobox" data-options="required:true,panelHeight:'auto'" style="width:150px" editable="false">
+				<option value="在业">在业</option>
+	          	<option value="存续">存续</option>
+	          	<option value="吊销">吊销</option>
+	          	<option value="注销">注销</option>
+	         	<option value="迁出">迁出</option>
+	          	<option value="迁入">迁入</option>
+	          	<option value="停业">停业</option>
+	          	<option value="清算">清算</option>
+			</select>
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">成立日期：</label>
+			<input id='redDate' name='redDate' class="easyui-datebox" data-options="required:true,validType:'maxLength[10]'">
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">注册资本：</label>
+			<input id='capital' name='capital' class="easyui-numberbox" data-options="required:true,validType:'maxLength[10]',min:1,precision:0">元
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">统一社会信用代码：</label>
+			<input id='creditCode' name='creditCode' class="easyui-textbox" data-options="required:true,validType:'maxLength[60]'">
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">企业性质：</label>
+			<select id='nature' name='nature' class="easyui-combobox" data-options="required:true,required:true,panelHeight:'auto'" style="width:150px" editable="false">
+				<option selected="" value="个人独资企业">个人独资企业</option>
+          		<option value="合伙企业">合伙企业</option>
+          		<option value="有限责任公司">有限责任公司</option>
+          		<option value="股份有限公司">股份有限公司</option>
+			</select>
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">登记机关：</label>
+			<input id='regauthor' name='regauthor' class="easyui-textbox" data-options="required:true,validType:'maxLength[80]'">
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">营业期限：</label>
+			<input id='beginTime' name='beginTime' class="easyui-datebox" data-options="required:true,validType:'maxLength[10]'">
+		</div>
+		<div class='cos-3'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">至：</label>
+			<input id='endTime' name='endTime' class="easyui-datebox" data-options="required:true,validType:'maxLength[10]'">
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">法人代表：</label>
+			<input id='legalPerson' name='legalPerson' class="easyui-textbox" data-options="required:true,validType:'maxLength[30]'">
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">联系人：</label>
+			<input id='linkman' name='linkman' class="easyui-textbox" data-options="required:true,validType:'maxLength[30]'">
+		</div>
+		<div class='cos-3 must'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">联系电话：</label>
+			<input id='phone' name='phone' class="easyui-textbox" data-options="required:true,validType:'maxLength[30]'">
+		</div>
+		<div class='cos-3'>	
+			<label class="textbox-label textbox-label-before" style="text-align: left;">主营分类：</label>
+			<input id="scopeType" class="easyui-combotree" name="scopeType" style='width:150px' data-options="
+				valueField: 'typeid',
+				textField: 'typename'
+			">
+		</div>
+		<div class='cos must'>
+			<label class="textbox-label textbox-label-before" style="text-align: left;">地址：</label>
+			<select id='first' name='first' class="easyui-combobox" editable="false" data-options="
+			required:true,
+			panelHeight:'200',
+			valueField:'id',
+        	textField:'name'" style="width:100px">
+			</select>
+			<select id='second' name='second' class="easyui-combobox" editable="false" data-options="required:true,
+			panelHeight:'200',
+			valueField:'id',
+        	textField:'name'" style="width:100px">
+			</select>
+			<select id='third' name='third' class="easyui-combobox" editable="false" data-options="required:true,
+			panelHeight:'200',
+			valueField:'id',
+        	textField:'name'" style="width:100px">
+			</select>
+			<input id='address' name='address' class="easyui-textbox" data-options="required:true,validType:'maxLength[70]'" style="width:250px">
+		</div>
+		<div class='cos must'>
+			<label class="textbox-label textbox-label-before" style="text-align: left;">经营范围：</label>
+			<input class="easyui-textbox" id='scope' name='scope' style="width:400px;height:100px" data-options="required:true,multiline:true,validType:'maxLength[100]'" >
+		</div>
+		<div class='cos must'>
+			<label class="textbox-label textbox-label-before" style="text-align: left;">营业执照：</label>
+			<div style='margin-left:100px'>				
+				<input type='file' id='yyzxFile' name="hqfile"/><input type='button' value='上传' onclick="uploadFile('yyzxFile','licensePic',0)"/>
+				<div id='yyzxFile_div' width='52' style='display: inline;'></div>
+			</div>
+		</div>
+		<div class='cos must'>
+			<label class="textbox-label textbox-label-before" style="text-align: left;">食品经营许可证：</label>
+			<div style='margin-left:100px;'>
+				
+				<input type='file' id='jyxjkFile' name="hqfile"/><input type='button' value='上传' onclick="uploadFile('jyxjkFile','licensekeyPic',0)"/>
+				<div id='jyxjkFile_div' width='52' style='display: inline;'></div>
+			</div>
+		</div>
+		<div class='cos'>
+			<label class="textbox-label textbox-label-before" style="text-align: left;">商标：</label>
+			<div style='margin-left:100px'>				
+				<input type='file' id='sbFile' name="hqfile"/><input type='button' value='上传' onclick="uploadFile('sbFile','tradeMark',0)"/>
+				<div id='sbFile_div' width='52' style='display: inline;'></div>
+			</div>
+		</div>
+	</div>
+
+</form>
+<script type="text/javascript"> 
+$(document).ready(function () {
+	intOrgType('#frm #orgType',classType);
+	
+	$('#frm #first').combobox({
+        disabled:false,
+        url:'/common/area/getAreaByParent?parentid=0',
+        valueField:'id',
+        textField:'name'
+    }).combobox('clear');
+	
+	$('#frm #first').combobox({
+        onSelect:function(record){
+        	$('#second').combobox({
+                disabled:false,
+                url:'/common/area/getAreaByParent?parentid='+record.id,
+                valueField:'id',
+                textField:'name'
+            }).combobox('clear');
+            $('#area').combobox().combobox('clear');
+        }
+    });
+    $('#frm #second').combobox({
+        onSelect:function(record){
+        	$('#third').combobox({
+                disabled:false,
+                url:'/common/area/getAreaByParent?parentid='+record.id,
+                valueField:'id',
+                textField:'name'
+            }).combobox('clear');
+        }
+    });    
+})
+
+
+
+
+</script>

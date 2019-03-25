@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.system.OperationLogMapper">
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.system.OperationLog">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="FK_USERID" jdbcType="VARCHAR" property="userid" />
+    <result column="OPTIME" jdbcType="TIMESTAMP" property="opTime" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Table_List" >
+    ID, FK_USERID, OPTIME, IP,CONTENT, REMARK
+  </sql>
+  
+  <sql id="param" >
+  	<if test="startTime!=null">
+  		and t.OPTIME >= #{startTime,jdbcType=TIMESTAMP}
+  	</if>
+  	<if test="endTime!=null">
+  		and t.OPTIME &lt;= #{endTime,jdbcType=TIMESTAMP}
+  	</if>
+  </sql>
+  
+  <sql id="orderBy" >
+  	<choose>
+		<when test="sortStr!=null and sortStr!=''">
+	  		<choose>
+	  			<when test="sortStr=='content' or sortStr=='remark'">
+	  				NLSSORT(${sortStr},'NLS_SORT=SCHINESE_PINYIN_M')
+	  			</when>
+	  			<otherwise>
+	  				${sortStr}
+	  			</otherwise>
+	  		</choose>
+	  		<if test="asc==0">
+		  		desc
+		  	</if>
+		  	,OPTIME desc
+	  	</when>
+	  	<otherwise>
+	  		OPTIME desc
+	  	</otherwise>
+	</choose>
+  </sql>
+  
+  
+  <insert id="addLog" parameterType="com.yj.hqbz.model.system.OperationLog">
+    insert into OPERATIONLOG (<include refid="Table_List" />)
+    values (OPERATIONLOG_SEQ_ID.NEXTVAL, #{userid,jdbcType=VARCHAR}, #{opTime,jdbcType=TIMESTAMP},
+    		#{ip,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+    		)
+  </insert>
+  
+  <select id="getLogsByUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select t.ID,t.FK_USERID,t.OPTIME,t.IP,t.CONTENT,t.REMARK,u.NAME as USERNAME
+  	from OPERATIONLOG t
+  	where t.FK_USERID=#{VARCHAR,jdbcType=DECIMAL} <include refid="param" />
+  	order by <include refid="orderBy" />
+  </select>
+  
+  <delete id="deleteLogByLessTime" parameterType="java.util.Date">
+  	delete from OPERATIONLOG where OPTIME &lt; #{time,jdbcType=TIMESTAMP}
+  </delete>
+  
+</mapper>

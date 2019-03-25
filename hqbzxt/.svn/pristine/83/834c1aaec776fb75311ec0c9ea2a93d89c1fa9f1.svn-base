@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>用户中心</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" type="text/css" href="/admin/easyui/themes/bootstrap/easyui.css">
+	<link rel="stylesheet" type="text/css" href="/admin/easyui/themes/icon1.css">
+	<link rel="stylesheet" type="text/css"  href="/admin/css/yj.css">
+	<script type="text/javascript" src="/admin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/admin/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="/admin/js/common.js"></script>
+	<script type="text/javascript" src="/admin/js/pub.js"></script>
+	<script type="text/javascript" src="/admin/layui/layui.js"></script>	
+	<script>
+	document.write("<s"+"cript type='text/javascript' src='env.min.js?"+Math.random()+"'></scr"+"ipt>");
+	</script>
+</head>
+<body class="easyuibody">
+<input type='hidden' id='orgid' name='orgid'/>
+	<div class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'north',border:false,split:false" style='margin:2px'>
+			<div class='searchItemDiv'>用户名：<input type="text" class="easyui-textbox" style="width:150px" id="userName" name="userName" />&emsp;</div>
+			<div class='searchItemDiv'>姓名：<input type="text" class="easyui-textbox" style="width:150px" id="trueName" name="trueName" />&emsp;</div>
+			<div class='searchItemDiv'>机构：<!--# include file="/admin/pages/pub/orgSelect.html"-->&emsp;</div>
+			<div class='searchItemDiv' style="line-height:30px">
+				添加日期：从&emsp;
+					<input type="text" class="easyui-datebox" style="width:150px" id="beginTime" name="beginTime" data-options="validType:'dateValid'"/>&emsp;至
+					<input type="text" class="easyui-datebox" style="width:150px" id="endTime" name="endTime" data-options="validType:'dateValid'"/>&emsp;&emsp;
+			</div>
+			<div class='searchItemDiv'>
+				<a href="#" class="easyui-linkbutton cls_yj_query" iconCls="icon-search" onclick="doQuery()">查询</a>
+			</div>
+		</div>
+		<div data-options="region:'center',border:false" style="padding:5px">
+			<table id="grid" class="easyui-datagrid" title='用户列表' style="height:95%"
+				data-options="nowrap:false,rownumbers:true,singleSelect:true,method:'get',toolbar:'#ft',pagination:true">
+				<thead>
+					<tr>
+						<th data-options="field:'userName',width:100">用户名</th>
+						<th data-options="field:'trueName',width:100">姓名</th>
+						<th data-options="field:'mobile',width:150">联系电话</th>
+						<th data-options="field:'sex',width:100,formatter:sexFormatter">性别</th>
+						<th data-options="field:'birthday',width:150">出生日期</th>
+						<th data-options="field:'orgName',width:150">所属机构</th>
+						<th data-options="field:'addPerson',width:150">添加人</th>
+						<th data-options="field:'addTime',width:150">添加时间</th>						
+						<th data-options="field:'status',width:200,formatter:operationFormatter">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div id="ft" style="padding:2px 5px;">
+		<input type='button' class='myButton cls_yj_add icon-add' value='增加'/>	
+	</div>
+	<div id='MyPopWindow'></div>
+
+<script type="text/javascript">
+	var grid = $('#grid');
+</script>
+</body>
+</html>

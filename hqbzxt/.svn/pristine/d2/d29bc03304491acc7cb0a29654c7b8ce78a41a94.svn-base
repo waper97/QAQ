@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.sporadic.SporadicIndexMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.sporadic.SporadicIndex" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="VOUCHERCODE" property="voucherCode" jdbcType="VARCHAR" />
+    <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+    <result column="PURCHASERID" property="purchaserid" jdbcType="VARCHAR" />
+    <result column="PURCHASER" property="purchaser" jdbcType="VARCHAR" />
+    <result column="USEDATE" property="useDate" jdbcType="TIMESTAMP" />
+    <result column="PUTINWAREHOUSE" property="putInWarehouse" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="DELETESTATUS" property="deleteStatus" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
+    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
+    <result column="INSTORE_DATE" property="inStoreDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, VOUCHERCODE, FK_ORGID, TOTAL, PURCHASERID, PURCHASER, USEDATE, PUTINWAREHOUSE, STATUS, 
+    REMARK, DELETESTATUS, CREATOR, CREATEDATE, LASTOPUSER, LASTOPDATE,INSTORE_DATE
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String"  resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" />
+    from SPORADIC_INDEX
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getInStockBySporadic"  parameterType="java.util.Map" resultType="map">
+  	select g.GOODSID as "goodsid",g.CODE as "goodsCode",g.GOODSNAME as "goodsName",
+  		   i.VOUCHERCODE as "voucherCode",t.TYPEID as "goodsTypeid",t.TYPENAME as "goodsTypeName",
+  		   d.QTY as "qty",g.UNIT as "unit",d.PRICE as "price",tr.SUPPLIER as "supplier",tr.ID as "traceid",
+  		   tr.BATCHNO as "traceNo",tr.PRODATE as "proDate",tr.INTERVALDATE as "intervalDate",
+  		   tr.USELIFEDATE as "uselifeDate",
+  		   case when sysdate>=tr.INTERVALDATE and sysdate &lt;=tr.USELIFEDATE then '临期'
+  		   	 	when sysdate>tr.USELIFEDATE then '过期'
+  		   	 	else '新鲜' end as "status"
+  	from SPORADIC_INDEX i,SPORADIC_DETAIL d,GOODS_TRACE tr,SPORADIC_GOODS g,GOODSTYPE t
+  	where i.ID=d.FK_INDEXID and i.ID=tr.FK_ORDERID and d.ID=tr.FK_ORDER_DETAILID and tr.TRACE_TYPE=1
+  		  and d.FK_GOODSID=g.GOODSID and g.FK_GOODSTYPEID=t.TYPEID and i.PUTINWAREHOUSE=0
+  		  and i.STATUS=0 and i.DELETESTATUS=0 and i.FK_ORGID=#{orgid,jdbcType=DECIMAL}
+  </select>
+  
+  <insert id="addIndex" parameterType="com.yj.hqbz.model.sporadic.SporadicIndex">
+  	insert into SPORADIC_INDEX(<include refid="Base_Column_List" />)
+  	values (#{id,jdbcType=VARCHAR},#{voucherCode,jdbcType=VARCHAR},#{orgid,jdbcType=DECIMAL},
+  		    #{total,jdbcType=DECIMAL},#{purchaserid,jdbcType=VARCHAR},#{purchaser,jdbcType=DECIMAL},
+  		    #{useDate,jdbcType=TIMESTAMP},#{putInWarehouse,jdbcType=DECIMAL},#{status,jdbcType=DECIMAL},
+  		    #{remark,jdbcType=VARCHAR},#{deleteStatus,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},
+  		    #{createDate,jdbcType=TIMESTAMP},#{lastOpUser,jdbcType=VARCHAR},#{lastOpDate,jdbcType=TIMESTAMP},
+  		    #{inStoreDate,jdbcType=TIMESTAMP}
+  		   )
+  </insert>
+  
+  <update id="updateIndex"  parameterType="com.yj.hqbz.model.sporadic.SporadicIndex">
+  	update SPORADIC_INDEX
+  	set TOTAL=#{total,jdbcType=DECIMAL}, 
+  		PURCHASERID=#{purchaserid,jdbcType=VARCHAR}, 
+  		PURCHASER=#{purchaser,jdbcType=DECIMAL}, 
+  		USEDATE=#{useDate,jdbcType=TIMESTAMP}, 
+  		PUTINWAREHOUSE=#{putInWarehouse,jdbcType=DECIMAL}, 
+    	REMARK=#{remark,jdbcType=VARCHAR}, 
+    	LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR}, 
+    	LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="deleteSporadic" parameterType="com.yj.hqbz.model.sporadic.SporadicIndex">
+  	update SPORADIC_INDEX
+  	set DELETESTATUS=#{deleteStatus},
+  		LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
+  		LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+  	where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

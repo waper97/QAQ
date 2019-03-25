@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.org.OrganizationMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.org.Organization" >
+    <id column="ORGID" property="orgid" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="FK_ORGTYPE" property="orgType" jdbcType="DECIMAL" />
+    <result column="ORGTYPENAME" property="orgTypeName" jdbcType="VARCHAR" />
+    <result column="SCOPE_TYPE" property="scopeType" jdbcType="VARCHAR" />
+    <result column="SCOPETYPENAME" property="scopeTypeName" jdbcType="VARCHAR" />
+    <result column="NAMEPY" property="namepy" jdbcType="VARCHAR" />
+    <result column="ORGSTYLE" property="orgStyle" jdbcType="DECIMAL" />
+    <result column="ORGNATURE" property="orgNature" jdbcType="VARCHAR" />
+    <result column="OPEN_SELLER" property="openSeller" jdbcType="DECIMAL" />
+    <result column="OPENDATE" property="openDate" jdbcType="TIMESTAMP" />
+    <result column="BUSINESS_STATE" property="businessState" jdbcType="VARCHAR" />
+    <result column="CAPITAL" property="capital" jdbcType="VARCHAR" />
+    <result column="REDDATE" property="redDate" jdbcType="TIMESTAMP" />
+    <result column="CREDITCODE" property="creditCode" jdbcType="VARCHAR" />
+    <result column="NATURE" property="nature" jdbcType="VARCHAR" />
+    <result column="REGAUTHOR" property="regauthor" jdbcType="VARCHAR" />
+    <result column="BEGINTIME" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="ENDTIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="LEGALPERSON" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="LINKMAN" property="linkman" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="AREA" property="area" jdbcType="VARCHAR" />
+    <result column="AREANAME" property="areaName" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="DELIVERTIME" property="deliverTime" jdbcType="VARCHAR" />
+    <result column="SCOPE" property="scope" jdbcType="VARCHAR" />
+    <result column="LICENSE_PIC" property="licensePic" jdbcType="VARCHAR" />
+    <result column="LICENSEKEY_PIC" property="licensekeyPic" jdbcType="VARCHAR" />
+    <result column="TRADEMARK" property="tradeMark" jdbcType="VARCHAR" />
+    <result column="RATEPAYING" property="ratePaying" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
+    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
+    <result column="SCHOOLNAME" property="schoolName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ORGID, NAME, CODE, FK_ORGTYPE, SCOPE_TYPE, NAMEPY, ORGSTYLE, ORGNATURE, OPEN_SELLER, 
+    OPENDATE, BUSINESS_STATE, CAPITAL, REDDATE, CREDITCODE, NATURE, REGAUTHOR, BEGINTIME, 
+    ENDTIME, LEGALPERSON, LINKMAN, PHONE, AREA, ADDRESS,DELIVERTIME , SCOPE, LICENSE_PIC, LICENSEKEY_PIC, 
+    TRADEMARK, RATEPAYING, REMARK, STATUS, CREATOR, CREATEDATE, LASTOPUSER, LASTOPDATE
+  </sql>
+  
+  <sql id="param">
+  	<if test="orgStyle!=null">
+  		and o.ORGSTYLE=#{orgStyle,jdbcType=DECIMAL}
+  	</if>
+  	<if test="code!=null and code!=''">
+  		and o.CODE=#{code,jdbcType=VARCHAR}
+  	</if>
+  	<if test="name!=null and name!=''">
+  		and instr(o.NAME,#{name,jdbcType=VARCHAR})>0
+  	</if>
+  	<if test="orgType!=null">
+  		and o.FK_ORGTYPE=#{orgType,jdbcType=DECIMAL}
+  	</if>
+  	<if test="scopeType!=null and name!=''">
+  		and instr(','||o.SCOPE_TYPE||',',','||#{scopeType,jdbcType=VARCHAR}||',')>0
+  	</if>
+  	<if test="status==0">
+  		and o.STATUS=0
+  	</if>
+  	<if test="status==1">
+  		and o.STATUS=1
+  	<if test="area!=null and area!=''">
+  		and o.AREA=#{area,jdbcType=VARCHAR}
+  	</if>
+  	<if test="phone!=null and phone!=''">
+  		and instr(o.PHONE,#{phone,jdbcType=VARCHAR})=1
+  	</if>
+  	<if test="beginDate!=null">
+  		and o.CREATEDATE >= #{beginDate,jdbcType=TIMESTAMP}
+  	</if>
+  	<if test="endDate!=null">
+  		and o.CREATEDATE &lt;= #{endDate,jdbcType=TIMESTAMP}
+  	</if>
+  	</if>
+  </sql>
+  
+  <sql id="orderBy">
+  	<choose>
+  		<when test="orderBy!=null and orderBy!=''">
+  			<choose>
+		  		<when test="orderBy=='name' or orderBy=='orgTypeName' or orderBy=='scopeTypeName' or orderBy=='orgNature' or
+		  					orderBy=='businessState' or orderBy=='capital' or orderBy=='nature' or orderBy=='regauthor' or
+		  					orderBy=='legalPerson' or orderBy=='linkman' or orderBy=='areaName' or orderBy=='address' or
+		  					orderBy=='scope' or orderBy=='ratePaying' or orderBy=='remark' or orderBy=='creator' or 
+		  					orderBy=='lastOpUser' ">
+		  			NLSSORT(#{orderBy},'NLS_SORT=SCHINESE_PINYIN_M') 
+		  		</when>
+		  		<otherwise>
+		  			#{orderBy}
+		  		</otherwise>
+		  	</choose>
+		  	<if test="orderType==1">
+		  		desc
+		  	</if>
+  		</when>
+  		<otherwise>
+  			CODE
+  		</otherwise>
+  	</choose>
+  </sql>
+  
+  <select id="getByPrimaryKey"  parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from ORGANIZATION
+    where ORGID = #{orgid,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="getOrgByOrgType" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+    from ORGANIZATION
+    where STATUS!=2 and FK_ORGTYPE= #{orgTypeid,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="getOrgBill" parameterType="java.util.Map" resultMap="BaseResultMap">
+	  select * from (
+		  	select o.ORGID,o.CODE,o.NAME,o.LINKMAN,o.PHONE,o.AREA,o.ADDRESS,o.STATUS, o.FK_ORGTYPE,
+		  		   o.SCOPE_TYPE,o.CREATEDATE,o.CREATOR,ot.NAME as ORGTYPENAME,b.YJORGNAME as SCHOOLNAME,
+		  		   o.TRADEMARK,REPLACE(WMSYS.WM_CONCAT(gt.TYPENAME),',','、') as scopeTypeName 
+		  	from ORGANIZATION o
+		  	left join ORGTYPE ot on o.FK_ORGTYPE=ot.ID
+		  	left join GOODSTYPE gt on instr(','||o.SCOPE_TYPE||',',','||gt.TYPEID||',')>0
+		  	left join ORG_BELONG b on instr(','||b.FK_ORGIDS||',',','||o.ORGID||',')>0
+		  	where o.STATUS!=2 <include refid="param"/>
+		  	group by o.ORGID,o.CODE,o.NAME,o.LINKMAN,o.PHONE,o.AREA,o.ADDRESS,o.STATUS,o.FK_ORGTYPE,
+		  		   	 o.SCOPE_TYPE,o.CREATEDATE,o.CREATOR,ot.NAME,b.YJORGNAME,o.TRADEMARK 
+	  ) order by <include refid="orderBy"/>
+  </select>
+  
+  <select id="getOrgSimpleBill" parameterType="java.util.Map" resultMap="BaseResultMap">
+	select o.ORGID,o.CODE,o.NAME
+	from ORGANIZATION o
+	where o.STATUS = 0
+	<if test="orgIdArr!=null">
+		and	o.ORG in
+		<foreach collection="orgIdArr" open="(" separator="," close=")" item="item">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</if>  
+	order by o.ORGID
+  </select>
+  
+  <select id="getOrgById" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	select o.*,ot.NAME as ORGTYPENAME, REPLACE(WMSYS.WM_CONCAT(gt.TYPENAME),',','、') as SCOPETYPENAME 
+  	from ORGANIZATION o
+	left join ORGTYPE ot on o.FK_ORGTYPE=ot.ID
+	left join GOODSTYPE gt on instr(','||o.SCOPE_TYPE||',',','||gt.TYPEID||',')>0
+	where o.ORGID=#{orgid,jdbcType=DECIMAL}	  	
+	group by o.ORGID,o.NAME,o.CODE,o.FK_ORGTYPE,o.SCOPE_TYPE,o.NAMEPY,o.ORGSTYLE,o.ORGNATURE,o.OPEN_SELLER, 
+	    	 o.OPENDATE,o.BUSINESS_STATE,o.CAPITAL,o.REDDATE,o.CREDITCODE,o.NATURE,o.REGAUTHOR,o.BEGINTIME, 
+	    	 o.ENDTIME,o.LEGALPERSON,o.LINKMAN, o.PHONE, o.AREA, o.ADDRESS,o.DELIVERTIME,o.DELIVERTIME , o.SCOPE, o.LICENSE_PIC, 
+	    	 o.LICENSEKEY_PIC,o.TRADEMARK, o.RATEPAYING, o.REMARK, o.STATUS, o.CREATOR, o.CREATEDATE, 
+	    	 o.LASTOPUSER, o.LASTOPDATE,ot.NAME
+  </select>
+  
+  <select id="getOrgByNameAndStyle" parameterType="com.yj.hqbz.model.org.Organization"  resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from ORGANIZATION
+  	where STATUS!=2 and ORGSTYLE=#{orgStyle,jdbcType=DECIMAL} and NAME=#{name,jdbcType=VARCHAR} and rownum=1
+  </select>
+  
+  <insert id="addOrg" parameterType="com.yj.hqbz.model.org.Organization">
+  	<selectKey keyProperty="orgid" resultType="int" order="BEFORE">
+		select ORGANIZATION_SEQ_ID.NEXTVAL from dual
+	</selectKey>
+  	insert into ORGANIZATION(<include refid="Base_Column_List" />)
+  	select	#{orgid,jdbcType=DECIMAL},#{name,jdbcType=VARCHAR},trim(to_char(to_number(nvl(max(o.CODE),0))+1,'00000009')),
+  			#{orgType,jdbcType=DECIMAL},#{scopeType,jdbcType=VARCHAR},#{namepy,jdbcType=VARCHAR},#{orgStyle,jdbcType=DECIMAL},
+  			#{orgNature,jdbcType=VARCHAR},#{openSeller,jdbcType=DECIMAL},#{openDate,jdbcType=TIMESTAMP},#{businessState,jdbcType=VARCHAR},
+  			#{capital,jdbcType=VARCHAR},#{redDate,jdbcType=TIMESTAMP},#{creditCode,jdbcType=VARCHAR},#{nature,jdbcType=VARCHAR},
+  			#{regauthor,jdbcType=VARCHAR},#{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},#{legalPerson,jdbcType=VARCHAR},
+  			#{linkman,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{area,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{deliverTime,jdbcType=VARCHAR},
+  			#{scope,jdbcType=VARCHAR},#{licensePic,jdbcType=VARCHAR},#{licensekeyPic,jdbcType=VARCHAR},#{tradeMark,jdbcType=VARCHAR},
+  			#{ratePaying,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{status,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},
+  			#{createDate,jdbcType=TIMESTAMP},#{lastOpUser,jdbcType=VARCHAR},#{lastOpDate,jdbcType=TIMESTAMP}
+  	from ORGANIZATION o
+  	where o.STATUS!=2 and o.ORGSTYLE=#{orgStyle,jdbcType=DECIMAL}
+  </insert>
+  
+  <update id="updateOrg" parameterType="com.yj.hqbz.model.org.Organization">
+  	update ORGANIZATION
+  	set NAME=#{name,jdbcType=VARCHAR},
+  	 	FK_ORGTYPE=#{orgType,jdbcType=DECIMAL}, 
+  	 	SCOPE_TYPE=#{scopeType,jdbcType=VARCHAR}, 
+  	 	NAMEPY=#{namepy,jdbcType=VARCHAR}, 
+  	 	ORGNATURE=#{orgNature,jdbcType=VARCHAR}, 
+  	 	OPEN_SELLER=#{openSeller,jdbcType=DECIMAL}, 
+    	OPENDATE=#{openDate,jdbcType=TIMESTAMP}, 
+    	BUSINESS_STATE=#{businessState,jdbcType=VARCHAR}, 
+    	CAPITAL=#{capital,jdbcType=VARCHAR}, 
+    	REDDATE=#{redDate,jdbcType=TIMESTAMP}, 
+    	CREDITCODE=#{creditCode,jdbcType=VARCHAR}, 
+    	NATURE=#{nature,jdbcType=VARCHAR}, 
+    	REGAUTHOR=#{regauthor,jdbcType=VARCHAR}, 
+    	BEGINTIME=#{beginTime,jdbcType=TIMESTAMP}, 
+    	ENDTIME=#{endTime,jdbcType=TIMESTAMP}, 
+    	LEGALPERSON=#{legalPerson,jdbcType=VARCHAR}, 
+    	LINKMAN=#{linkman,jdbcType=VARCHAR}, 
+    	PHONE=#{phone,jdbcType=VARCHAR}, 
+    	AREA=#{area,jdbcType=VARCHAR}, 
+    	ADDRESS=#{address,jdbcType=VARCHAR}, 
+    	DELIVERTIME=#{deliverTime,jdbcType=VARCHAR}, 
+    	SCOPE=#{scope,jdbcType=VARCHAR}, 
+    	LICENSE_PIC=#{licensePic,jdbcType=VARCHAR}, 
+    	LICENSEKEY_PIC=#{licensekeyPic,jdbcType=VARCHAR}, 
+   	 	TRADEMARK=#{tradeMark,jdbcType=VARCHAR}, 
+   	 	RATEPAYING=#{ratePaying,jdbcType=VARCHAR}, 
+   	 	REMARK=#{remark,jdbcType=VARCHAR}, 
+   	 	LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR}, 
+   	 	LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+    where ORGID = #{orgid,jdbcType=DECIMAL}
+  </update>
+  
+  <update id="updateStatus" parameterType="com.yj.hqbz.model.org.Organization">
+  	update ORGANIZATION
+  	set STATUS=#{status,jdbcType=DECIMAL},
+  		LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
+  		LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+  	where ORGID = #{orgid,jdbcType=DECIMAL}
+  </update>
+</mapper>

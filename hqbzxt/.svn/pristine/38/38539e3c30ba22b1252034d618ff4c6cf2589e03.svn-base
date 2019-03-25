@@ -1,0 +1,16 @@
+<form class="easyui-form" style="width:500px;margin-top:20px;" id='frm'>
+	<input type='hidden' id='id' name='id'/>
+	<div class="form-row">
+		<input class="easyui-textbox" id='paramCode' name='paramCode' style="width:100%" data-options="prompt:'请输入参数编码',label:'参数编码:',required:true,validType:'maxLength[30]'" >
+	</div>
+	<div class="form-row">
+		<input class="easyui-textbox" id='paramName' name='paramName' style="width:100%" data-options="label:'参数名称:',required:true,validType:'maxLength[30]'">
+	</div>
+	<div class="form-row">
+		<input class="easyui-textbox" id='value' name='value' style="width:100%" data-options="label:'参数值:',required:true,validType:'maxLength[100]'">
+	</div>
+	<div class="form-row">
+		<input class="easyui-textbox" id='remark' name='remark' style="width:100%" data-options="label:'备注:'">
+	</div>
+
+</form>

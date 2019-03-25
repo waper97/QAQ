@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" type="text/css" href="/admin/easyui/themes/bootstrap/easyui.css">
+	<link rel="stylesheet" type="text/css" href="/admin/easyui/themes/icon1.css">
+	<link rel="stylesheet" type="text/css"  href="/admin/css/yj.css">
+	<script type="text/javascript" src="/admin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/admin/easyui/jquery.easyui.min.js"></script>	
+	<script type="text/javascript" src="/admin/js/datagrid.js"></script>
+	<script type="text/javascript" src="/admin/js/common.js"></script>
+	<script type="text/javascript" src="/admin/js/pub.js"></script>
+	<script type="text/javascript" src="/admin/layui/layui.js"></script>
+	<script>
+	document.write("<s"+"cript type='text/javascript' src='env.js?"+Math.random()+"'></scr"+"ipt>");
+	</script>
+</head>
+<body class="easyuibody">
+	<div class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'north',border:false,split:false" style='margin:2px'>
+			<div class='searchItemDiv'>编号：<input type="text" class="easyui-textbox" style="width:150px" id="code" name="code" />&emsp;</div>
+			<div class='searchItemDiv'>名称：<input type="text" class="easyui-textbox" style="width:150px" id="name" name="name" />&emsp;</div>
+			<div class='searchItemDiv' style="line-height:30px">
+				状&emsp;&emsp;态：
+				<select id='status' name='status' class="easyui-combobox" data-options="panelHeight:'auto'">
+					<option value=''>全部</option>
+					<option value='0'>已启用</option>
+					<option value='1'>已停用</option>
+				</select>&emsp;
+			</div>
+			<div class='searchItemDiv'>
+				<a href="#" class="easyui-linkbutton cls_yj_query" iconCls="icon-search" onclick="doQuery()">查询</a>
+			</div>
+		</div>
+		<div data-options="region:'center',border:false" style="padding:5px">
+			<table id="grid" class="easyui-datagrid" title="客户分类" style="height:95%;"
+				data-options="nowrap:false,rownumbers:true,singleSelect:true,method:'get',toolbar:'#ft',pagination:true">
+			<thead>
+				<tr>
+					<th data-options="field:'code',width:100">编号</th>
+					<th data-options="field:'parentName',width:150">上级分类</th>
+					<th data-options="field:'name',width:150">分类名称</th>
+					<th data-options="field:'createDate',width:200">创建时间</th>
+					<th data-options="field:'status',width:150,formatter:statusOperationFormatter">状态</th>
+					<th data-options="field:'d',width:150,formatter:operationFormatter">状态</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</div>
+	<div id="ft" style="padding:2px 5px;">
+		<input type='button' class='myButton cls_yj_add icon-add' value='增加'/>
+	</div>
+	<div id='MyPopWindow'></div>
+
+<script type="text/javascript">
+	var grid = $('#grid');
+</script>
+</body>
+</html>

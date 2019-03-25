@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.system.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.system.Role" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ROLECODE" property="roleCode" jdbcType="VARCHAR" />
+    <result column="ROLENAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ROLETYPE" property="roleType" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="SYSTEMROLE" property="systemRole" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ROLECODE, ROLENAME, ROLETYPE, REMARK, STATUS,SYSTEMROLE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ROLE
+    where ID = #{id,jdbcType=DECIMAL}
+    and STATUS = 0
+  </select>
+  
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ROLE
+    where ROLECODE = #{code,jdbcType=VARCHAR}
+    and STATUS = 0
+  </select>
+  
+  <select id="selectRolesByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select 
+    <include refid="Base_Column_List" />
+    from ROLE
+    where STATUS = 0
+    <if test="_parameter!=null">
+    	and ROLETYPE = #{type,jdbcType=DECIMAL}
+    </if>
+  </select>
+  
+  <update id="deleteRole" parameterType="java.lang.Integer">
+  	update ROLE
+  	set STATUS = 1
+  	where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <insert id="insertRole" parameterType="com.yj.hqbz.model.system.Role">
+  	insert into ROLE(<include refid="Base_Column_List" />)
+  	values(ROLE_SEQ_ID.nextval,#{roleCode,jdbcType=VARCHAR},#{roleName,jdbcType=VARCHAR},
+  		#{roleType,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR},#{status,jdbcType=DECIMAL},
+  		#{systemRole,jdbcType=DECIMAL})
+  </insert>
+  
+  <update id="updateRole" parameterType="com.yj.hqbz.model.system.Role">
+  	update ROLE
+  	set ROLENAME = #{roleName,jdbcType=VARCHAR},
+  	ROLETYPE = #{roleType,jdbcType=DECIMAL},
+  	REMARK = #{remark,jdbcType=VARCHAR}
+  	where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  
+  <select id="selectUserHaveRoles" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select r.*
+  	from USER_ROLE ur,ROLE r
+  	where ur.FK_USERID = #{userId}
+  	and ur.FK_ROLEID = r.ID
+  	<if test="roleType!=null">
+  		and r.ROLETYPE = #{roleType}
+  	</if>
+  </select>
+  
+  <select id="selectUserRolesByOrgid" resultMap="BaseResultMap">
+  	select r.* 
+  	from ROLE r,ORGANIZATION o 
+  	where r.ROLETYPE=o.ORGSTYLE
+  	and o.ORGID = #{0} and r.STATUS = 0
+  </select>
+  
+  <delete id="deleteRolesByUserId" parameterType="java.lang.String">
+  	delete USER_ROLE where FK_USERID = #{userid,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="addUserHaveRoles" parameterType="java.util.Map">
+  	insert into USER_ROLE(ID,FK_USERID,FK_ROLEID)
+  	values(USER_ROLE_SEQ_ID.nextval,#{userid},#{roleid})
+  </insert>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.order.PurchaseDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.order.PurchaseDetail" >
+    <id column="ID" property="detailid" jdbcType="VARCHAR" />
+    <result column="FK_INDEXID" property="indexid" jdbcType="VARCHAR" />
+    <result column="FK_SKUID" property="skuid" jdbcType="VARCHAR" />
+    <result column="SEPC_INFO" property="sepcInfo" jdbcType="VARCHAR" />
+    <result column="FK_ORG_SKUID" property="orgSkuid" jdbcType="VARCHAR" />
+    <result column="GOODSNAME" property="goodsName" jdbcType="VARCHAR" />
+    <result column="ALIASNAME" property="aliasName" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="PROPERTY" property="property" jdbcType="VARCHAR" />
+    <result column="AUIXUNIT" property="auixUnit" jdbcType="VARCHAR" />
+    <result column="AUIXRATE" property="auixRate" jdbcType="DECIMAL" />
+    <result column="QTY" property="qty" jdbcType="DECIMAL" />
+    <result column="QTY_BASIC" property="qtyBasic" jdbcType="DECIMAL" />
+    <result column="PLAN_QTY" property="planQty" jdbcType="DECIMAL" />
+    <result column="REAL_QTY" property="realQty" jdbcType="DECIMAL" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="REAL_PRICE" property="realPrice" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, FK_INDEXID, FK_SKUID, SEPC_INFO, FK_ORG_SKUID, AUIXUNIT, AUIXRATE, QTY, QTY_BASIC, 
+    PLAN_QTY, REAL_QTY, PRICE, REAL_PRICE, REMARK, STATUS
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    UPDATE PURCHASE_DETAIL
+    SET STATUS = 1
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.yj.hqbz.model.order.PurchaseDetail" >
+    insert into PURCHASE_DETAIL (ID, FK_INDEXID, FK_SKUID, 
+      SEPC_INFO, FK_ORG_SKUID, AUIXUNIT, 
+      AUIXRATE, QTY, QTY_BASIC, 
+      PLAN_QTY, REAL_QTY, PRICE, 
+      REAL_PRICE, REMARK, STATUS
+      )
+    values (#{detailid,jdbcType=VARCHAR}, #{indexid,jdbcType=VARCHAR}, #{skuid,jdbcType=VARCHAR}, 
+      #{sepcInfo,jdbcType=VARCHAR}, #{orgSkuid,jdbcType=VARCHAR}, #{auixUnit,jdbcType=VARCHAR}, 
+      #{auixRate,jdbcType=DECIMAL}, #{qty,jdbcType=DECIMAL}, #{qtyBasic,jdbcType=DECIMAL}, 
+      #{planQty,jdbcType=DECIMAL}, #{realQty,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
+      #{realPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}
+      )
+  </insert>
+  
+  <update id="update"  parameterType="com.yj.hqbz.model.order.PurchaseDetail">
+  	update PURCHASE_DETAIL
+    <set >
+      <if test="planQty != null" >
+        PLAN_QTY = #{planQty,jdbcType=DECIMAL},
+      </if>
+      <if test="realQty != null" >
+        REAL_QTY = #{realQty,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        REAL_PRICE = #{realPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{detailid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectListByIndexid" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select a.*,g.goodsname,g.aliasname,g.unit,sku.PROPERTY
+  	from PURCHASE_DETAIL a,SKU sku,GOODS g
+  	where a.FK_SKUID = sku.SKUID 
+  	and sku.FK_GOODSID = g.GOODSID
+  	and a.FK_INDEXID = #{indexid}
+  	AND a.STATUS = 0
+  </select>
+ 
+</mapper>

@@ -1,0 +1,5 @@
+	<select class="easyui-combotree" style="width:150px" id='orgType' name='orgType' editable="false" data-options="
+			valueField: 'id',
+			textField: 'name',
+			panelHeight:'auto'
+		"></select>&emsp;

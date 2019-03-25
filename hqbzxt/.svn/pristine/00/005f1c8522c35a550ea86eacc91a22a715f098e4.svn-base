@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.system.ErrorLogMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.system.ErrorLog" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ERRORTIME" property="errorTime" jdbcType="TIMESTAMP" />
+    <result column="ERRORCLASS" property="errorClass" jdbcType="VARCHAR" />
+    <result column="ERRORMETHOD" property="errorMethod" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ERRORTIME, ERRORCLASS, ERRORMETHOD, CONTENT
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from ERRORLOG
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <insert id="insert" parameterType="com.yj.hqbz.model.system.ErrorLog">
+  	insert into ERRORLOG(<include refid="Base_Column_List"/>)
+  	values(ERRORLOG_SEQ_ID.nextval,#{errorTime,jdbcType=TIMESTAMP},#{errorClass,jdbcType=VARCHAR},
+  				#{errorMethod,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR})
+  </insert>
+  
+  <delete id="deleteLogByLessTime" parameterType="java.util.Date">
+  	delete from ERRORLOG where ERRORTIME &lt; #{time,jdbcType=TIMESTAMP}
+  </delete>
+  
+</mapper>

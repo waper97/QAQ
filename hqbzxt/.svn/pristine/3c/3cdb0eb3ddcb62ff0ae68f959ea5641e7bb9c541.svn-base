@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.area.AreaMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.area.Area" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="FK_PARENTID" property="parentid" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="LEVELS" property="levels" jdbcType="DECIMAL" />
+    <result column="SORTNO" property="sortNo" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, FK_PARENTID, NAME, LEVELS, SORTNO
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from AREA
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="getAreaByParent"  parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from AREA
+  	where FK_PARENTID=#{parentid}
+  	order by ID
+  </select>
+  
+  <select id="getAreaNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select REPLACE(WMSYS.WM_CONCAT(a.name),',','')
+  	from(
+	select t.name from AREA t
+	start with t.id= #{id,jdbcType=DECIMAL} connect by prior t.fk_parentid=t.id
+	order by t.id
+	)a
+  </select>
+</mapper>

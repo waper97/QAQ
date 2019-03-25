@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.system.SystemParamsMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.system.SystemParams" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PARAMCODE" property="paramCode" jdbcType="VARCHAR" />
+    <result column="PARAMNAME" property="paramName" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PARAMCODE, PARAMNAME, VALUE, REMARK
+  </sql>
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select<include refid="Base_Column_List" />
+    from SYSPARAMS
+  </select> 
+  
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select *
+  	from SYSPARAMS
+  	where PARAMCODE = #{code}
+  </select>
+  
+  <insert id="insert" parameterType="com.yj.hqbz.model.system.SystemParams">
+  	insert into SYSPARAMS(<include refid="Base_Column_List" />)
+  	values(SYSPARAMS_SEQ_ID.nextval,#{paramCode,jdbcType=VARCHAR},#{paramName,jdbcType=VARCHAR},
+  	#{value,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterType="com.yj.hqbz.model.system.SystemParams">
+	update SYSPARAMS
+	set 
+	PARAMNAME = #{paramName,jdbcType=VARCHAR},
+	VALUE = #{value,jdbcType=VARCHAR},
+	REMARK = #{remark,jdbcType=VARCHAR}
+	where ID = #{id}
+  </update> 
+	 
+  <delete id="delete" parameterType="java.lang.Integer">
+		delete
+  		from SYSPARAMS
+  		where ID = #{id}
+  </delete>
+</mapper>

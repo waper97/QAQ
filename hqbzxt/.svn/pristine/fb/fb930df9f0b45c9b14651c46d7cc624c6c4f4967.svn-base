@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.inventory.BVoucherIndexMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.inventory.BVoucherIndex" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="VOUCHERTYPE" property="voucherType" jdbcType="DECIMAL" />
+    <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
+    <result column="VOUCHERCODE" property="voucherCode" jdbcType="VARCHAR" />
+    <result column="BUSINESSDATE" property="businessDate" jdbcType="TIMESTAMP" />
+    <result column="USEDATE" property="useDate" jdbcType="TIMESTAMP" />
+    <result column="PURPOSE" property="purpose" jdbcType="DECIMAL" />
+    <result column="LIABLEPERSONID" property="liablePersonid" jdbcType="VARCHAR" />
+    <result column="LIABLEPERSON" property="liablePerson" jdbcType="VARCHAR" />
+    <result column="DEALERID" property="dealerid" jdbcType="VARCHAR" />
+    <result column="DEALER" property="dealer" jdbcType="VARCHAR" />
+    <result column="DEAL_DATE" property="dealDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
+    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, VOUCHERTYPE, FK_ORGID, VOUCHERCODE, BUSINESSDATE, USEDATE, PURPOSE, LIABLEPERSONID, 
+    LIABLEPERSON, DEALERID, DEALER, DEAL_DATE, REMARK, STATUS, CREATOR, CREATEDATE, LASTOPUSER, 
+    LASTOPDATE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from BVOUCHER_INDEX
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="addBVoucherIndex" parameterType="com.yj.hqbz.model.inventory.BVoucherIndex">
+  	insert into BVOUCHER_INDEX(<include refid="Base_Column_List"/>)
+  	values(#{id,jdbcType=VARCHAR},#{voucherType,jdbcType=DECIMAL},#{orgid,jdbcType=DECIMAL},
+  		   #{voucherCode,jdbcType=VARCHAR},#{businessDate,jdbcType=TIMESTAMP},#{useDate,jdbcType=TIMESTAMP},
+  		   #{purpose,jdbcType=DECIMAL},#{liablePersonid,jdbcType=VARCHAR},#{liablePerson,jdbcType=VARCHAR},
+  		   #{dealerid,jdbcType=VARCHAR},#{dealer,jdbcType=VARCHAR},#{dealDate,jdbcType=TIMESTAMP},
+  		   #{remark,jdbcType=VARCHAR},#{status,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},
+  		   #{createDate,jdbcType=TIMESTAMP},#{lastOpUser,jdbcType=VARCHAR},#{lastOpDate,jdbcType=TIMESTAMP}
+  		  )
+  </insert>
+</mapper>

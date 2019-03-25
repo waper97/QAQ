@@ -1,0 +1,39 @@
+<form class="easyui-form" style="width:500px;margin-top:20px;" id='frm'>
+	<input type='hidden' id='userid' name='userid'/>
+	<!-- 列出所有的角色供用户选择 -->
+	<table>
+		<tr>
+			<td width='80'><label class="textbox-label textbox-label-before" style="text-align: left;">选择角色：</label></td>
+			<td><div id='roleDiv'></div></td>
+		</tr>
+	</table>
+	
+</form>
+<script>
+	function initUserRoles(userid){
+		YJGet('/manage/system/user/getAuthList',{'userid':userid},function(data){
+			if(data.success){
+				var roleData = data.data.roleList;
+				var haveRole = data.data.haveRoleList;
+				var selects = ",";
+				 $.each(haveRole, function(key, val) {  
+					selects += val.id+",";
+				});
+				var html = '';
+				 $.each(roleData, function(key, val) {     
+					html += "<label for='role_"+val.id+"'>"+val.roleName+"</label><input type='checkbox' name='roles' id='role_"+val.id+"' value='"+val.id+"' ";
+					if(selects.indexOf(','+val.id+',')>=0){
+						html += ' checked ';
+					}
+					html += "/> &emsp;";
+					
+				});
+				console.log(html);
+				$('#frm #roleDiv').html(html);
+			}
+			else{
+				error(data.message);
+			}
+		});
+	}
+</script>
