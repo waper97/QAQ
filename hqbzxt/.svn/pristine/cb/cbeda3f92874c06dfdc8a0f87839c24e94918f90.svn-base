@@ -539,11 +539,9 @@ public class OrderFormServiceImpl implements OrderFormService {
     @Override
     @Transactional
     public void saveOrderForSeller(String addressInfo, String deliverInfo) {
-        if(StringUtils.isNotBlank(addressInfo)){
-            Map<String,Object> addressMap = JSONObject.parseObject(addressInfo);
-            orderMapper.updateReceiver(addressMap);
-        }        
-        Map<String,Object> deliverMap = JSONObject.parseObject(deliverInfo);       
+        Map<String,Object> addressMap = JSONObject.parseObject(addressInfo);
+        Map<String,Object> deliverMap = JSONObject.parseObject(deliverInfo);
+        orderMapper.updateReceiver(addressMap);
         logisticsMapper.updateByMap(deliverMap);     
     }
 
@@ -601,7 +599,7 @@ public class OrderFormServiceImpl implements OrderFormService {
         if(num == 0){
             OrderForm of = orderMapper.selectByPrimaryKey(o.getId());
             if(of==null||of.getOrderStatus()<OrderStatusConst.HAVE_CONFIRM||of.getOrderStatus()>=OrderStatusConst.WAIT_RECEVIE){
-                return -2;
+                return -1;
             }
             //更新出库数量
             for(OrderDetail detail:o.getOrderDetails()){

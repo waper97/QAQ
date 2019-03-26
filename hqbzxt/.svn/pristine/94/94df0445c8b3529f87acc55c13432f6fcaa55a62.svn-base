@@ -539,11 +539,9 @@ public class OrderFormServiceImpl implements OrderFormService {
     @Override
     @Transactional
     public void saveOrderForSeller(String addressInfo, String deliverInfo) {
-        if(StringUtils.isNotBlank(addressInfo)){
-            Map<String,Object> addressMap = JSONObject.parseObject(addressInfo);
-            orderMapper.updateReceiver(addressMap);
-        }        
-        Map<String,Object> deliverMap = JSONObject.parseObject(deliverInfo);       
+        Map<String,Object> addressMap = JSONObject.parseObject(addressInfo);
+        Map<String,Object> deliverMap = JSONObject.parseObject(deliverInfo);
+        orderMapper.updateReceiver(addressMap);
         logisticsMapper.updateByMap(deliverMap);     
     }
 

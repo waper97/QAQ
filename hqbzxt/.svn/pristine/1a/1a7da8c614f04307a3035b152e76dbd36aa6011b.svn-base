@@ -320,7 +320,7 @@ public class OrderController extends BaseController {
     @PostMapping("/order/seller/saveOrder")
     public Object saveOrderForSeller(String addressInfo,String deliverInfo){
         getTokenUser();
-        if(StringUtils.isBlank(deliverInfo)){
+        if(StringUtils.isBlank(deliverInfo)||StringUtils.isBlank(deliverInfo)){
             return fail("参数错误！");
         }
         orderService.saveOrderForSeller(addressInfo, deliverInfo);

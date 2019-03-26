@@ -67,7 +67,7 @@ public class FileUtil {
 		    return "/trace/realpic/" + strFile;
 		}
 		else if(type==6){
-		    return "/trace/qualification/" + strFile;
+		    return "/trace/qualification" + strFile;
 		}
 		else{
 			return strFile;
