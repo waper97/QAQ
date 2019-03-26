@@ -9,6 +9,12 @@ export const queyUserList = params=>{
   return axios.post("/getUserList","",params);
 }
 export const deleteByPrimaryKey = params =>{
-
    return axios.post('/deleteUserByPrimarykey',params = qs.stringify(params))
+}
+
+export const updateUserByPrimaryKey = params =>{
+  return axios.post('/updateUserByPrimaryKey',params,)
+}
+export const addUser = params =>{
+  return axios.post('/addUser',params,)
 }

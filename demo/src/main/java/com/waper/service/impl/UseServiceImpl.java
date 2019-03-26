@@ -49,7 +49,7 @@ public class UseServiceImpl implements UserService {
 
     @Override
     public int updateByPrimaryKeySelective(Users record) {
-        return 0;
+        return userMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

@@ -6,9 +6,7 @@ import com.waper.util.CommUtil;
 import com.waper.util.TokenUtil;
 import com.waper.util.WebExecptionResolve;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,8 +65,8 @@ public class UserController extends BaseController {
         return new WebExecptionResolve(false,"系统异常，删除失败",499);
     }
 
-    @RequestMapping(value = "/updateUserByPrimaryKey",method = RequestMethod.POST)
-    public Object updateUserByPrimaryKey(Users user){
+    @RequestMapping(value = "/updateUserByPrimaryKey",method = RequestMethod.POST,consumes = "application/json")
+    public Object updateUserByPrimaryKey(@RequestBody Users user){
         if(user.getAddress() == null && "".equals(user.getAddress())){
             return new WebExecptionResolve(false,"参数不能为空",400);
         }
@@ -79,11 +77,12 @@ public class UserController extends BaseController {
         return new WebExecptionResolve(false,"系统异常删除失败",2333);
     }
     @RequestMapping("/addUser")
-    public Object addUser(Users user){
+    public Object addUser(@RequestBody Users user){
         if(user.getAddress() == null||user.getAge() == null || user.getPassword()== null ||
         user.getUsername() == null){
             return new WebExecptionResolve(false,"必填信息不能为空",400);
         }
+        user.setStatus(0);
         user.setId(CommUtil.getUUid());
         int result = userService.insert(user);
         if(result > 0){
