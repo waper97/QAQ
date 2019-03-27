@@ -114,7 +114,7 @@
   
   <update id="checkBill" parameterType="com.yj.hqbz.model.menu.MenuIndex">
   	update MENU_INDEX
-  	set STATUS=#{status,jdbcType=DECIMAL}
+  	set STATUS=#{status,jdbcType=DECIMAL},
   		CHECKERID=#{checkerid,jdbcType=VARCHAR},
   		CHECKNAME=#{checkName,jdbcType=VARCHAR},
   		CHECKDATE=#{checkDate,jdbcType=TIMESTAMP},

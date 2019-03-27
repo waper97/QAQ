@@ -99,24 +99,17 @@ public class TraceServiceImpl implements TraceService{
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("traceid", traceid);
 		map.put("time", time);
-		List<Map<String,Object>> outStock = traceMapper.getTraceByOutStock(map);
-		for (int i = 0; i < outStock.size(); i++) {
-			outStock.get(i).put("pic", goodsPic);
-			if(i!=0) {
-				outStock.get(i).put("isTransverse", 1);
-			}
+		Map<String, Object> outStock = traceMapper.getTraceByOutStock(map);
+		if(outStock!=null) {
+			outStock.put("pic", goodsPic);
+			list.add(outStock);
 		}
-		list.addAll(outStock);
-		
 		//使用
-		List<Map<String,Object>> use = traceMapper.getTraceByUse(map);
-		for (int i = 0; i < use.size(); i++) {
-			use.get(i).put("pic", goodsPic);
-			if(i!=0) {
-				use.get(i).put("isTransverse", 1);
-			}
+		Map<String, Object> use = traceMapper.getTraceByUse(map);
+		if(use!=null) {
+			outStock.put("pic", goodsPic);
+			list.add(use);
 		}
-		list.addAll(use);
 		return list;
 	}
 	

@@ -1,11 +1,18 @@
 package com.yj.hqbz.services.impl.menu;
 
+import java.awt.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import com.yj.common.model.BaseRes;
+import com.yj.hqbz.model.schoolOperation.RetentionSample;
+import com.yj.hqbz.model.user.UserInfo;
+import com.yj.hqbz.services.schoolOperation.RetentionSampleService;
+import com.yj.hqbz.util.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +44,9 @@ public class MenuServiceImpl implements MenuService{
 	private MenuMainMaterialMapper menuMainMaterialMapper;
 	@Resource
 	DiningOutMapper diningOutMapper;
+
+	@Resource
+	RetentionSampleService retentionSampleService;
 	
 	public MenuIndex selectByPrimaryKey(String menuid) {
 		return menuIndexMapper.selectByPrimaryKey(menuid);
@@ -114,8 +124,9 @@ public class MenuServiceImpl implements MenuService{
 		menuIndexMapper.checkBill(menu);
 		//自动生成出餐记录
 		if(menu.getStatus().intValue()==2){
-			List<MenuDish> dishList = menuDishMapper.getDishByMenu(menu.getMenuid());
-			for(MenuDish dish:dishList){				
+			List<MenuDish> dishList = menuDishMapper.getDishByMenu(menu.getMenuid()); //查询菜品详情
+
+			for(MenuDish dish:dishList){
 				DiningOut out = new DiningOut();
 				out.setCreator(dish.getCreator());
 				out.setCreateDate(new Date());
@@ -128,6 +139,21 @@ public class MenuServiceImpl implements MenuService{
 				out.setStatus(0);
 				out.setMenuCode(menu.getMenuCode());
 				out.setId(StringUtil.getUUID());
+
+				//根据菜单id查询菜单信息
+				MenuIndex index = menuIndexMapper.selectByPrimaryKey(menu.getMenuid());
+				//自动生成留样记录
+				RetentionSample rs = new RetentionSample();
+				rs.setRsCode(DateUtil.getStrByDate(new Date(), "yyyyMMdd"));
+				rs.setMenuCode(menu.getMenuid());
+				rs.setDishName(dish.getDishName());
+				rs.setMenuType(index.getMenuType());
+				rs.setOrgid(menu.getOrgid());
+				rs.setLastOpDate(new Date());
+				rs.setCreateDate(new Date());
+				rs.setRsDate(new Date());
+				rs.setRsid(StringUtil.getUUID());
+				retentionSampleService.insert(rs);
 				diningOutMapper.insert(out);
 			}
 		}

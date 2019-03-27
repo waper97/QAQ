@@ -136,9 +136,9 @@ public class MenuController extends BaseController{
 		if(menu.getStatus()!=1) {
 			return fail("菜单已审核，不允许重复操作！");
 		}
-		if(!menu.getCheckerid().equals(getTokenUserid())) {
-			return fail("非指定审核人，不允许审核！");
-		}
+//		if(!menu.getCheckerid().equals(getTokenUserid())) {
+//			return fail("非指定审核人，不允许审核！");
+//		}
 		if(checkStatus==1) {
 			menu.setStatus(2);
 		}else if(checkStatus==2) {
@@ -151,10 +151,11 @@ public class MenuController extends BaseController{
 		menu.setCheckOpinion(checkOpinion);
 		menu.setLastOpUser(menu.getCheckName());
 		menu.setLastOpDate(menu.getCheckDate());
+		menu.setCheckerid(getTokenUser().getUserid());
 		menuService.checkBill(menu);
 		//日志
 		saveJournalLog("审核菜单", "menuid:"+menu.getMenuid());
-		return success("删除成功！");
+		return success("审核成功！");
 		
 	}
 	
