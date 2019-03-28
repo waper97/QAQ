@@ -1,7 +1,6 @@
 package com.yj.hqbz.services.impl.trace;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import com.yj.hqbz.mapper.trace.GoodsTracePicMapper;
 import com.yj.hqbz.model.goods.GoodsType;
 import com.yj.hqbz.model.trace.GoodsTracePic;
 import com.yj.hqbz.services.trace.TraceService;
-import com.yj.hqbz.util.StringUtil;
 @Service
 public class TraceServiceImpl implements TraceService{
 
@@ -143,14 +141,7 @@ public class TraceServiceImpl implements TraceService{
 	
 	public List<Map<String, Object>> getSchoolStock(String goodsTypeid,Map<String,Object> paramMap) {
 		//分类
-		List<String> typeArray;
-		if(StringUtil.isBlank(goodsTypeid)||"0".equals(goodsTypeid)) {
-			typeArray=traceMapper.getParentGoodsTypeid();
-			
-		}else {
-			typeArray=Arrays.asList(goodsTypeid.split(","));
-		}
-
+		String[] typeArray = goodsTypeid.split(",");
 		//学校
 		List<Map<String, Object>> schoolList = orgBelongMapper.getSchoolByArea(paramMap);
 		//查询参数

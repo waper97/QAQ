@@ -371,8 +371,4 @@
 	  	order by "quarterTotal" desc
     ) t2
   </select>
-  
-  <select id="getParentGoodsTypeid" resultType="java.lang.String">
-  	select t.TYPEID from GOODSTYPE t where t.FK_PARENTID=0
-  </select>
 </mapper>
