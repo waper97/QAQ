@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.inventory.BVoucherDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.inventory.BVoucherDetail" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FK_INDEXID" property="indexid" jdbcType="VARCHAR" />
+    <result column="FK_GOODSID" property="goodsid" jdbcType="DECIMAL" />
+    <result column="FK_SKUID" property="skuid" jdbcType="VARCHAR" />
+    <result column="FK_TRACEID" property="traceid" jdbcType="VARCHAR" />
+    <result column="TRACENO" property="traceNo" jdbcType="VARCHAR" />
+    <result column="PRODATE" property="proDate" jdbcType="TIMESTAMP" />
+    <result column="INTERVALDATE" property="intervalDate" jdbcType="TIMESTAMP" />
+    <result column="USELIFEDATE" property="uselifeDate" jdbcType="TIMESTAMP" />
+    <result column="INDATE" property="inDate" jdbcType="TIMESTAMP" />
+    <result column="QTY" property="qty" jdbcType="DECIMAL" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+    <result column="STOCKID" property="stockid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, FK_INDEXID, FK_GOODSID, FK_SKUID, FK_TRACEID, TRACENO, PRODATE, INTERVALDATE, 
+    USELIFEDATE, INDATE, QTY, PRICE, WAREHOUSE, TOTAL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select<include refid="Base_Column_List" />
+    from BVOUCHER_DETAIL
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="addBVoucherDetail" parameterType="com.yj.hqbz.model.inventory.BVoucherDetail">
+  	insert into BVOUCHER_DETAIL(<include refid="Base_Column_List"/>)
+  	select #{id,jdbcType=VARCHAR},#{indexid,jdbcType=VARCHAR},i.FK_GOODSID,i.FK_SKUID,
+  		   i.FK_TRACEID,i.TRACENO,i.PRODATE,i.INTERVALDATE,i.USELIFEDATE,i.INDATE,i.QTY,
+  		   i.PRICE,i.WAREHOUSE,i.TOTAL
+  	from INVENTORY i
+  	where i.ID=#{stockid,jdbcType=VARCHAR}
+  </insert>
+  
+  <select id="getOutInDetail" parameterType="java.lang.String" resultType="map">
+  	select i.VOUCHERCODE as "code",i.VOUCHERTYPE as "type",d.QTY as "qty",g.UNIT as "unit",
+  		   to_char(i.BUSINESSDATE,'yyyy/MM/dd HH24:mm:ss') as "businessDate",
+  		   to_char(tr.PRODATE,'yyyy/MM/dd HH24:mm:ss') as "proDate",
+  		   to_char(tr.INTERVALDATE,'yyyy/MM/dd HH24:mm:ss') as "intervalDate",
+  		   to_char(tr.USELIFEDATE,'yyyy/MM/dd HH24:mm:ss') as "uselifeDate",
+  		   i.LIABLEPERSON as "liablePerson",i.PURPOSE as "purpose",i.REMARK as "remark"
+  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,INVENTORY s,GOODS g,GOODS_TRACE tr
+  	where i.ID=d.FK_INDEXID and d.FK_TRACEID=s.FK_TRACEID and s.FK_GOODSID=g.GOODSID 
+  		  and s.FK_TRACEID=tr.ID and i.STATUS=0 and s.ID=#{stockid,jdbcType=VARCHAR}
+  	order by i.BUSINESSDATE
+  </select>
+</mapper>
