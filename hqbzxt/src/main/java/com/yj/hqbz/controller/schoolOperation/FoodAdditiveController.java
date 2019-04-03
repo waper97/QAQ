@@ -1,180 +1,183 @@
 package com.yj.hqbz.controller.schoolOperation;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.web.bind.annotation.*;
-
 import com.github.pagehelper.PageInfo;
 import com.yj.common.controller.BaseController;
 import com.yj.common.model.BaseRes;
 import com.yj.common.model.DataGridModel;
 import com.yj.hqbz.model.schoolOperation.FoodAdditive;
-import com.yj.hqbz.model.schoolOperation.FoodAdditiveOut;
-import com.yj.hqbz.model.user.UserInfo;
 import com.yj.hqbz.services.schoolOperation.FoodAdditiveService;
-import com.yj.hqbz.util.DateUtil;
 import com.yj.hqbz.util.StringUtil;
-import com.yj.hqbz.web.Global;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-/**  
- * @Title: FoodAdditiveController.java
- * @Package com.yj.hqbz.controller.schoolOperation
- * @Description: TODO
- * @author xx
- * @date 2019-3-16
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author wangpeng
+ * @date 2019-3-14
  */
 @RestController
-public class FoodAdditiveController extends BaseController{
+public class FoodAdditiveController extends BaseController {
 
 	@Resource
-	FoodAdditiveService service;
-	
+	FoodAdditiveService foodAdditiveService;
+
 	/**
-	 * 获取食品添加剂使用列表
-	 * @param param
+	 * 查询食品添加剂使用列表
+	 *
+	 * @param persionLiable 责任人名称
+	 * @param useDate       使用日期
+	 * @param menuType      餐食类别
 	 * @param model
+	 * @param aliable       责任人
 	 * @return
 	 */
 	@GetMapping("/foodAddtive/school/getList")
-	public Object getFoodAdditiveList(@RequestParam Map<String,Object> param,DataGridModel model){
-		param.put("orgid", getTokenUser().getOrgId());
-		PageInfo<FoodAdditive> pg = service.selectFoodAdditiveListByParam(param,model.getPage(),model.getRows());
-		return new BaseRes("Ok",pg.getTotal(),pg.getPages(),pg.getList());
+	public Object getFoodAdditiveList(String persionLiable, String useDate, Integer menuType, String aliable, DataGridModel model) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("persionLiable", persionLiable);
+		param.put("useDate", useDate);
+		param.put("menuType", menuType);
+		param.put("aliable", aliable);
+		PageInfo<FoodAdditive> pg = foodAdditiveService.getFoodAdditiveList(param, model.getPage(), model.getRows());
+		return new BaseRes("ok", pg.getTotal(), pg.getPages(), pg.getList());
 	}
-	
-	//添加剂出库记录
-	@GetMapping("/foodAddtive/school/getOutDetailList")
-	public Object getFoodAdditiveListOutList(){
-		Map<String,Object> param = new HashMap<String,Object>();
-		param.put("orgid", this.getTokenUser().getOrgId());
-		param.put("goodsTypeid", Global.getSystemParamValueByKey("additive_typeid"));
-		List<FoodAdditiveOut> list = service.getFoodAdditiveOutListByParam(param);
-		return success(list);
-	}
-	
+
 	/**
-	 * 提交食品添加剂使用记录
-	 * @param record
-	 * @return
-	 */
-	@PostMapping("/foodAddtive/school/saveRecord")
-	public Object insertFoodAdditiveUseRecord(FoodAdditive record){
-		if(StringUtil.isBlank(record.getDetailid())
-				|| record.getUseDate()==null
-				|| record.getMenuType() == null
-//				|| StringUtil.isBlank(record.getAliasName())   责任人是用aliasName还是用personAilable
-				|| StringUtil.isBlank(record.getPersonAliable())
-				|| record.getQty().compareTo(new BigDecimal(0))<=0
-				|| record.getPercent().compareTo(new BigDecimal(0))<=0)
-			return fail("参数非法");
-		else{
-			UserInfo user = this.getTokenUser();
-			record.setCreator(user.getUserName());
-			record.setCreateDate(new Date());
-			record.setOrgid(user.getOrgId());
-			record.setStatus(0);
-			try{
-				service.insertFoodAdditive(record);
-				return success("保存成功");
-			}
-			catch(Exception ex){
-				return fail("保存失败");
-			}
-		}
-	}
-	
-	/**
-	 * 修改保存
-	 * @param record
-	 * @return
-	 */
-	@PostMapping("/foodAddtive/school/updateRecord")
-	public Object updateFoodAdditiveUseRecord(FoodAdditive record){
-		if(StringUtil.isBlank(record.getId())
-				|| record.getUseDate()==null
-				|| record.getMenuType() == null
-				|| StringUtil.isBlank(record.getAliableid())
-				|| record.getQty().compareTo(new BigDecimal(0))<=0
-				|| record.getPercent().compareTo(new BigDecimal(0))<=0)
-			return fail("参数非法");
-		else{
-			UserInfo user = getTokenUser();
-			
-			FoodAdditive _additive = service.selectFoodAdditiveDetailInfo(record.getId());
-			if(_additive == null){
-				return fail("参数非法");
-			}
-			else{
-				_additive.setLastOpUser(user.getUserName());
-				_additive.setLastOpDate(new Date());
-				_additive.setUseDate(record.getUseDate());
-				_additive.setMenuType(record.getMenuType());
-				_additive.setQty(record.getQty());
-				_additive.setPercent(record.getPercent());
-				_additive.setAliableid(record.getAliableid());
-				_additive.setAliasName(record.getPersonAliable());
-				_additive.setRemark(record.getRemark());
-				try{
-					service.updateFoodAdditive(_additive);
-					return success("保存成功");
-				}
-				catch(Exception ex){
-					ex.printStackTrace();
-					return fail("保存失败");
-				}
-			}			
-		}
-	}
-	
-	/**
-	 * 删除使用记录
-	 * @param record
-	 * @return
-	 */
-	@PostMapping("/foodAddtive/school/deleteRecord")
-	public Object removeFoodAdditiveRecord(String id){
-		if(StringUtil.isBlank(id))
-			return fail("参数非法");
-		else{
-			UserInfo user = getTokenUser();
-			
-			FoodAdditive _additive = service.selectFoodAdditiveDetailInfo(id);
-			if(_additive == null || _additive.getOrgid().intValue()!=user.getOrgId().intValue()){
-				return fail("参数非法");
-			}
-			else{
-				service.deleteFoodAdditive(id);
-				return success("删除成功");
-			}			
-		}
-	}
-	
-	/**
-	 * 查看详情
+	 * 条件查看食品添加剂使用记录
+	 *
 	 * @param id
 	 * @return
 	 */
 	@GetMapping("/foodAddtive/school/getDetailInfo")
-	public Object getFoodAdditiveDetailInfo(String id){
-		if(StringUtil.isBlank(id))
-			return fail("参数非法");
-		else{
-			UserInfo user = getTokenUser();
-			
-			FoodAdditive _additive = service.selectFoodAdditiveDetailInfo(id);
-			if(_additive == null || _additive.getOrgid().intValue()!=user.getOrgId().intValue()){
-				return fail("参数非法");
-			}
-			else{
-				return success(_additive);
-			}			
-		}
+	public Object selectByPrimaryKey(String id) {
+		if (StringUtil.isBlank(id))
+			return new BaseRes("false");
+		FoodAdditive rseult = foodAdditiveService.selectByPrimaryKey(id);
+		return rseult;
 	}
 
+	/**
+	 * 删除商品添加剂使用记录
+	 *
+	 * @param id
+	 * @return
+	 */
+	@PostMapping("/foodAddtive/school/deleteRecord")
+	public Object deleteByPrimaryKey(String id) {
+		if (StringUtil.isBlank(id))
+			return fail("参数不能为空");
+		//TODO:判断记录是否存在
+		FoodAdditive food = new FoodAdditive();
+		food.setStatus(1);
+		food.setId(id);
+		food.setLastopdate(new Date());
+		food.setLastopuser(getTokenUser().getTrueName());
+		foodAdditiveService.updateByPrimaryKeySelective(food);
+		//TODO:日志
+		return success("删除成功");
+	}
+
+	/**
+	 * 修改食品添加剂使用
+	 *
+	 * @param food
+	 * @return
+	 */
+	@PostMapping("/foodAddtive/school/updateRecord")
+	public Object updateSave(FoodAdditive food) {
+		if (StringUtil.isBlank(food.getId()))
+			return fail("食品添加剂使用记录id不能为空，修改失败");
+		if (food.getUsedate() == null || food.getUsedate() == null || food.getLiableid() == null
+				|| food.getQty() == null || food.getPercent() == null) {
+			return fail("必填字段不能为空");
+		}
+		food.setLastopuser(getTokenUser().getTrueName());
+		food.setLastopdate(new Date());
+		foodAdditiveService.updateByPrimaryKeySelective(food);
+		//日志
+		return success("修改成功");
+	}
+
+	/**
+	 * 新增食品添加剂使用记录
+	 *
+	 * @param food
+	 * @return
+	 */
+	@RequestMapping("foodAddtive/school/saveRecord")
+	public Object addSave(FoodAdditive food) {
+		if (food.getFkOutdetailid() == null) {
+			return fail("出库ID不能为空");
+		}
+		if (food.getUsedate() == null) {
+			return fail("使用时间不能为空");
+		}
+		if (food.getMenutype() == null) {
+			return fail("餐食类别不能为空");
+		}
+		//TODO:字段名称可能有问题，后面在调整
+		if (food.getLiableid() == null) {
+			return fail("责任人ID不能为空");
+		}
+		if (food.getPersionLiable() == null) {
+			return fail("责任人名称不能为空");
+		}
+		if (food.getQty() == null) {
+			return fail("使用量不能空");
+		}
+		if (food.getPercent() == null) {
+			return fail("使用百分比不能为空");
+		}
+		food.setStatus(0);
+		food.setCreatedate(new Date());
+		food.setCreator(getTokenUser().getTrueName());
+		//设置id
+		food.setId(StringUtil.getUUID());
+		foodAdditiveService.insert(food);
+		//记录日志
+		return success("添加成功");
+	}
+
+	/**
+	 * 查询使用详情
+	 * @param code
+	 * @return
+	 */
+	@GetMapping("/foodAddtive/school/getUseDetailInfo")
+	public Object foodAdditiveMapper(String code) {
+		if (StringUtil.isBlank(code)) {
+			return fail("使用记录ID不能为空");
+		}
+		Map<String, Object> result = foodAdditiveService.getFoodAdditiveUseDetail(code);
+		System.out.println(result);
+		return result;
+	}
+
+	@PostMapping("/foodAddtive/school/upload")
+	public String upload(@RequestParam("file") MultipartFile file) {
+		if (file.isEmpty()) {
+			return "不能为空";
+		}
+		String fileName = file.getOriginalFilename();
+		String filePath = "D:\\";
+
+		File f = new File(filePath, fileName);
+		try {
+			file.transferTo(f);
+			return "上传成功";
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "上传失败！";
+	}
+
+	public static void main(String[] args) {
+
+	}
 }

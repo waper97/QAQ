@@ -1,7 +1,6 @@
 package com.yj.hqbz.model.schoolOperation;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,8 +25,6 @@ public class RetentionSample {
     
     private String orgName;
 
-    private String coolerId;
-
     private String cookerName;
 
     private String remark;
@@ -40,25 +37,7 @@ public class RetentionSample {
     
     private String conductor;//处理人
 
-	private List<RetentionSampleAttachment> attachmentList;//留样附件（图片）
-
-	public String getCoolerId() {
-		return coolerId;
-	}
-
-	public void setCoolerId(String coolerId) {
-		this.coolerId = coolerId;
-	}
-
-	public List<RetentionSampleAttachment> getAttachmentList() {
-		return attachmentList;
-	}
-
-	public void setAttachmentList(List<RetentionSampleAttachment> attachmentList) {
-		this.attachmentList = attachmentList;
-	}
-
-	public Integer getTemperature() {
+    public Integer getTemperature() {
 		return temperature;
 	}
 

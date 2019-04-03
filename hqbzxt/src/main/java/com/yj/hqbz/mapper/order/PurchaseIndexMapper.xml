@@ -164,7 +164,7 @@
   		and o.ORDER_TYPE = #{orderType,jdbcType=VARCHAR}
   	</if>  
   	<if test="orgid!=null">
-  		and o.ORG_ID = #{orgid,jdbcType=DECIMAL}
+  		and o.FK_ORGID = #{orgid,jdbcType=DECIMAL}
   	</if>
   	<if test="buyerOrgName!=null">
   		and instr(buyer.name,#{scopeType,jdbcType=VARCHAR})>0

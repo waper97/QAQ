@@ -5,7 +5,7 @@
     <id column="INDEXID" property="indexid" jdbcType="VARCHAR" />
     <result column="ATT_DATE" property="attDate" jdbcType="TIMESTAMP" />
     <result column="ATT_USERID" property="userid" jdbcType="VARCHAR" />
-    <result column="ATT_NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TRUENAME" property="name" jdbcType="VARCHAR" />
     <result column="COUNT" property="count" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="DECIMAL" />
     <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
@@ -29,8 +29,8 @@
     nvl((select count(d.result) from attendance_detail d where t.INDEXID=d.FK_INDEXID and d.result in (5,6,7)),0) as "lack"
   </sql>
   <sql id="getSummary">
-  case when t.count=(select count(d.result) from attendance_detail d where t.INDEXID=d.FK_INDEXID and d.result=0) then '全部合格'
-       when t.count=(select count(d.result) from attendance_detail d where t.INDEXID=d.FK_INDEXID and d.result in (1,2,3)) then '全部不合格'
+  case when t.count=(select count(result) from attendance_detail d where t.INDEXID=d.FK_INDEXID and result=0) then '全部合格'
+       when t.count=(select count(result) from attendance_detail d where t.INDEXID=d.FK_INDEXID and result in (1,2,3)) then '全部不合格'
        else '部分不合格' end as "summary"
   </sql>
   <sql id="orderBy">
@@ -93,11 +93,11 @@
   <select id="getList" parameterType="map" resultMap="BaseResultMap" >
   	select 
     t.INDEXID, t.ATT_DATE, t.ATT_USERID, t.COUNT, t.STATUS, t.FK_ORGID, t.CREATOR, t.CREATEDATE, t.LASTOPUSER, 
-    t.LASTOPDATE, o.NAME, h.TRUENAME as ATT_NAME,
-    <include refid="getSummary"/>, 
+    t.LASTOPDATE, o.NAME,
+    <include refid="getSummary"/>,
     <include refid="getResult" />
-    from ATTENDANCE_INDEX t,ORGANIZATION o,HQXT_USER h
-    where t.status=0 and t.FK_ORGID=o.ORGID and h.userid=t.att_userid
+    from ATTENDANCE_INDEX t,ORGANIZATION o
+    where t.status=0 and t.FK_ORGID=o.ORGID
     <if test="beginDate !=null">
     	and t.ATT_DATE >= #{beginDate,jdbcType=TIMESTAMP}
     </if>
@@ -116,8 +116,8 @@
     	and t.COUNT>(select count(1) from ATTENDANCE_DETAIL d 
     				 where d.FK_INDEXID=t.INDEXID and d.RESULT=0)
     </if>
-    <if test="name != null and name !=''">
-    	and exists (select 1 from practice_user p where o.ORGID=p.FK_ORGID and instr(p.name,#{name,jdbcType=VARCHAR})>0)
+    <if test="userid != null">
+    	and t.ATT_USERID=#{userid,jdbcType=VARCHAR}
     </if>
     <choose>
   		<when test="isManager == null">

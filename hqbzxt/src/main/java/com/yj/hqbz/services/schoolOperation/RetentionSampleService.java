@@ -3,13 +3,10 @@
 */
 package com.yj.hqbz.services.schoolOperation;
 
-import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.yj.hqbz.model.schoolOperation.RetentionSample;
-import com.yj.hqbz.model.schoolOperation.RetentionSampleAttachment;
-import org.apache.ibatis.annotations.Param;
 
 /**   
  * @Title: RetentionSampleService.java
@@ -28,8 +25,6 @@ public interface RetentionSampleService {
 	void updateSave(RetentionSample sample);
 
 	RetentionSample selectByPrimaryKey(String rsid);
-	//根据留样id查询留样附件
-	List<RetentionSampleAttachment> getRentionSampleAttachment(String rsid);
 
 	void deleteByPrimaryKey(RetentionSample sample);
 

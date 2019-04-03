@@ -122,10 +122,7 @@
          USERROLE = #{userRole,jdbcType=DECIMAL},
        </if>  
        <if test="orgManager != null" > 
-       	ORG_MANAGER = #{orgManager,jdbcType=DECIMAL},
-       </if>
-       <if test="headThumbnailUrl!=null and headThumbnailUrl!=''">
-        HEADTHUMBNAILURL = #{headThumbnailUrl,jdbcType=VARCHAR}
+       		ORG_MANAGER = #{orgManager,jdbcType=DECIMAL},
        </if>
   	</set>
   	 where userid = #{userid,jdbcType=VARCHAR}

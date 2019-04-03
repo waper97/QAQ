@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
-import com.yj.hqbz.model.schoolOperation.RetentionSampleAttachment;
-import com.yj.hqbz.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
@@ -42,40 +40,14 @@ public class RetentionSampleServiceImpl implements RetentionSampleService {
 
 	@Override
 	@Transactional
-	public void insert(RetentionSample sample ) {
-		//获取多个pc图片地址
-			List<RetentionSampleAttachment> attachments = sample.getAttachmentList();
-			for(RetentionSampleAttachment rsa:attachments){
-				rsa.setRsid(sample.getRsid());
-				rsa.setAttenId(StringUtil.getUUID());
-				retentionSampleMapper.insertAttachment(rsa);
-			}
+	public void insert(RetentionSample sample) {
 		retentionSampleMapper.insert(sample);
 	}
 
 	@Override
 	@Transactional
 	public void updateSave(RetentionSample sample) {
-
-		for(RetentionSampleAttachment attachment:sample.getAttachmentList()){
-			if(attachment.getAttenId() == null){
-				//如果附件图id为空，就是新增
-				attachment.setAttenId(StringUtil.getUUID());
-				attachment.setRsid(sample.getRsid());
-				retentionSampleMapper.insertAttachment(attachment);
-			}else{
-				//修改
-				retentionSampleMapper.updateAttachment(attachment);
-			}
-
-		}
-
 		retentionSampleMapper.updateByPrimaryKey(sample);
-	}
-
-	@Override
-	public List<RetentionSampleAttachment> getRentionSampleAttachment(String rsid) {
-		return retentionSampleMapper.getRentionSampleAttachment(rsid);
 	}
 
 	@Override

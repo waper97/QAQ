@@ -158,6 +158,8 @@ public class BaseController {
 		String ip= getRequestAddr();
 		//调用线程池
 		TmThreadPool.saveOperationLog(operationLogService, getTokenUserid(), getRequestAddr(),content,remark);
+
+
 	}
 	
 

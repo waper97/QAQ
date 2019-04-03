@@ -26,13 +26,6 @@
     <result column="CONDUCTOR" property="conductor" jdbcType="VARCHAR" />
     <result column="TEMPERATURE" property="temperature" jdbcType="DECIMAL" />
   </resultMap>
-
-	<resultMap id="RetentionSampleAttachmentResultMap" type="com.yj.hqbz.model.schoolOperation.RetentionSampleAttachment">
-		<id column="ID" property="attenId"/>
-		<result column="FK_RSID" property="rsid"/>
-		<result column="PIC_URL" property="picUrl"/>
-		<result column="THUMBNAIL_URL" property="thumbnailUrl"/>
-	</resultMap>
   <sql id="Base_Column_List" >
     RSID, RSCODE, MENUCODE, DISHNAME, RSDATE, MENUTYPE, FK_ORGID, COOKERNAME, REMARK, 
     QTY, RS_USER, RS_TIME, RS_END_TIME, PIC_URL, THUMBNAIL_URL, DELETESTATUS, CREATOR, 
@@ -193,18 +186,4 @@
   	</choose>
   	order by <include refid="orderBy" />
   </select>
-
-	<select id="getRentionSampleAttachment" resultMap="RetentionSampleAttachmentResultMap" parameterType="java.lang.String">
-			select ID,FK_RSID, PIC_URL,THUMBNAIL_URL from RETENTION_SAMPLE_ATTENCHMENT where FK_RSID = #{rsid}
-	</select>
-	<insert id="insertAttachment" parameterType="com.yj.hqbz.model.schoolOperation.RetentionSampleAttachment">
-		INSERT INTO RETENTION_SAMPLE_ATTENCHMENT
-		(ID, FK_RSID, PIC_URL, THUMBNAIL_URL)
-		 VALUES (#{attenId,jdbcType=VARCHAR}, #{rsid,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, #{thumbnailUrl,jdbcType=VARCHAR})
-	</insert>
-
-	<update id="updateAttachment" parameterType="com.yj.hqbz.model.schoolOperation.RetentionSampleAttachment">
-       UPDATE RETENTION_SAMPLE_ATTENCHMENT
-       SET  PIC_URL=#{picUrl}, THUMBNAIL_URL=#{thumbnailUrl} WHERE FK_RSID = #{rsid}
-	</update>
 </mapper>

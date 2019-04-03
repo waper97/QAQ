@@ -50,19 +50,6 @@
     where ID = #{id,jdbcType=VARCHAR}
   </select>
   
-  <select id="getReceiveListForDistributor" resultMap="BaseResultMap" parameterType="java.util.Map">
-  	select o.id,o.order_no,o.org_id,orz.name as ORG_NAME,o.order_type ,
-  	o.addtime ,o.order_status ,o.total,o.ship_price,o.receive_total 
-    from order_detail od 
-    left join ORDERFORM o on o.id=od.fk_orderid  
-    left join ORGANIZATION orz on o.org_id=orz.orgid
-    where o.deletestatus=0 
-    and o.order_status=#{orderStatus,jdbcType=DECIMAL}
-    and o.store_id=#{orgid,jdbcType=DECIMAL}
-  	
-    order by o.addtime desc
-  </select>
-  
   <select id="getOrderListForSeller" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select o.id,o.order_no,o.store_id,org.name as STORE_NAME,o.org_id,orz.name as ORG_NAME,o.order_type ,
   	o.addtime ,o.order_status ,o.total,o.ship_price,o.out_total,o.cost_total,o.receive_total,o.pay_status,
@@ -71,9 +58,6 @@
     left join ORGANIZATION org on o.store_id=org.orgid
     left join ORGANIZATION orz on o.org_id=orz.orgid
     where o.deletestatus=0 
-    <if test="orgid!=-1">
-    	and o.store_id=#{orgid,jdbcType=DECIMAL}
-    </if>    
     <if test="beginTime!=null and beginTime!=''">
   		<![CDATA[ and o.ADDTIME >= to_date(#{beginTime,jdbcType=DATE},'yyyy-MM-dd hh24:mi:ss')]]>
   	</if>
@@ -129,8 +113,12 @@
   <update id="updateReceiver" parameterType="java.util.Map">
   	update ORDERFORM
   		<set>
-  			RECEIVER = #{receiver,jdbcType=VARCHAR},		
+  			RECEIVER = #{receiver,jdbcType=VARCHAR},
+  		</set>
+  		<set>
   			RECEIVER_MOBILE = #{receiverMobile,jdbcType=VARCHAR},
+  		</set>
+  		<set>
   			RECEIVER_ADDRESS = #{receiverAddress,jdbcType=VARCHAR}
   		</set>
   		where ID = #{id,jdbcType=VARCHAR}
@@ -181,20 +169,13 @@
   	where o.user_id=#{userid,jdbcType=VARCHAR} and o.DELETESTATUS=0
   	<if test="orderStatus!=null">
   		<choose>
-    		<when test="orderStatus==0 or orderStatus==30 or orderStatus==40">
+    		<when test="orderStatus==0 or orderStatus==40">
     			<choose>
     				<when test="orderStatus==0">
     					and (ORDER_STATUS = 0 or ORDER_STATUS= 5)
     				</when>
     				<otherwise>
-    					<choose>
-    						<when test="orderStatus==30">
-    							and (ORDER_STATUS = 20 or ORDER_STATUS= 30)
-    						</when>
-    						<otherwise>
-    							and (ORDER_STATUS = 40 or ORDER_STATUS= 50)
-    						</otherwise>
-    					</choose>
+    					and (ORDER_STATUS = 40 or ORDER_STATUS= 50)
     				</otherwise>
     			</choose> 			
     		</when>
@@ -210,7 +191,7 @@
   	select o.id ,o.order_no,o.store_id,org.name as STORE_NAME,o.org_id,orz.name as ORG_NAME, order_type ,
   	o.addtime ,o.order_status ,o.total,o.ship_price,o.msg,
   	o.receive_total, EXPECT_RECV_BEGIN_TIME,EXPECT_RECV_END_TIME,RECEIVER,RECEIVER_MOBILE,RECEIVER_ADDRESS,
-  	count(1) as RECORD_COUNT,o.DELIVERY_DATE,o.RECEIVE_DATE
+  	count(1) as RECORD_COUNT
   	from ORDERFORM o 
   	left join ORGANIZATION org on o.store_id=org.orgid
   	left join ORGANIZATION orz on o.org_id=orz.orgid
@@ -218,18 +199,17 @@
   	where ID = #{id,jdbcType=VARCHAR} and od.deletestatus=0
   	group by o.id,o.order_no,o.store_id,o.org_id,o.order_type,o.msg,
   	o.addtime,o.order_status ,o.total,o.ship_price,o.receive_total,
-  	EXPECT_RECV_BEGIN_TIME,EXPECT_RECV_END_TIME,RECEIVER,RECEIVER_MOBILE,RECEIVER_ADDRESS,org.name,orz.name,
-  	o.DELIVERY_DATE,o.RECEIVE_DATE
+  	EXPECT_RECV_BEGIN_TIME,EXPECT_RECV_END_TIME,RECEIVER,RECEIVER_MOBILE,RECEIVER_ADDRESS,org.name,orz.name
   </select>
   
   
   <update id="deleteOrder" parameterType="com.yj.hqbz.model.order.OrderForm">
-  	 update ORDERFORM set DELETESTATUS=1 where ID = #{id,jdbcType=VARCHAR} 
+  	update ORDERFORM set DELETESTATUS=1 where ID = #{id,jdbcType=VARCHAR} 
   </update>
   
   <select id="getOrderFormByDetailid" parameterType="java.lang.String" resultMap="BaseResultMap">
-     select o.*,od.qty*od.price as DETAIL_TOTAL from ORDERFORM o left join ORDER_DETAIL od on o.ID = od.FK_ORDERID
-	 where od.DETAIL_ID=#{detailid,jdbcType=VARCHAR} and od.DELETESTATUS=0
+  	select o.*,od.qty*od.price as DETAIL_TOTAL from ORDERFORM o left join ORDER_DETAIL od on o.ID = od.FK_ORDERID
+	where od.DETAIL_ID=#{detailid,jdbcType=VARCHAR} and od.DELETESTATUS=0
   </select>
   
   <select id="getNotTraceNumByOrderid" parameterType="java.lang.String" resultType="java.lang.Integer">
@@ -239,12 +219,14 @@
   
   <select id="getOutTotalAndCostTotalByOrderid" parameterType="java.lang.String" resultMap="BaseResultMap">
   	 select sum(od.out_qty*od.price_basic) as OUT_TOTAL,sum(od.out_qty*od.costprice_basic) as COST_TOTAL from order_detail od 
-   	 where od.fk_orderid=#{orderid,jdbcType=VARCHAR} and od.deletestatus=0
+   		left join orderform o on od.fk_orderid=o.id
+   		where o.id=#{orderid,jdbcType=VARCHAR} and od.deletestatus=0
   </select>
   
   <select id="getReceiveTotalByOrderid"  parameterType="java.lang.String" resultMap="BaseResultMap">
   	select sum(od.real_qty*od.price_basic) as RECEIVE_TOTAL from order_detail od 
-   	where od.fk_orderid=#{orderid,jdbcType=VARCHAR} and od.deletestatus=0
+   		left join orderform o on od.fk_orderid=o.id
+   		where o.id=#{orderid,jdbcType=VARCHAR} and od.deletestatus=0
   </select>
   
   <select id="getOrderCountByUser" parameterType="java.lang.String" resultMap="BaseResultMap">

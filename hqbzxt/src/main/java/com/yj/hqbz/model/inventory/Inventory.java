@@ -57,10 +57,6 @@ public class Inventory {
     private String warehouse;
     
     private String status;
-    
-    private String voucherCode;
-    
-    private String liablePerson;
 
 	public String getId() {
 		return id;
@@ -253,22 +249,6 @@ public class Inventory {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getVoucherCode() {
-		return voucherCode;
-	}
-
-	public void setVoucherCode(String voucherCode) {
-		this.voucherCode = voucherCode;
-	}
-
-	public String getLiablePerson() {
-		return liablePerson;
-	}
-
-	public void setLiablePerson(String liablePerson) {
-		this.liablePerson = liablePerson;
 	}
 
    

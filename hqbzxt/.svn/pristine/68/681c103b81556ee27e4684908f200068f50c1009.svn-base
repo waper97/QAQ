@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.goods.GoodsTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.goods.GoodsType" >
+    <id column="TYPEID" property="typeid" jdbcType="DECIMAL" />
+    <result column="FK_PARENTID" property="parentid" jdbcType="DECIMAL" />
+    <result column="TYPENAME" property="typeName" jdbcType="VARCHAR" />
+    <result column="ALIASNAME" property="aliasName" jdbcType="VARCHAR" />
+    <result column="BUSINESSATTR" property="businessAttr" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="SORTNO" property="sortNo" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
+    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TYPEID, FK_PARENTID, TYPENAME, ALIASNAME, BUSINESSATTR, REMARK, SORTNO, STATUS, CREATOR, 
+    CREATEDATE, LASTOPUSER, LASTOPDATE
+  </sql>
+  <sql id="orderBy">
+  	<choose>
+  		<when test="orderBy!=null and orderBy!=''">
+  			<choose>
+		  		<when test="orderBy=='typeName' or orderBy=='aliasName' or orderBy=='creator' or orderBy=='lastOpUser' ">
+		  			NLSSORT(#{orderBy},'NLS_SORT=SCHINESE_PINYIN_M') 
+		  		</when>
+		  		<otherwise>
+		  			#{orderBy}
+		  		</otherwise>
+		  	</choose>
+		  	<if test="orderType==1">
+		  		desc
+		  	</if>
+  		</when>
+  		<otherwise>
+  			SORTNO
+  		</otherwise>
+  	</choose>
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from GOODSTYPE
+    where TYPEID = #{typeid,jdbcType=DECIMAL}
+  </select>
+  <insert id="addGoodsType" parameterType="com.yj.hqbz.model.goods.GoodsType">
+  	insert into GOODSTYPE(TYPEID, FK_PARENTID, 
+  	TYPENAME, ALIASNAME, BUSINESSATTR, REMARK, SORTNO, STATUS, CREATOR, 
+    CREATEDATE)
+  	values (GOODSTYPE_SEQ_ID.NEXTVAL,#{parentid,jdbcType=DECIMAL}, 
+  	#{typeName,jdbcType=VARCHAR},
+  	#{aliasName,jdbcType=VARCHAR},#{businessAttr,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR}, 	
+  	#{sortNo},
+  	#{status,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},sysdate
+  	)
+  </insert>
+  <delete id="deleteGoodsType" parameterType="java.lang.Integer">
+  	UPDATE GOODSTYPE
+  	SET 
+  	STATUS = 2
+  	where TYPEID = #{typeid,jdbcType=DECIMAL}
+  </delete>
+  
+  <select id="selectMaxSortNoByParentTypeId" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select max(sortno) 
+  	from goodstype 
+  	where fk_parentid = #{parentId}
+  	and STATUS !=2
+  </select>
+  
+  <update id="updateGoodsType" parameterType="com.yj.hqbz.model.goods.GoodsType">
+  	update GOODSTYPE t
+  	set t.TYPENAME=#{typeName,jdbcType=VARCHAR},
+  	t.ALIASNAME=#{aliasName,jdbcType=VARCHAR},
+  	t.LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
+  	t.LASTOPDATE=sysdate
+  	where t.TYPEID=#{typeid}
+  </update>
+  
+  <select id="getAllGoodsTypes" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from GOODSTYPE where STATUS = 0
+  </select>
+  
+  <update id="updateSortno" parameterType="com.yj.hqbz.model.goods.GoodsType">
+  	update GOODSTYPE t
+  	set t.SORTNO = #{sortNo}
+  	where t.TYPEID = #{typeid}
+  </update>
+  
+  <update id="disabledChildrenGoodsType" parameterType="java.lang.Integer">
+  	update GOODSTYPE  g set g.STATUS =1
+	where exists( select * from (select * 
+		from GOODSTYPE 		
+    	WHERE STATUS = 0 
+		start with FK_PARENTID = #{parentId}
+		connect by prior  TYPEID = FK_PARENTID  ) t where g.TYPEID=t.TYPEID)
+  </update>
+  
+  <select id="selectSwitchGoodsType" resultMap="BaseResultMap" parameterType="java.util.Map" >
+  	select * from (select *
+  	from GOODSTYPE
+  	where STATUS!=2
+  	and FK_PARENTID = #{parentId}
+  	<choose>
+  		<when test="sortType==1">
+  			and SORTNO > #{sortno}
+  		</when>
+  		<otherwise>
+  			and SORTNO &lt;#{sortno}
+  		</otherwise>
+  	</choose>
+  	order by SORTNO)
+  	where rownum = 1
+  </select>
+  
+  <select id="getGoodsTypesByParentId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from GOODSTYPE 
+    where 1=1
+    <if test="parentId!=null">
+    	and FK_PARENTID = #{parentId,jdbcType=DECIMAL}
+    </if>
+    <if test="businessAttr!=null">
+    	and BUSINESSATTR = #{businessAttr,jdbcType=DECIMAL}
+    </if>
+    <if test="includeDisabled!=null">
+    	<choose>
+    		<when test="includeDisabled==0">
+    			and STATUS = 0
+    		</when>
+    		<otherwise>
+    			and STATUS!=2
+    		</otherwise>
+    	</choose>
+    </if>
+    order by <include refid="orderBy"/>
+  </select>
+  
+  <select id="selectBySortNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	select
+  	<include refid="Base_Column_List"/>
+  	from GOODSTYPE
+  	where SORTNO=#{sortno} and STATUS = 0
+  </select>
+  
+  <update id="updateGoodsTypeStatus">
+  	update GOODSTYPE t
+  	set t.STATUS=#{1}
+  	where t.TYPEID=#{0}
+  </update>
+  <select id="getChildGoodsTypes" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+  	select 
+  	<include refid="Base_Column_List"/>
+	from GOODSTYPE
+ 	start with TYPEID = #{typeid,jdbcType=DECIMAL}
+ 	connect by prior TYPEID = FK_PARENTID
+ 	order by FK_PARENTID
+  </select>
+  <select id="getFatherTree" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+  	select t.typeid ,t.typename from (select * 
+    from GOODSTYPE     
+      WHERE STATUS = 0 
+    start with TYPEID  = #{typeid,jdbcType=DECIMAL}
+    connect by prior  FK_PARENTID = TYPEID) t where t.status=0
+  </select>
+</mapper>

@@ -22,14 +22,12 @@
     <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
     <result column="CREDENTIAL_URL" property="credentialUrl" jdbcType="VARCHAR" />
     <result column="CREDENTAIL_THUM_URL" property="credentailThumUrl" jdbcType="VARCHAR" />
-    <result column="ENTRY_BEGIN_DATE"  property="entryBeginDate" jdbcType="TIMESTAMP"/>
-    <result column="ENTRY_END_DATE"  property="entryEndDate" jdbcType="TIMESTAMP"/>
     <result column="WARNING" property="warning" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     USERID, USER_CODE, NAME, SEX, PHONE, BIRTHDAY, ENTRY_DATE, BEGIN_DATE, END_DATE, 
     PIC_URL, THUMBNAIL_URL, FK_ORGID, STATUS, CREATOR, CREATEDATE, LASTOPUSER, 
-    LASTOPDATE,CREDENTIAL_URL,CREDENTAIL_THUM_URL,ENTRY_BEGIN_DATE,ENTRY_END_DATE
+    LASTOPDATE,CREDENTIAL_URL,CREDENTAIL_THUM_URL
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -278,12 +276,6 @@
   	<if test="endDate != null">
   		and p.END_DATE &lt;=#{endDate,jdbcType=TIMESTAMP}
   	</if>
-    <if test="entryBeginDate != null">
-      and p.ENTRY_BEGIN_DATE>=#{entryBeginDate,jdbcType=TIMESTAMP}
-    </if>
-    <if test="entryEndDate != null">
-      and p.ENTRY_END_DATE &lt;=#{entryEndDate,jdbcType=TIMESTAMP}
-    </if>
   	<choose>
   		<when test="isManager == null">
   			and p.FK_ORGID = #{orgid,jdbcType=DECIMAL}

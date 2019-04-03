@@ -1,24 +1,25 @@
 package com.yj.hqbz.mapper.schoolOperation;
 
+import com.yj.hqbz.model.schoolOperation.FoodAdditive;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 
-import com.yj.hqbz.model.schoolOperation.FoodAdditive;
-import com.yj.hqbz.model.schoolOperation.FoodAdditiveOut;
-
 public interface FoodAdditiveMapper {
-	
-    int deleteByPrimaryKey(String id);
-
+    //添加食品添加剂使用记录
     int insert(FoodAdditive record);
 
+    int insertSelective(FoodAdditive record);
+    //获取食品添加剂出库记录
     FoodAdditive selectByPrimaryKey(String id);
-
+    //修改食品添加剂出库记录
     int updateByPrimaryKeySelective(FoodAdditive record);
-    
-    //获取食品添加时使用记录
-    List<FoodAdditive> selectFoodAdditiveListByParam(Map<String,Object> param);
-    
-    //获取食品添加剂出库(未使用完)记录
-    List<FoodAdditiveOut> getFoodAdditiveOutListByParam(Map<String,Object> param);
+
+    int updateByPrimaryKey(FoodAdditive record);
+    //查询食品添加剂使用记录
+    List<FoodAdditive> getFoodAdditiveList(Map<String, Object> param);
+    //查看商品添加剂使用记录详情
+    Map<String,Object>  getFoodAdditiveUseDetail(@Param("code")String code);
+
 }

@@ -34,9 +34,6 @@ public class ReturnOrder {
     private BigDecimal outTotal;
     private BigDecimal buyOrderRealQty;	//购货订单实际收货数量
     private BigDecimal buyOrderRealTotal;	//购货订单实际收货金额
-    private String receiver;
-    private String receiverMobile;
-    private String receiverAddress;
     
     
     private String goodsName;
@@ -386,30 +383,5 @@ public class ReturnOrder {
 	public void setCostPriceBasic(BigDecimal costPriceBasic) {
 		this.costPriceBasic = costPriceBasic;
 	}
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getReceiverMobile() {
-        return receiverMobile;
-    }
-
-    public void setReceiverMobile(String receiverMobile) {
-        this.receiverMobile = receiverMobile;
-    }
-
-    public String getReceiverAddress() {
-        return receiverAddress;
-    }
-
-    public void setReceiverAddress(String receiverAddress) {
-        this.receiverAddress = receiverAddress;
-    }
-	
 
 }

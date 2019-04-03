@@ -62,21 +62,12 @@ public class TraceController extends BaseController{
 		return success(traceService.getTraceDetail(traceid,time));
 	}
 	
-	@RequestMapping("/getSchoolAllStock")
-	public Object getSchoolAllStock(DataGridModel model) {
-		PageInfo<Map<String, Object>> info = traceService.getSchoolAllStock( model.getPage(), model.getRows());
-		return new BaseRes("获取成功！", info.getTotal(), info.getPages(), info.getList());
-	}
-	
 	@RequestMapping("/getSchoolStock")
-	public Object getSchoolStock(String goodsTypeid,Integer areaid,Integer schoolid) {
-		if("-1".equals(goodsTypeid)) {
-			return fail("商品分类至少选一个！");
+	public Object getSchoolStock(String goodsTypeid,Integer areaid) {
+		if(StringUtil.isBlank(goodsTypeid)) {
+			return fail("分类不能为空！");
 		}
-		Map<String,Object> param=new HashMap<String,Object>();
-		param.put("schoolid", schoolid);
-		param.put("areaid", areaid);
-		List<Map<String,Object>> info = traceService.getSchoolStock(goodsTypeid,param);
+		List<Map<String,Object>> info = traceService.getSchoolStock(goodsTypeid,areaid);
 		return new BaseRes("获取成功！", info);
 	}
 	

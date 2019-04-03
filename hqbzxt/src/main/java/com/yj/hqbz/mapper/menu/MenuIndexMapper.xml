@@ -22,18 +22,6 @@
     <result column="CHECKDATE" property="checkDate" jdbcType="TIMESTAMP" />
     <result column="CHECKOPINION" property="checkOpinion" jdbcType="VARCHAR" />
   </resultMap>
-
-	<resultMap id="MenuInfoResultMap" type="com.yj.hqbz.model.menu.MenuInfo">
-		<id property="menuid" column="ID"/>
-		<result property="orgid" column="ORGID"/>
-		<result property="menuCode" column="MENUCODE"/>
-		<result property="menuType" column="MENUTYPE"/>
-		<result property="mealsDate" column="MEALSDATE"/>
-		<result property="dishName" column="DISHNAME"/>
-		<result property="cookerid" column="COOKERID"/>
-		<result property="cookerName" column="COOKERNAME"/>
-		<result property="materialName" column="MATERIALNAME"/>
-	</resultMap>
   <sql id="Base_Column_List" >
     ID, FK_ORGID, MENUCODE, MENUTYPE, MEALSDATE, COUNT, REMARK, STATUS, DELETESTATUS, 
     CREATOR, CREATEDATE, LASTOPUSER, LASTOPDATE, CHECKERID, CHECKNAME, CHECKDATE, CHECKOPINION
@@ -87,20 +75,11 @@
     from MENU_INDEX
     where ID = #{menuid,jdbcType=VARCHAR}
   </select>
-
-	<select id="getMenuInfoAndMenuDishAndMaterial" resultMap="MenuInfoResultMap" parameterType="java.lang.String">
-	  SELECT A.ID,A.FK_ORGID,A.MENUCODE,A.MENUTYPE,A.MEALSDATE,
-	  B.DISHNAME,B.COOKERID,B.COOKERNAME,C.MATERIALNAME,D.ORGID from MENU_INDEX A
-	  LEFT JOIN MENU_DISH B  on A.ID = B.FK_MENUID
-	  LEFT  JOIN MENU_MAIN_MATERIAL C on B.DISHID = C.FK_DISHID
-	  LEFT JOIN ORGANIZATION D on D.ORGID = A.FK_ORGID
-	  WHERE  A.ID = #{menuid,jdbcType=VARCHAR}
-	</select>
   
   <select id="getMenuList" parameterType="java.util.Map" resultMap="BaseResultMap">
   	select * from (
 	  	select m.ID,m.FK_ORGID,m.MENUCODE,m.MENUTYPE,m.MEALSDATE,m.STATUS,m.CREATOR,m.CREATEDATE,
-	  		   m.COUNT,m.CHECKERID,m.CHECKNAME,m.CHECKDATE,o.NAME as ORGNAME,ob.YJORGNAME as SCHOOLNAME
+	  		   m.CHECKERID,m.CHECKNAME,m.CHECKDATE,o.NAME as ORGNAME,ob.YJORGNAME as SCHOOLNAME
 	  	from MENU_INDEX m,ORGANIZATION o
 	  	left join ORG_BELONG ob on instr(','||ob.FK_ORGIDS||',',','||o.ORGID||',')>0
 	  	where m.FK_ORGID=o.ORGID and m.DELETESTATUS=0 <include refid="param"/>
@@ -116,7 +95,7 @@
   		   #{checkOpinion,jdbcType=VARCHAR}
   	from MENU_INDEX m
   	where m.DELETESTATUS=0 and m.FK_ORGID=#{orgid,jdbcType=DECIMAL}
-  		  and instr(m.MENUCODE,#{menuCode,jdbcType=VARCHAR})>0
+  		  and instr(i.VOUCHERCODE,substr(m.MENUCODE,0,8))>0
   </insert>
   
   <update id="updateSave" parameterType="com.yj.hqbz.model.menu.MenuIndex">
@@ -135,7 +114,7 @@
   
   <update id="checkBill" parameterType="com.yj.hqbz.model.menu.MenuIndex">
   	update MENU_INDEX
-  	set STATUS=#{status,jdbcType=DECIMAL},
+  	set STATUS=#{status,jdbcType=DECIMAL}
   		CHECKERID=#{checkerid,jdbcType=VARCHAR},
   		CHECKNAME=#{checkName,jdbcType=VARCHAR},
   		CHECKDATE=#{checkDate,jdbcType=TIMESTAMP},
@@ -147,7 +126,7 @@
   
   <update id="deleteBill" parameterType="com.yj.hqbz.model.menu.MenuIndex">
   	update MENU_INDEX
-  	set DELETESTATUS=#{deleteStatus,jdbcType=DECIMAL},
+  	set DELETESTATUS=#{deleteStatus,jdbcType=DECIMAL}
   		LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
   		LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
   	where ID = #{menuid,jdbcType=VARCHAR}

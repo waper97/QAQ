@@ -151,12 +151,10 @@ public class MenuController extends BaseController{
 		menu.setCheckOpinion(checkOpinion);
 		menu.setLastOpUser(menu.getCheckName());
 		menu.setLastOpDate(menu.getCheckDate());
-		menu.setCheckerid(this.getTokenUser().getUserid());
-		menu.setCheckName(this.getTokenUser().getUserName());
 		menuService.checkBill(menu);
 		//日志
 		saveJournalLog("审核菜单", "menuid:"+menu.getMenuid());
-		return success("审核成功！");
+		return success("删除成功！");
 		
 	}
 	

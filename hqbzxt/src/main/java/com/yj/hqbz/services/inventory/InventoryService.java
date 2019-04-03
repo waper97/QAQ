@@ -25,7 +25,4 @@ public interface InventoryService {
 	void addInventory(List<Inventory> stocks,BVoucherIndex index);
 	
 	void outStock(BVoucherIndex index);
-	
-	PageInfo<Map<String,Object>> getOutInDetail(String id,int page,int rows);
-	
 }

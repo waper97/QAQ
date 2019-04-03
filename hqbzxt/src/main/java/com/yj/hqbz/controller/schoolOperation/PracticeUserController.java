@@ -14,7 +14,10 @@ import javax.annotation.Resource;
 import oracle.net.aso.p;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.yj.common.controller.BaseController;
@@ -43,25 +46,14 @@ public class PracticeUserController extends BaseController {
 	 * 查询人员列表
 	 */
 	@GetMapping("/people/school/getList")
-	public Object getList(String name,String beginDate,String endDate,String entryBeginDate,String entryEndDate,Integer orgid,Integer sex,String entryDate,DataGridModel model){
+	public Object getList(String name,String beginDate,String endDate,Integer orgid,Integer sex,String entryDate,DataGridModel model){
 		Date beginTime=null;
 		Date endTime=null;
-		Date entryBeginTime = null;
-		Date entryEndTime = null;
 		if(StringUtil.isNotBlank(beginDate)) {
 			beginTime=DateUtil.getDateByStr(beginDate.trim()+" 00:00:00", "yyyy-MM-dd HH:mm:ss");
 		}
 		if(StringUtil.isNotBlank(endDate)) {
 			endTime=DateUtil.getDateByStr(endDate.trim()+" 23:59:59", "yyyy-MM-dd HH:mm:ss");
-		}
-		if(StringUtil.isNotBlank(entryBeginDate)) {
-			entryBeginTime=DateUtil.getDateByStr(entryBeginDate.trim()+" 00:00:00", "yyyy-MM-dd HH:mm:ss");
-		}
-		if(StringUtil.isNotBlank(entryEndDate)) {
-			entryEndTime=DateUtil.getDateByStr(entryEndDate.trim()+" 23:59:59", "yyyy-MM-dd HH:mm:ss");
-		}
-		if(entryBeginTime !=null && entryBeginTime !=null && entryBeginTime.after(entryEndTime)){
-			return fail("入职开始时间不能大于入职结束时间");
 		}
 		if(beginTime!=null&&endTime!=null&&beginTime.after(endTime)) {
 			return fail("开始时间不能大于结束时间！");
@@ -72,9 +64,7 @@ public class PracticeUserController extends BaseController {
 		param.put("endDate", endTime);
 		param.put("orderBy", model.getOrderBy());
 		param.put("orderType", model.getOrderType());
-		param.put("entryBeginDate",entryBeginTime);
-		param.put("entryEndDate",entryEndTime);
-
+		
 		if(orgid != null){
 			param.put("orgid", orgid);
 		}else{
@@ -108,44 +98,7 @@ public class PracticeUserController extends BaseController {
 		PageInfo<PracticeUser> pageInfo=practiceUserService.getList(param,model.getPage(),model.getRows());
 		return new BaseRes("OK",pageInfo.getTotal(),pageInfo.getPages(),pageInfo.getList());
 	}
-	/**
-	 * 条件查询人员(不分页)
-	 * @param name
-	 * @param orgid
-	 * @return
-	 */
-	@RequestMapping("/people/school/getListByCondition")
-	public Object getListByCondition(String name,Integer orgid){
-		Map<String,Object> params = new HashMap<>();
-		if(name == null){
-			return fail("查询条件不能为空");
-		}
-		if(orgid !=null){
-			params.put("orgid", orgid);
-		}else{
-			//获取当前登录用户,如果为食堂级用户，则设置orgid为对应的食堂，否则为校级，如果有则查询对应orgid，没有则查询所有。
-			UserInfo user = this.getTokenUser();
-			Integer orgId = user.getOrgId();
-			if( user.getUserRole().intValue() ==2){//角色是食堂
-				Integer isManager = user.getOrgManager();//是否是食堂管理员
-				if(isManager==1){
-					//是食堂管理员，获取学校机构id,再获取学校所有食堂机构id,sql处理
-					params.put("isManager", 1);
-					params.put("orgid", orgId);
-				}else if(isManager==0){
-					//不是食堂管理员,获取用户所在食堂机构的对应人员
-					params.put("orgid", orgId);
-				}else{
-					return fail("食堂管理员参数非法，查询失败！");
-				}
-			}else{
-				return fail("非食堂用户，查询失败！");
-			}
-		}
-		params.put("name",name);
-		return practiceUserService.getListByCondition(params);
-	}
-
+	
 	/**
 	 * 新增人员保存
 	 */

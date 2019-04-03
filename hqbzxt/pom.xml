@@ -156,11 +156,15 @@
    			<artifactId>spring-boot-starter-velocity</artifactId>
    			<version>1.2.2.RELEASE</version>
 		</dependency>
+<!--lombok-->
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.2.0.1.0</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.4</version>
+			<scope>provided</scope>
 		</dependency>
+
+
 	</dependencies>	
 	
 	<build>
@@ -186,10 +190,13 @@
 	        </resource>
 	    </resources>
 		<plugins>
-			<!-- <plugin>
+			 <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin> -->
+				 <configuration>
+					 <fork>false</fork>
+				 </configuration>
+			</plugin>
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

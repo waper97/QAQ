@@ -1,7 +1,6 @@
 package com.yj.hqbz.services.impl.trace;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import com.yj.hqbz.mapper.trace.GoodsTracePicMapper;
 import com.yj.hqbz.model.goods.GoodsType;
 import com.yj.hqbz.model.trace.GoodsTracePic;
 import com.yj.hqbz.services.trace.TraceService;
-import com.yj.hqbz.util.StringUtil;
 @Service
 public class TraceServiceImpl implements TraceService{
 
@@ -37,7 +35,7 @@ public class TraceServiceImpl implements TraceService{
 		int count=0;
 		List<Map<String, Object>> area = orgBelongMapper.getBelongArea();
 		for (Map<String, Object> map : area) {
-			List<Map<String, Object>> school = orgBelongMapper.getSchoolByArea(map);
+			List<Map<String, Object>> school = orgBelongMapper.getSchoolByArea(Integer.valueOf(map.get("areaid").toString()));
 			count+=school.size();
 			map.put("school", school);
 		}
@@ -101,58 +99,25 @@ public class TraceServiceImpl implements TraceService{
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("traceid", traceid);
 		map.put("time", time);
-		List<Map<String,Object>> outStock = traceMapper.getTraceByOutStock(map);
-		for (int i = 0; i < outStock.size(); i++) {
-			if(i!=0) {
-				outStock.get(i).put("isTransverse", 1);
-			}
-			outStock.get(i).put("pic", goodsPic);
-			
-			//使用
-			String detailid = outStock.get(i).get("detailid").toString();
-			List<Map<String,Object>> additiveUse= traceMapper.getAdditiveUse(detailid);
-			if(additiveUse!=null&&additiveUse.size()>0) {
-				for (Map<String, Object> use : additiveUse) {
-					use.put("pic", goodsPic);
-				}
-				outStock.get(i).put("use",additiveUse);
-			}else {
-				List<Map<String,Object>> goodsUse= traceMapper.getGoodsUse(detailid);
-				for (Map<String, Object> use : additiveUse) {
-					use.put("pic", goodsPic);
-				}
-				outStock.get(i).put("use",goodsUse);
-			}
+		Map<String, Object> outStock = traceMapper.getTraceByOutStock(map);
+		if(outStock!=null) {
+			outStock.put("pic", goodsPic);
+			list.add(outStock);
 		}
-		list.addAll(outStock);
+		//使用
+		Map<String, Object> use = traceMapper.getTraceByUse(map);
+		if(use!=null) {
+			outStock.put("pic", goodsPic);
+			list.add(use);
+		}
 		return list;
 	}
 	
-	public PageInfo<Map<String, Object>> getSchoolAllStock(int page, int rows) {
-		PageHelper.startPage(page, rows);
-		//学校
-		List<Map<String, Object>> list = orgBelongMapper.getSchoolByArea(null);
-		Map<String, Object> param=new HashMap<String, Object>();
-		for (Map<String, Object> map : list) {
-			param.put("schoolid", map.get("schoolid"));
-			map.put("stock", traceMapper.getSchoolStock(param));
-		}
-		PageInfo<Map<String, Object>> info=new PageInfo<Map<String, Object>>(list);
-		return info;
-	}
-	
-	public List<Map<String, Object>> getSchoolStock(String goodsTypeid,Map<String,Object> paramMap) {
+	public List<Map<String, Object>> getSchoolStock(String goodsTypeid,Integer areaid) {
 		//分类
-		List<String> typeArray;
-		if(StringUtil.isBlank(goodsTypeid)||"0".equals(goodsTypeid)) {
-			typeArray=traceMapper.getParentGoodsTypeid();
-			
-		}else {
-			typeArray=Arrays.asList(goodsTypeid.split(","));
-		}
-
+		String[] typeArray = goodsTypeid.split(",");
 		//学校
-		List<Map<String, Object>> schoolList = orgBelongMapper.getSchoolByArea(paramMap);
+		List<Map<String, Object>> schoolList = orgBelongMapper.getSchoolByArea(areaid);
 		//查询参数
 		Map<String, Object> param=new HashMap<String, Object>();
 		for (Map<String, Object> map : schoolList) {

@@ -102,9 +102,9 @@
   <select id="getDetailListByOrderid" resultMap="BaseResultMap" parameterType="java.lang.String">
   	select od.detail_id ,od.org_skuid ,g.goodsname as GOODSNAME,
   	g.aliasname as ALIASNAME,s.property as PROPERTY,od.unit,od.spec_info,
-	od.qty ,od.qty_basic ,od.price ,od.price_basic,od.auixunit,od.OUT_QTY,
+	od.qty ,od.qty_basic ,od.price ,od.price_basic,od.auixunit,
     sp.pic_url as PICURL,sp.thumbnail_url as THUMBNAILURL,od.REAL_QTY,od.DIFF_QTY, od.DIFF_QTY*od.price_basic as DIFF_TOTAL,
-    od.qty*od.price as TOTAL,od.DIFF_STATUS,od.DIFF_DESC
+    od.qty*od.price as TOTAL
   	from ORDER_DETAIL od
   	left join ORG_SKU os on od.org_skuid=os.id
 	left join SKU s on s.skuid=os.fk_skuid
@@ -163,7 +163,7 @@
   	select od.detail_id,od.org_skuid,g.goodsname as GOODSNAME,g.aliasname as ALIASNAME,s.property as PROPERTY,
     od.unit,od.spec_info,od.qty,od.qty_basic,od.real_qty,od.price,od.price_basic,od.out_qty,od.return_qty,od.COSTPRICE,od.COSTPRICE_BASIC,
     od.return_real_qty,od.auixunit,sp.pic_url as PICURL,sp.thumbnail_url as THUMBNAILURL,od.detail_status,od.diff_status,
-    od.real_qty*od.price as REAL_TOTAL, od.out_qty*od.price_basic as OUTTOTAL,od.TRACE_STATUS,od.DIFF_DESC    
+    od.real_qty*od.price as REAL_TOTAL, od.out_qty*od.price_basic as OUTTOTAL,od.TRACE_STATUS    
     from ORDER_DETAIL od 
     left join ORG_SKU os on od.org_skuid=os.id
     left join SKU s on s.skuid=os.fk_skuid

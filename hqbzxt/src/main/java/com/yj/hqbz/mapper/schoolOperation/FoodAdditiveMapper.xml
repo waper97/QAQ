@@ -1,249 +1,235 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yj.hqbz.mapper.schoolOperation.FoodAdditiveMapper" >
-  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.schoolOperation.FoodAdditive" >
-    <id column="ID" property="id" jdbcType="VARCHAR" />
-    <result column="CODE" property="code" jdbcType="VARCHAR" />
-    <result column="LIABLEID" property="aliableid" jdbcType="VARCHAR" />
-    <result column="PERSION_LIABLE" property="personAliable" jdbcType="VARCHAR" />
-    <result column="MENUTYPE" property="menuType" jdbcType="DECIMAL" />
-    <result column="USEDATE" property="useDate" jdbcType="TIMESTAMP" />
-    <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
-    <result column="ORGNAME" property="orgName" jdbcType="VARCHAR" />
-    <result column="FK_OUTDETAILID" property="detailid" jdbcType="VARCHAR" />
-    <result column="QTY" property="qty" jdbcType="DECIMAL" />
-    <result column="PERCENT" property="percent" jdbcType="DECIMAL" />
-    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
-    <result column="STATUS" property="status" jdbcType="DECIMAL" />
-    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
-    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
-    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
-    
-    <result column="PRODATE" property="prodate" jdbcType="TIMESTAMP" />
-    <result column="INTERVALDATE" property="intervaldate" jdbcType="TIMESTAMP" />
-    <result column="USELIFEDATE" property="uselifedate" jdbcType="TIMESTAMP" />
-    <result column="OUTDATE" property="outDate" jdbcType="TIMESTAMP" />
-    <result column="GOODSNAME" property="goodsName" jdbcType="VARCHAR" />
-    <result column="ALIASNAME" property="aliasName" jdbcType="VARCHAR" />
-    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
-    <result column="TYPENAME" property="goodsType" jdbcType="VARCHAR" />
-    <result column="OUTORDERNO" property="outOrderNo" jdbcType="VARCHAR" />
-    <result column="RELORDERNO" property="relOrderNo" jdbcType="VARCHAR" />
-    <result column="OUTQTY" property="outQty" jdbcType="DECIMAL" />
-    <result column="availableQty" property="availableQty" jdbcType="DECIMAL" />
-    <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR" />
-    <result column="OUTPERSON" property="outPerson" jdbcType="VARCHAR" />
-    <result column="PURPOSE" property="purpose" jdbcType="DECIMAL" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.hqbz.mapper.schoolOperation.FoodAdditiveMapper">
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.schoolOperation.FoodAdditive">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="LIABLEID" jdbcType="VARCHAR" property="liableid" />
+    <result column="PERSION_LIABLE" jdbcType="VARCHAR" property="persionLiable" />
+    <result column="MENUTYPE" jdbcType="DECIMAL" property="menutype" />
+    <result column="USEDATE" jdbcType="TIMESTAMP" property="usedate" />
+    <result column="FK_ORGID" jdbcType="DECIMAL" property="fkOrgid" />
+    <result column="FK_OUTDETAILID" jdbcType="VARCHAR" property="fkOutdetailid" />
+    <result column="QTY" jdbcType="DECIMAL" property="qty" />
+    <result column="PERCENT" jdbcType="DECIMAL" property="percent" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+    <result column="CREATEDATE" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="LASTOPUSER" jdbcType="VARCHAR" property="lastopuser" />
+    <result column="LASTOPDATE" jdbcType="TIMESTAMP" property="lastopdate" />
   </resultMap>
-  
-  
-  <resultMap id="AddtiveOutMap" type="com.yj.hqbz.model.schoolOperation.FoodAdditiveOut" >    
-    <result column="ID" property="detailid" jdbcType="VARCHAR" />
-    <result column="PRODATE" property="prodate" jdbcType="TIMESTAMP" />
-    <result column="INTERVALDATE" property="intervaldate" jdbcType="TIMESTAMP" />
-    <result column="USELIFEDATE" property="uselifedate" jdbcType="TIMESTAMP" />
-    <result column="OUTDATE" property="outDate" jdbcType="TIMESTAMP" />
-    <result column="GOODSNAME" property="goodsName" jdbcType="VARCHAR" />
-    <result column="ALIASNAME" property="aliasName" jdbcType="VARCHAR" />
-    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
-    <result column="TYPENAME" property="goodsType" jdbcType="VARCHAR" />
-    <result column="OUTORDERNO" property="outOrderNo" jdbcType="VARCHAR" />
-    <result column="RELORDERNO" property="relOrderNo" jdbcType="VARCHAR" />
-    <result column="OUTQTY" property="outQty" jdbcType="DECIMAL" />
-    <result column="availableQty" property="availableQty" jdbcType="DECIMAL" />
-    <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR" />
-    <result column="OUTPERSON" property="outPerson" jdbcType="VARCHAR" />
-    <result column="PURPOSE" property="purpose" jdbcType="DECIMAL" />
-    <result column="GOODSSTATUS" property="goodsStatus" jdbcType="DECIMAL" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-    ID, CODE, LIABLEID, PERSION_LIABLE, MENUTYPE, USEDATE, FK_ORGID, FK_OUTDETAILID, 
+
+  <sql id="Base_Column_List">
+    ID, CODE, LIABLEID, PERSION_LIABLE, MENUTYPE, USEDATE, FK_ORGID, FK_OUTDETAILID,
     QTY, PERCENT, REMARK, STATUS, CREATOR, CREATEDATE, LASTOPUSER, LASTOPDATE
   </sql>
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-	select a.*,g.goodsname,gt.typename,g.unit,bi.vouchercode as "outOrderNo",
-		bd.qty as outQty,bi.businessdate as outDate,bd.warehouse,bd.prodate,bd.intervaldate,
-		bd.uselifedate,bi.purpose,bi.liableperson as outPerson,i.orderno as relOrderNo
-    from FOOD_ADDITIVE a,BVOUCHER_INDEX bi,BVOUCHER_DETAIL bd,GOODS g,GOODSTYPE gt,INVENTORY i
-    where a.ID = #{id,jdbcType=VARCHAR}
-    	and a.fk_outdetailid = bd.id
-    	and bi.id = bd.fk_indexid
-    	and bd.fk_goodsid = g.goodsid
-    	and g.fk_goodstypeid = gt.typeid
-    	and bd.fk_traceid = i.fk_traceid
-    	and a.status = 0
-    union
-    select a.*,g.goodsname,gt.typename,g.unit,bi.vouchercode as "outOrderNo",
-		bd.qty as outQty,bi.businessdate as outDate,bd.warehouse,bd.prodate,bd.intervaldate,
-		bd.uselifedate,bi.purpose,bi.liableperson as outPerson,i.orderno as relOrderNo
-    from FOOD_ADDITIVE a,BVOUCHER_INDEX bi,BVOUCHER_DETAIL bd,SPORADIC_GOODS g,GOODSTYPE gt,INVENTORY i
-    where a.ID = #{id,jdbcType=VARCHAR}
-    	and a.fk_outdetailid = bd.id
-    	and bi.id = bd.fk_indexid
-    	and bd.fk_goodsid = g.goodsid
-    	and g.fk_goodstypeid = gt.typeid
-    	and bd.fk_traceid = i.fk_traceid
-    	and a.status = 0
+
+
+  <select id="getFoodAdditiveList" resultMap="BaseResultMap" parameterType="map">
+    select  <include refid="Base_Column_List"/>
+    from FOOD_ADDITIVE
   </select>
-  
-  <select id="selectFoodAdditiveListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
-  	select * from (
-	  	select a.*,g.goodsname,g.unit
-	    from FOOD_ADDITIVE a,BVOUCHER_DETAIL bd,GOODS g
-	    where a.fk_outdetailid = bd.id
-	    	and bd.fk_goodsid = g.goodsid
-	    	<if test="orgid!=null">
-	    		and a.FK_ORGID = #{orgid,jdbcType=DECIMAL}
-	    	</if>
-	    	<if test="menuType!=null">
-	    		and a.MENUTYPE = #{menuType,jdbcType=DECIMAL}
-	    	</if>
-	    	<if test="useDate!=null and useDate!=''">
-	    		and to_char(a.USEDATE,'yyyy-MM-dd') = #{useDate,jdbcType=VARCHAR}
-	    	</if>
-	    	<if test="aliable!=null and aliable!=''">
-	    		and instr(a.PERSION_LIABLE,#{aliable})>0
-	    	</if>
-	    	and a.status = 0
-	    	
-	    	union
-	    	select a.*,g.goodsname,g.unit
-		    from FOOD_ADDITIVE a,BVOUCHER_DETAIL bd,SPORADIC_GOODS g
-		    where a.fk_outdetailid = bd.id
-		    	and bd.fk_goodsid = g.goodsid
-		    	<if test="orgid!=null">
-		    		and a.FK_ORGID = #{orgid,jdbcType=DECIMAL}
-		    	</if>
-		    	<if test="menuType!=null">
-		    		and a.MENUTYPE = #{menuType,jdbcType=DECIMAL}
-		    	</if>
-		    	<if test="useDate!=null and useDate!=''">
-		    		and to_char(a.USEDATE,'yyyy-MM-dd') = #{useDate,jdbcType=VARCHAR}
-		    	</if>
-		    	<if test="aliable!=null and aliable!=''">
-		    		and instr(a.PERSION_LIABLE,#{aliable})>0
-		    	</if>
-		    	and a.status = 0
-	    )	
-    order by CREATEDATE desc
+
+  <select id="getFoodAdditiveUseDetail" resultType="map">
+         select a.CODE,a.LIABLEID,a.MENUTYPE,a.PERSION_LIABLE,b.INDATE,b.WAREHOUSE,c.LIABLEPERSON as OUTLIABLEPERSON,
+         b.INTERVALDATE,b.USELIFEDATE,a.REMARK,a.LASTOPUSER,a.LASTOPDATE,a.USEDATE,b.PRODATE,a.QTY,a.PERCENT,a.CREATEDATE,
+         a.CREATOR from FOOD_ADDITIVE a
+         LEFT JOIN  BVOUCHER_DETAIL b on a.FK_OUTDETAILID = b.ID
+         LEFT JOIN  BVOUCHER_INDEX c on c.id = b.FK_INDEXID
+         where a.code =#{code} and  a.STATUS = 0
   </select>
-  
-  
-  <select id="getFoodAdditiveOutListByParam" resultMap="AddtiveOutMap" parameterType="java.util.Map">
-	select i.*,(i.outQty-i.useQty) as availableQty,
-	case when i.uselifedate &lt;sysdate then '2'
-	when i.intervaldate &lt; sysdate then '1'
-	else '0' end  as goodsStatus
- from (
-		select bd.ID,g.goodsname,gt.typename,g.unit,bi.vouchercode as outOrderNo,
-			bd.qty as outQty,bi.businessdate as outDate,bd.warehouse,bd.prodate,bd.intervaldate,
-			bd.uselifedate,bi.purpose,bi.liableperson as outPerson,i.orderno as relOrderNo,sum(a.qty) as useQty
-	    from BVOUCHER_INDEX bi,SPORADIC_GOODS g,GOODSTYPE gt,INVENTORY i,BVOUCHER_DETAIL bd
-	    left join FOOD_ADDITIVE a on bd.id = a.fk_outdetailid
-	    where bi.id = bd.fk_indexid
-	    	and bi.STATUS = 0
-	    	and bi.VOUCHERTYPE = 1
-	    	and bd.fk_goodsid = g.goodsid
-	    	and g.fk_goodstypeid = gt.typeid
-	    	and bd.fk_traceid = i.fk_traceid
-	    <if test="orgid!=null">
-	    	and bi.FK_ORGID = #{orgid,jdbcType=DECIMAL}
-	    </if>
-	    <if test="goodsTypeid!=null">
-	    and exists(select 1 from (select * from GOODSTYPE 
-        	WHERE STATUS = 0 
-      		start with TYPEID  = #{goodsTypeid,jdbcType=DECIMAL}
-      		connect by prior  FK_PARENTID = TYPEID) t where t.typeid=g.fk_goodstypeid)  
-	    </if>
-	  	group by bd.ID,g.goodsname,gt.typename,g.unit,bi.vouchercode,
-			bd.qty,bi.businessdate,bd.warehouse,bd.prodate,bd.intervaldate,
-			bd.uselifedate,bi.purpose,bi.liableperson,i.orderno
-			
-		union
-		
-		select bd.ID,g.goodsname,gt.typename,g.unit,bi.vouchercode as outOrderNo,
-			bd.qty as outQty,bi.businessdate as outDate,bd.warehouse,bd.prodate,bd.intervaldate,
-			bd.uselifedate,bi.purpose,bi.liableperson as outPerson,i.orderno as relOrderNo,sum(a.qty) as useQty
-	    from BVOUCHER_INDEX bi,GOODS g,GOODSTYPE gt,INVENTORY i,BVOUCHER_DETAIL bd
-	    left join FOOD_ADDITIVE a on bd.id = a.fk_outdetailid
-	    where bi.id = bd.fk_indexid
-	    	and bi.STATUS = 0
-	    	and bi.VOUCHERTYPE = 1
-	    	and bd.fk_goodsid = g.goodsid
-	    	and g.fk_goodstypeid = gt.typeid
-	    	and bd.fk_traceid = i.fk_traceid
-	    <if test="orgid!=null">
-	    	and bi.FK_ORGID = #{orgid,jdbcType=DECIMAL}
-	    </if>
-	    <if test="goodsTypeid!=null">
-	    and exists(select 1 from (select * from GOODSTYPE 
-        	WHERE STATUS = 0 
-      		start with TYPEID  = #{goodsTypeid,jdbcType=DECIMAL} 
-      		connect by prior  FK_PARENTID = TYPEID) t where t.typeid=g.fk_goodstypeid)
-	    </if>
-	  	group by bd.ID,g.goodsname,gt.typename,g.unit,bi.vouchercode,
-			bd.qty,bi.businessdate,bd.warehouse,bd.prodate,bd.intervaldate,
-			bd.uselifedate,bi.purpose,bi.liableperson,i.orderno
-		
-	  ) i
-    where (i.outqty>i.useQty or i.useQty is null)
-    order by i.outDate
-  </select>
-  
-  <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    update FOOD_ADDITIVE
-    set STATUS = 1
-    where ID = #{id,jdbcType=VARCHAR}
-  </update>
-  
-  <insert id="insert" parameterType="com.yj.hqbz.model.schoolOperation.FoodAdditive" >
-    insert into FOOD_ADDITIVE (ID, CODE, LIABLEID, 
-      PERSION_LIABLE, MENUTYPE, USEDATE, 
-      FK_ORGID, FK_OUTDETAILID, QTY, 
-      PERCENT, REMARK, STATUS, 
-      CREATOR, CREATEDATE)
-    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{aliableid,jdbcType=VARCHAR}, 
-      #{personAliable,jdbcType=VARCHAR}, #{menuType,jdbcType=DECIMAL}, #{useDate,jdbcType=TIMESTAMP}, 
-      #{orgid,jdbcType=DECIMAL}, #{detailid,jdbcType=VARCHAR}, #{qty,jdbcType=DECIMAL}, 
-      #{percent,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, 
-      #{creator,jdbcType=VARCHAR},sysdate)
+  <insert id="insertSelective" parameterType="com.yj.hqbz.model.schoolOperation.FoodAdditive">
+    insert into FOOD_ADDITIVE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="liableid != null">
+        LIABLEID,
+      </if>
+      <if test="persionLiable != null">
+        PERSION_LIABLE,
+      </if>
+      <if test="menutype != null">
+        MENUTYPE,
+      </if>
+      <if test="usedate != null">
+        USEDATE,
+      </if>
+      <if test="fkOrgid != null">
+        FK_ORGID,
+      </if>
+      <if test="fkOutdetailid != null">
+        FK_OUTDETAILID,
+      </if>
+      <if test="qty != null">
+        QTY,
+      </if>
+      <if test="percent != null">
+        PERCENT,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="creator != null">
+        CREATOR,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="lastopuser != null">
+        LASTOPUSER,
+      </if>
+      <if test="lastopdate != null">
+        LASTOPDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="liableid != null">
+        #{liableid,jdbcType=VARCHAR},
+      </if>
+      <if test="persionLiable != null">
+        #{persionLiable,jdbcType=VARCHAR},
+      </if>
+      <if test="menutype != null">
+        #{menutype,jdbcType=DECIMAL},
+      </if>
+      <if test="usedate != null">
+        #{usedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fkOrgid != null">
+        #{fkOrgid,jdbcType=DECIMAL},
+      </if>
+      <if test="fkOutdetailid != null">
+        #{fkOutdetailid,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="percent != null">
+        #{percent,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastopuser != null">
+        #{lastopuser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastopdate != null">
+        #{lastopdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
   </insert>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="com.yj.hqbz.model.schoolOperation.FoodAdditive" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.hqbz.model.schoolOperation.FoodAdditive">
     update FOOD_ADDITIVE
-    <set >      
-      <if test="aliableid != null" >
-        LIABLEID = #{aliableid,jdbcType=VARCHAR},
+    <set>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
       </if>
-      <if test="personAliable != null" >
-        PERSION_LIABLE = #{personAliable,jdbcType=VARCHAR},
+      <if test="liableid != null">
+        LIABLEID = #{liableid,jdbcType=VARCHAR},
       </if>
-      <if test="menuType != null" >
-        MENUTYPE = #{menuType,jdbcType=DECIMAL},
+      <if test="persionLiable != null">
+        PERSION_LIABLE = #{persionLiable,jdbcType=VARCHAR},
       </if>
-      <if test="useDate != null" >
-        USEDATE = #{useDate,jdbcType=TIMESTAMP},
+      <if test="menutype != null">
+        MENUTYPE = #{menutype,jdbcType=DECIMAL},
       </if>
-      <if test="qty != null" >
+      <if test="usedate != null">
+        USEDATE = #{usedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fkOrgid != null">
+        FK_ORGID = #{fkOrgid,jdbcType=DECIMAL},
+      </if>
+      <if test="fkOutdetailid != null">
+        FK_OUTDETAILID = #{fkOutdetailid,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null">
         QTY = #{qty,jdbcType=DECIMAL},
       </if>
-      <if test="percent != null" >
+      <if test="percent != null">
         PERCENT = #{percent,jdbcType=DECIMAL},
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         REMARK = #{remark,jdbcType=VARCHAR},
-      </if>      
-      <if test="lastopuser != null" >
-        LASTOPUSER = #{lastOpUser,jdbcType=VARCHAR},
       </if>
-      <if test="lastopdate != null" >
-        LASTOPDATE = #{lastOpDate,jdbcType=TIMESTAMP},
+      <if test="status != null">
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null">
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastopuser != null">
+        LASTOPUSER = #{lastopuser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastopdate != null">
+        LASTOPDATE = #{lastopdate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}
   </update>
- 
+  <update id="updateByPrimaryKey" parameterType="com.yj.hqbz.model.schoolOperation.FoodAdditive">
+    update FOOD_ADDITIVE
+    set CODE = #{code,jdbcType=VARCHAR},
+      LIABLEID = #{liableid,jdbcType=VARCHAR},
+      PERSION_LIABLE = #{persionLiable,jdbcType=VARCHAR},
+      MENUTYPE = #{menutype,jdbcType=DECIMAL},
+      USEDATE = #{usedate,jdbcType=TIMESTAMP},
+      FK_ORGID = #{fkOrgid,jdbcType=DECIMAL},
+      FK_OUTDETAILID = #{fkOutdetailid,jdbcType=VARCHAR},
+      QTY = #{qty,jdbcType=DECIMAL},
+      PERCENT = #{percent,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=DECIMAL},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=TIMESTAMP},
+      LASTOPUSER = #{lastopuser,jdbcType=VARCHAR},
+      LASTOPDATE = #{lastopdate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from FOOD_ADDITIVE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.yj.hqbz.model.schoolOperation.FoodAdditive">
+    insert into FOOD_ADDITIVE (ID, CODE, LIABLEID, 
+      PERSION_LIABLE, MENUTYPE, USEDATE, 
+      FK_ORGID, FK_OUTDETAILID, QTY, 
+      PERCENT, REMARK, STATUS, 
+      CREATOR, CREATEDATE, LASTOPUSER, 
+      LASTOPDATE)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{liableid,jdbcType=VARCHAR}, 
+      #{persionLiable,jdbcType=VARCHAR}, #{menutype,jdbcType=DECIMAL}, #{usedate,jdbcType=TIMESTAMP}, 
+      #{fkOrgid,jdbcType=DECIMAL}, #{fkOutdetailid,jdbcType=VARCHAR}, #{qty,jdbcType=DECIMAL}, 
+      #{percent,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, 
+      #{creator,jdbcType=VARCHAR}, #{createdate,jdbcType=TIMESTAMP}, #{lastopuser,jdbcType=VARCHAR}, 
+      #{lastopdate,jdbcType=TIMESTAMP})
+  </insert>
 </mapper>

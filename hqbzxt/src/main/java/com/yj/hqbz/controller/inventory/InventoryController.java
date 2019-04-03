@@ -142,14 +142,4 @@ public class InventoryController extends BaseController{
 		saveJournalLog("出库商品", "bVchid:"+index.getId());
 		return success("出库成功！");
 	}
-	
-	@RequestMapping("/stock/getOutInDetail")
-	public Object getOutInDetail(String id,DataGridModel model) {
-		if(StringUtil.isBlank(id)) {
-			return fail("库存ID不能为空！");
-		}
-		PageInfo<Map<String,Object>> info = inventoryService.getOutInDetail(id, model.getPage(), model.getRows());	
-		return new BaseRes("获取成功！", info.getTotal(), info.getPages(), info.getList());
-	}
-	
 }

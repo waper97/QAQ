@@ -15,9 +15,7 @@ public interface TraceService {
 	
 	List<Map<String,Object>> getTraceDetail(String traceid,String time);
 	
-	PageInfo<Map<String, Object>> getSchoolAllStock(int page,int rows);
-	
-	List<Map<String,Object>> getSchoolStock(String goodsTypeid,Map<String,Object> param);
+	List<Map<String,Object>> getSchoolStock(String goodsTypeid,Integer areaid);
 	
 	List<Map<String,Object>> getExpireFood(Map<String,Object> map);
 	

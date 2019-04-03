@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
-import com.yj.hqbz.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
@@ -53,13 +52,7 @@ public class DiningOutServiceImpl implements DiningOutService {
 	@Override
 	@Transactional
 	public void updateSave(DiningOut dining) {
-		if(dining.getId() == null){
-			dining.setStatus(0);//新增时未出餐
-			dining.setId(StringUtil.getUUID());
-			diningOutMapper.insert(dining);
-		}else{
-			diningOutMapper.updateByPrimaryKey(dining);
-		}
+		diningOutMapper.updateByPrimaryKey(dining);
 		//已出餐状态，同步存入至留样
 		RetentionSample rs=retentionSampleMapper.selectByMenuCode(dining.getMenuCode());
 		if(rs==null){

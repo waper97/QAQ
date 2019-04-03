@@ -67,19 +67,10 @@ public class FileUtil {
 		    return "/trace/realpic/" + strFile;
 		}
 		else if(type==6){
-		    return "/trace/qualification/" + strFile;
-		}
-		else if(type==7){  //学校留样
-		    return "/school/sample/" + strFile;
-		}
-		else if(type==8){	//学校人员
-		    return "/school/user/" + strFile;
-		}
-		else if(type==99){
-			return "/other/"+strFile;
+		    return "/trace/qualification" + strFile;
 		}
 		else{
-			return strFile;
+			return null;
 		}
 	}
 	

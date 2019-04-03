@@ -1,17 +1,11 @@
 package com.yj.hqbz.services.impl.menu;
 
-import java.awt.*;
-import java.util.*;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.yj.common.model.BaseRes;
-import com.yj.hqbz.model.menu.MenuInfo;
-import com.yj.hqbz.model.schoolOperation.RetentionSample;
-import com.yj.hqbz.model.user.UserInfo;
-import com.yj.hqbz.services.schoolOperation.RetentionSampleService;
-import com.yj.hqbz.util.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +37,6 @@ public class MenuServiceImpl implements MenuService{
 	private MenuMainMaterialMapper menuMainMaterialMapper;
 	@Resource
 	DiningOutMapper diningOutMapper;
-
-	@Resource
-	RetentionSampleService retentionSampleService;
 	
 	public MenuIndex selectByPrimaryKey(String menuid) {
 		return menuIndexMapper.selectByPrimaryKey(menuid);
@@ -124,7 +115,7 @@ public class MenuServiceImpl implements MenuService{
 		//自动生成出餐记录
 		if(menu.getStatus().intValue()==2){
 			List<MenuDish> dishList = menuDishMapper.getDishByMenu(menu.getMenuid());
-			for(MenuDish dish:dishList){
+			for(MenuDish dish:dishList){				
 				DiningOut out = new DiningOut();
 				out.setCreator(dish.getCreator());
 				out.setCreateDate(new Date());
@@ -139,23 +130,6 @@ public class MenuServiceImpl implements MenuService{
 				out.setId(StringUtil.getUUID());
 				diningOutMapper.insert(out);
 			}
-            List<MenuInfo> infoList = menuIndexMapper.getMenuInfoAndMenuDishAndMaterial(menu.getMenuid());
-			for(MenuInfo info :infoList){
-                //自动生成留样记录
-                RetentionSample rs = new RetentionSample();
-                rs.setRsCode(DateUtil.getStrByDate(new Date(), "yyyyMMdd"));
-                rs.setMenuCode(menu.getMenuid());
-                rs.setDishName(info.getDishName());
-                rs.setMenuType(Integer.valueOf(info.getMenuType()));
-                rs.setOrgid(Integer.valueOf(info.getOrgid()));
-                rs.setLastOpDate(new Date());
-                rs.setCreateDate(new Date());
-                rs.setRsDate(new Date());
-                rs.setRsTime(new Date());
-                rs.setRsEndTime(new Date());
-                rs.setRsid(StringUtil.getUUID());
-                retentionSampleService.insert(rs);
-            }
 		}
 		return 1;
 	}

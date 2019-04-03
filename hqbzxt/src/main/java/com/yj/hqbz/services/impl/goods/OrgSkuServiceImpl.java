@@ -150,7 +150,6 @@ public class OrgSkuServiceImpl implements OrgSkuService{
 			sku.setGoodsTypeid(g.getGoodsTypeid());
 			sku.setCostPriceBasic(sku.getCostPrice().divide(sku.getAuixRate(),8,RoundingMode.HALF_UP));
 			sku.setCreator(user.getTrueName());
-			sku.setSpecInfo(sku.getAuixRate()+sku.getUnit()+"/"+sku.getAuixUnit());
 			orgSkuMapper.insertOrgSku(sku);
 		}
 	}
@@ -165,11 +164,9 @@ public class OrgSkuServiceImpl implements OrgSkuService{
 				sku.setGoodsTypeid(g.getGoodsTypeid());
 				sku.setCostPriceBasic(sku.getCostPrice().divide(sku.getAuixRate(),8,RoundingMode.HALF_UP));
 				sku.setCreator(user.getTrueName());
-				sku.setSpecInfo(sku.getAuixRate()+sku.getUnit()+"/"+sku.getAuixUnit());
 				orgSkuMapper.insertOrgSku(sku);
 			}
 			else{
-			    sku.setSpecInfo(sku.getAuixRate()+sku.getUnit()+"/"+sku.getAuixUnit());
 				sku.setCostPriceBasic(sku.getCostPrice().divide(sku.getAuixRate(),8,RoundingMode.HALF_UP));
 				sku.setLastOpUser(user.getTrueName());
 				orgSkuMapper.updateOrgSku(sku);

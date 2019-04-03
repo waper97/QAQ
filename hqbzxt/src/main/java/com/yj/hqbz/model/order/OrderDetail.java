@@ -48,7 +48,7 @@ public class OrderDetail {
     
     private Integer createPurchaseOrder = 0;
     
-    private Integer instoreStatus = 0;
+    private Integer instoreStatus;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date instoreDate;

@@ -105,17 +105,8 @@ public class GoodsTypeServiceImpl implements GoodsTypeService {
 	@Override
 	public PageInfo<GoodsType> getGoodsTypeByParam(Map<String, Object> param,
 			int page, int rows) {
-		List<GoodsType> temp = new ArrayList<>();
 		PageHelper.startPage(page,rows);
 		List<GoodsType> list = goodsTypeMapper.getGoodsTypesByParentId(param);
-		if(!list.isEmpty()){
-			for(GoodsType goods : list){
-				List<GoodsType> type = getIsExistChilden(Integer.valueOf(goods.getTypeid())); //是否有下一级
-				if(!type.isEmpty()){
-					goods.setChildren(temp);
-				}
-			}
-		}
 		PageInfo<GoodsType> pageInfo=new PageInfo<>(list);
 		return pageInfo;
 	}
@@ -167,11 +158,7 @@ public class GoodsTypeServiceImpl implements GoodsTypeService {
 		return goodsTypeMapper.getFatherTree(typeid);
 	}
 
+	
+	
 
-
-
-
-	private List<GoodsType> getIsExistChilden(Integer parentid){
-		return  goodsTypeMapper.getIsExistChilden(parentid);
-	}
 }

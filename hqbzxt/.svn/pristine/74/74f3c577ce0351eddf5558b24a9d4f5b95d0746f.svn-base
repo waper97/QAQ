@@ -1,0 +1,24 @@
+package com.yj.hqbz.services.trace;
+
+import java.util.List;
+import java.util.Map;
+
+import com.github.pagehelper.PageInfo;
+
+public interface TraceService {
+	Map<String,Object> getAllSchool();
+	
+	List<Map<String,Object>> getOrgBySchool(Integer schoolid);
+	
+	Map<String,Object> getFoodBySchool(Map<String,Object> map);
+	
+	List<Map<String,Object>> getTraceDetail(String traceid);
+	
+	List<Map<String,Object>> getSchoolStock(String goodsTypeid,Integer areaid);
+	
+	List<Map<String,Object>> getExpireFood(Map<String,Object> map);
+	
+	PageInfo<Map<String,Object>> getMaterial(Map<String,Object> param,int page,int rows);
+	
+	List<Map<String,Object>> getStoreList();
+}

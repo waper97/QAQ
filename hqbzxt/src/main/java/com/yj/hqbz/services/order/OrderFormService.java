@@ -43,7 +43,7 @@ public interface OrderFormService {
     //卖家确定订单
     void confirmOrderForSeller(OrderForm of,Integer status,String reason,UserInfo user);
     //卖家取消订单
-    void cancelOrderForSeller(OrderForm of,UserInfo user,String reason);
+    void cancelOrderForSeller(OrderForm of,UserInfo user);
     //卖家批量付款
     void payForSeller(List<OrderForm> orderList);
     //卖家发货
@@ -72,6 +72,4 @@ public interface OrderFormService {
     /******************************配送员****************************************/
    //配送员确认差异
     int confirmDiffForDistributor(Map<String,Object> map,UserInfo user);
-    //配送员获取待收货列表
-    PageInfo<OrderForm> getReceiveListForDistributor(Map<String,Object> map,int page,int rows);
 }

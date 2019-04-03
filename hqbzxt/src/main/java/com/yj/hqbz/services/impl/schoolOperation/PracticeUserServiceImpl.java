@@ -44,12 +44,6 @@ public class PracticeUserServiceImpl implements PracticeUserService {
 	}
 
 	@Override
-	public List<PracticeUser> getListByCondition(Map<String, Object> params) {
-		List<PracticeUser> list = practiceUserMapper.getList(params);
-		return list;
-	}
-
-	@Override
 	@Transactional
 	public void addUser(PracticeUser user) {
 		practiceUserMapper.insert(user);
@@ -71,7 +65,5 @@ public class PracticeUserServiceImpl implements PracticeUserService {
 	public void deletePeople(PracticeUser people) {
 		practiceUserMapper.deleteByPrimaryKey(people);
 	}
-
-
-
+	
 }

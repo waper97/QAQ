@@ -26,7 +26,7 @@ public class HttpURLConnectionUtil {
 		try {
 			URL dataUrl = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) dataUrl.openConnection();
-			con.setRequestMethod("GET");
+			con.setRequestMethod("POST");
 			con.setUseCaches(false);//不使用缓存
 //			con.setRequestProperty( "Content-Type", "application/json" );  
 //			con.setRequestProperty( "Content-Type", "application/x-java-serialized-object;charset=UTF-8" );  

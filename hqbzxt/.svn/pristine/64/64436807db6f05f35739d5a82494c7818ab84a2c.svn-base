@@ -1,0 +1,107 @@
+package com.yj.hqbz.controller.trace;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.yj.common.controller.BaseController;
+import com.yj.common.model.BaseRes;
+import com.yj.common.model.DataGridModel;
+import com.yj.hqbz.services.trace.TraceService;
+import com.yj.hqbz.util.StaticUtils;
+import com.yj.hqbz.util.StringUtil;
+import com.yj.hqbz.web.Global;
+@RestController
+@RequestMapping("/trace/supervise")
+public class TraceController extends BaseController{
+
+	@Resource
+	private TraceService traceService;
+	
+	@RequestMapping("/getAllSchool")
+	public Object getAllSchool() {
+		return success(traceService.getAllSchool());
+	}
+	
+	@RequestMapping("/getOrgBySchool")
+	public Object getOrgBySchool(Integer schoolid) {
+		if(schoolid==null) {
+			return fail("学校ID不能为空！");
+		}
+		return success(traceService.getOrgBySchool(schoolid));
+	}
+	
+	
+	@RequestMapping("/getFoodByOrgid")
+	public Object getFoodBySchool(String orgid,String time) {
+		if(StringUtil.isBlank(orgid)||StringUtil.isBlank(time)) {
+			return fail("食堂ID和日期不能为空！");
+		}
+		
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("orgid", orgid);
+		map.put("time", time);
+		map.put("additiveTypid", Global.getSystemParamIntValueByKey(StaticUtils.S_ADDITIVE_TYPEID_CODE));
+		Map<String,Object> list=traceService.getFoodBySchool(map);
+		return success(list);
+	}
+	
+	@RequestMapping("/getTraceDetail")
+	public Object getTraceDetail(String traceid) {
+		if(traceid==null) {
+			return fail("溯源ID不能为空！");
+		}
+		return success(traceService.getTraceDetail(traceid));
+	}
+	
+	@RequestMapping("/getSchoolStock")
+	public Object getSchoolStock(String goodsTypeid,Integer areaid) {
+		if(StringUtil.isBlank(goodsTypeid)) {
+			return fail("分类不能为空！");
+		}
+		List<Map<String,Object>> info = traceService.getSchoolStock(goodsTypeid,areaid);
+		return new BaseRes("获取成功！", info);
+	}
+	
+	@RequestMapping("/getExpireFood")
+	public Object getExpireFood(String goodsTypeid,Integer areaid,String outDate,DataGridModel model) {
+		if(StringUtil.isBlank(goodsTypeid)||StringUtil.isBlank(outDate)) {
+			return fail("分类、日期不能为空！");
+		}
+		Map<String,Object> param=new HashMap<String,Object>();
+		param.put("goodsTypeid", goodsTypeid);
+		param.put("areaid", areaid);
+		param.put("outDate", outDate);
+		param.put("orderType", model.getOrderType());
+		List<Map<String,Object>> info = traceService.getExpireFood(param);
+		return new BaseRes("获取成功！", info);
+	}
+	
+	
+	@RequestMapping("/getMaterial")
+	public Object getMaterial(String goodsTypeid,Integer areaid,String buyDate,DataGridModel model) {
+		if(StringUtil.isBlank(goodsTypeid)||StringUtil.isBlank(buyDate)) {
+			return fail("分类、日期不能为空！");
+		}
+		Map<String,Object> param=new HashMap<String,Object>();
+		param.put("goodsTypeid", goodsTypeid);
+		param.put("areaid", areaid);
+		param.put("buyDate", buyDate);
+		param.put("orderType", model.getOrderType());
+		PageInfo<Map<String,Object>> info = traceService.getMaterial(param, model.getPage(), model.getRows());
+		return new BaseRes("获取成功！", info.getTotal(), info.getPages(), info.getList());
+	}
+	
+	@RequestMapping("/getStoreList")
+	public Object getStoreList() {
+		List<Map<String,Object>> info = traceService.getStoreList();
+		return new BaseRes("获取成功！", info);
+	}
+	
+}

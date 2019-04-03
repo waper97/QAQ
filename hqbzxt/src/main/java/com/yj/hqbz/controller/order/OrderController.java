@@ -154,7 +154,7 @@ public class OrderController extends BaseController {
         for(Map<String,Object> map:goodsList){
             String detailid = CommUtil.null2String(map.get("detailid"));
             OrderForm of = orderService.getOrderFormByDetailid(detailid);
-            if(of==null||(of.getOrderStatus()!=OrderStatusConst.WAIT_RECEVIE&&of.getOrderStatus()!=OrderStatusConst.CONFIRM_DIFF)||!of.getId().equals(orderid)){
+            if(of==null||of.getOrderStatus()!=OrderStatusConst.WAIT_RECEVIE||!of.getId().equals(orderid)){
                 return fail("详情数据与订单不一致！");
             }
         }
@@ -190,7 +190,7 @@ public class OrderController extends BaseController {
      * @return
      */
     @PostMapping("/order/seller/cancelOrder")
-    public Object cancelOrderForSeller(String orderid,String reason){
+    public Object cancelOrderForSeller(String orderid){
         UserInfo user = getTokenUser();
         if(StringUtils.isBlank(orderid)){
             return fail("参数错误！");
@@ -199,7 +199,7 @@ public class OrderController extends BaseController {
         if(order == null||order.getOrderStatus()==OrderStatusConst.HAVE_RECEIVE){
             return fail("订单无效！"); 
         }
-        orderService.cancelOrderForSeller(order, user,reason);
+        orderService.cancelOrderForSeller(order, user);
         return success("取消订单成功！");
     }
     /**
@@ -294,8 +294,7 @@ public class OrderController extends BaseController {
      */
     @GetMapping("/order/seller/getList")
     public Object getOrderListForSeller(@RequestParam Map<String,Object> map,DataGridModel grid){
-        UserInfo user = getTokenUser();
-        map.put("orgid", user.getOrgId());
+        getTokenUser();
         PageInfo<OrderForm> pageList = orderService.getOrderListForSeller(map, grid.getPage(), grid.getRows());
         return new BaseRes("获取列表成功！",pageList.getTotal(),pageList.getPages(),pageList.getList());
     }
@@ -321,7 +320,7 @@ public class OrderController extends BaseController {
     @PostMapping("/order/seller/saveOrder")
     public Object saveOrderForSeller(String addressInfo,String deliverInfo){
         getTokenUser();
-        if(StringUtils.isBlank(deliverInfo)){
+        if(StringUtils.isBlank(deliverInfo)||StringUtils.isBlank(deliverInfo)){
             return fail("参数错误！");
         }
         orderService.saveOrderForSeller(addressInfo, deliverInfo);
@@ -368,13 +367,9 @@ public class OrderController extends BaseController {
         UserInfo user = getTokenUser();
         if(StringUtils.isBlank(of.getId())){
             return fail("参数错误");
-        } 
-        int rst = orderService.traceComplete(of,user);
-        if(rst == -1){            
+        }       
+        if(orderService.traceComplete(of,user)<0){
             return fail("请完善溯源信息！");
-        }
-        if(rst == -2){
-            return fail("无效订单！");
         }
         return success("更新溯源信息成功！");
     }
@@ -427,25 +422,6 @@ public class OrderController extends BaseController {
             return fail("差异状态不正确！");
         }
         return success("差异确认成功！");
-    }
-    /**
-     * 配送员收货列表
-     * @param status
-     * @param grid
-     * @return
-     */
-    @GetMapping("/order/distributor/getReceiveList")
-    public Object getReceiveListForDistributor(Integer status,DataGridModel grid){
-        UserInfo user = getTokenUser();
-        if(status==null||(status!=40&&status!=50)){
-            return fail("参数错误！");
-        }
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("orderStatus", status);
-        params.put("orgid", user.getOrgId());
-        PageInfo<OrderForm> pageList = this.orderService.getReceiveListForDistributor(params, grid.getPage(), grid.getRows());
-        return new BaseRes("获取成功!",pageList.getTotal(),pageList.getPages(),pageList.getList());
-        
     }
     
     

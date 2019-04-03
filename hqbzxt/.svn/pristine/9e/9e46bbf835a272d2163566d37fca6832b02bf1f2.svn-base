@@ -1,0 +1,45 @@
+package com.yj.hqbz.mapper.trace;
+
+import java.util.List;
+import java.util.Map;
+
+import com.yj.hqbz.model.trace.GoodsTrace;
+
+public interface GoodsTraceMapper {
+    GoodsTrace selectByPrimaryKey(String id);
+    
+    int addTrace(GoodsTrace trace);
+    
+    GoodsTrace getTraceBySporadicid(String indexid);
+    
+    int updateTrace(GoodsTrace trace);
+    
+    GoodsTrace getTraceInfoByDetailid(String orderDetailid);
+    GoodsTrace getTraceByDetailid(String orderDetailid);
+
+    
+    //===================溯源统计===========================
+    List<Map<String,Object>> getGoodsBySchool(Map<String,Object> param);
+    
+    List<Map<String,Object>> getMenuBySchool(Map<String,Object> param);
+    
+    List<Map<String,Object>> getStoreBySchool(Map<String,Object> param);
+    
+    List<Map<String,Object>> getSchoolStock(Map<String,Object> param);
+    
+    List<Map<String,Object>> getSchoolByExpireFood(Map<String,Object> param);
+    
+    List<Map<String,Object>> getExpireFood(Map<String,Object> param);
+    
+    List<Map<String,Object>> getMaterial(Map<String,Object> param);
+    
+    List<Map<String,Object>> getStoreList();
+    
+    List<Map<String,Object>> getDetailByPurchase(String traceid);
+    
+    Map<String,Object> getDetailByDeliver(String traceid);
+    
+    Map<String,Object> getDetailByReceive(String traceid);
+    
+
+}

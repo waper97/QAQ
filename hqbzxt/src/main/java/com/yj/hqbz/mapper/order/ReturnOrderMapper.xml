@@ -39,9 +39,6 @@
     <result column="outTotal" property="outTotal" jdbcType="DECIMAL" />
     <result column="buyOrderRealQty" property="buyOrderRealQty" jdbcType="DECIMAL" />
     <result column="buyOrderRealTotal" property="buyOrderRealTotal" jdbcType="DECIMAL" />
-    <result column="RECEIVER" property="receiver" jdbcType="VARCHAR" />
-    <result column="RECEIVER_MOBILE" property="receiverMobile" jdbcType="VARCHAR" />
-    <result column="RECEIVER_ADDRESS" property="receiverAddress" jdbcType="VARCHAR" />
   </resultMap>  
   <sql id="Base_Column_List" >
     ID, ORDER_NO, FK_ORDERID, FK_ORDER_DETAILID, STATUS, CREATE_DATE, ORG_SKUID, COUNT, 
@@ -50,7 +47,7 @@
   
   <sql id="param">
   	<if test="beginTime!=null">
-  		and a.CREATE_DATE &gt;= #{beginTime,jdbcType=TIMESTAMP}
+  		and a.CREATE_DATE >= #{beginTime,jdbcType=TIMESTAMP}
   	</if>
   	<if test="endTime!=null">
   		and a.CREATE_DATE &lt;= #{endTime,jdbcType=TIMESTAMP}
@@ -105,12 +102,11 @@
   <select id="selectOrderInfoById" resultMap="BaseResultMap" parameterType="java.lang.String" >
 	 select  a.*,
 	    buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
-	    g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL as picUrl,pic.THUMBNAIL_URL as thumbnailUrl,
+	    g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL,
 	    od.SPEC_INFO,od.AUIXUNIT,od.QTY as buyOrderQty,od.PRICE as salePrice,od.COSTPRICE as buyOrderCostPrice,od.OUT_QTY as outQty,od.REAL_QTY as buyOrderRealQty,
-	    ROUND(od.QTY*od.PRICE,2) as buyOrderTotal,ROUND(od.OUT_QTY*od.PRICE_BASIC,2) as outTotal,ROUND(od.REAL_QTY*od.PRICE_BASIC,2) as buyOrderRealTotal,
-	    o.RECEIVER,o.RECEIVER_MOBILE,o.RECEIVER_ADDRESS
+	    ROUND(od.QTY*od.PRICE,2) as buyOrderTotal,ROUND(od.OUT_QTY*od.PRICE_BASIC,2) as outTotal,ROUND(od.REAL_QTY*od.PRICE_BASIC,2) as buyOrderRealTotal
 	 from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic,
-	 ORDER_DETAIL od,ORDERFORM o
+	 ORDER_DETAIL od
 	 where a.ID = #{orderid,jdbcType=VARCHAR}         
 	 		and a.FK_ORDER_DETAILID= od.DETAIL_ID
 		    and a.ORG_ID = buyer.ORGID
@@ -120,14 +116,13 @@
 		    and orgsku.FK_SKUID = sku.SKUID
 		    and sku.FK_GOODSID = g.GOODSID
 		    and sku.SKUID = pic.FK_SKUID 
-		    and a.FK_ORDERID = o.id
   </select>
   
   <!-- 根据购货订单ID获取退货订单列表 -->
   <select id="getReturnOrderListByBuyOrderid" resultMap="BaseResultMap" parameterType="java.util.Map" >
   	select  a.*,
     	buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
-    	g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL as picUrl,pic.THUMBNAIL_URL as thumbnailUrl
+    	g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL
     from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic
     where a.FK_ORDERID = #{buyOrderid}
 	    and a.ORG_ID = buyer.ORGID
@@ -159,7 +154,7 @@
   	select * from (
   		select  a.fk_orderid as id,o.order_no,o.addtime as CREATE_DATE,o.order_type,a.org_skuid,a.costprice,sum(a.count) as count,sum(a.count*a.costprice) as return_total,
 	    	buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
-	    	g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL as picUrl,pic.THUMBNAIL_URL as thumbnailUrl
+	    	g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL
     	from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic,ORDERFORM o
     	where a.fk_orderid=o.ID
 	      	and a.ORG_ID = buyer.ORGID

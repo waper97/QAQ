@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -146,7 +145,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 			}
 			//食堂belong1无记录，学校belong2有记录
 			if(belong1==null&&belong2!=null) {
-				String orgids = StringUtil.isBlank(belong2.getOrgids())?orgid.toString():belong2.getOrgids()+","+orgid;
+				String orgids = belong2.getOrgids()+","+orgid;
 				belong2.setOrgids(orgids);
 				orgBelongMapper.updateBelong(belong2);
 			}
@@ -154,11 +153,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 			if(belong1!=null&&belong2==null) {
 				//先修改
 				String orgids = (","+belong1.getOrgids()+",").replaceAll(","+orgid+",", ",");
-				if(orgids.equals(",")) {
-					belong1.setOrgids(null);
-				}else {
-					belong1.setOrgids(orgids.substring(1, orgids.length()-1));
-				}
+				belong1.setOrgids(orgids);
 				orgBelongMapper.updateBelong(belong1);
 				//再添加
 				belong.setOrgids(orgid.toString());
@@ -170,14 +165,10 @@ public class OrganizationServiceImpl implements OrganizationService{
 			if(belong1!=null&&belong2!=null&&belong1.getId().intValue()!=belong2.getId().intValue()) {
 				//先修改
 				String orgids = (","+belong1.getOrgids()+",").replaceAll(","+orgid+",", ",");
-				if(orgids.equals(",")) {
-					belong1.setOrgids(null);
-				}else {
-					belong1.setOrgids(orgids.substring(1, orgids.length()-1));
-				}
+				belong1.setOrgids(orgids);
 				orgBelongMapper.updateBelong(belong1);
 				//再修改
-				String orgids2 = StringUtil.isBlank(belong2.getOrgids())?orgid.toString():belong2.getOrgids()+","+orgid;
+				String orgids2 = belong2.getOrgids()+","+orgid;
 				belong2.setOrgids(orgids2);
 				orgBelongMapper.updateBelong(belong2);
 			}
@@ -186,11 +177,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 			OrgBelong belong1 = orgBelongMapper.getBelongByOrg(orgid);
 			if(belong1!=null) {
 				String orgids = (","+belong1.getOrgids()+",").replaceAll(","+orgid+",", ",");
-				if(orgids.equals(",")) {
-					belong1.setOrgids("");
-				}else {
-					belong1.setOrgids(orgids.substring(1, orgids.length()-1));
-				}
+				belong1.setOrgids(orgids);
 				orgBelongMapper.updateBelong(belong1);
 			}
 		}

@@ -35,10 +35,5 @@ public interface OrderFormMapper {
     //根据订单ID获取实收总额
     OrderForm getReceiveTotalByOrderid(String orderid);
     
-    /******************配送员*************************/
-    //获取待收货列表及差异列表
-    List<OrderForm> getReceiveListForDistributor(Map<String,Object> map);
-    
-    
     
 }

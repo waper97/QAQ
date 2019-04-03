@@ -107,7 +107,7 @@
 	  	and ur.FK_ROLEID = rr.FK_ROLEID
 	  	and rr.FK_RESID = res.ID
 	  	and res.STATUS = 0
-	  	and (res.SCOPE = #{1} or res.SCOPE=9)  	
+	  	and res.SCOPE = #{1}  	
   </select>
   
   <select id="getUserHaveMenusRights" resultMap="BaseResultMap">
@@ -120,7 +120,7 @@
 		  	and ur.FK_ROLEID = rr.FK_ROLEID
 		  	and rr.FK_RESID = res.ID
 		  	and res.STATUS = 0
-		  	and (res.SCOPE = #{1} or res.SCOPE=9)
+		  	and res.SCOPE = #{1} 
 		  	and res.RIGHTTYPE = 0
 		 )
     	start with FK_PARENTID = 0

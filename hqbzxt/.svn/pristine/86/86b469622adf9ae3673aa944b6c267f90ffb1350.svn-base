@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.org.OrgRelationshipMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.org.OrgRelationship" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="FK_ORGNORGID" property="orgnOrgid" jdbcType="DECIMAL" />
+    <result column="ORGNORGNAME" property="orgnOrgName" jdbcType="VARCHAR" />
+    <result column="ORGNORGSTATUS" property="orgnOrgStatus" jdbcType="DECIMAL" />
+    <result column="FK_TARGETORGID" property="targetOrgid" jdbcType="DECIMAL" />
+    <result column="TARGETORGNAME" property="targetOrgName" jdbcType="VARCHAR" />
+    <result column="TARGETORGSTATUS" property="targetOrgStatus" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, FK_ORGNORGID, FK_TARGETORGID
+  </sql>
+  
+  <select id="getByPrimaryKey" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from ORG_RELATIONSHIP
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <insert id="addRelation" parameterType="com.yj.hqbz.model.org.OrgRelationship">
+  	insert into ORG_RELATIONSHIP(<include refid="Base_Column_List"/>)
+  	values (ORG_RELATIONSHIP_SEQ_ID.NEXTVAL,#{orgnOrgid,jdbcType=DECIMAL},#{targetOrgid,jdbcType=DECIMAL})
+  </insert>
+  
+  <delete id="deleteRelation" parameterType="java.lang.Integer">
+  	delete from ORG_RELATIONSHIP where FK_ORGNORGID=#{orgid,jdbcType=DECIMAL} or FK_TARGETORGID=#{orgid,jdbcType=DECIMAL}
+  </delete>
+  
+  <select id="getRelationByOrg" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	select r.ID,r.FK_ORGNORGID,r.FK_TARGETORGID,o1.NAME as ORGNORGNAME,o2.NAME as TARGETORGNAME,
+  		   o1.STATUS as ORGNORGSTATUS,o2.STATUS as TARGETORGSTATUS
+  	from ORG_RELATIONSHIP r,ORGANIZATION o1,ORGANIZATION o2
+  	where r.FK_ORGNORGID=o1.ORGID and r.FK_TARGETORGID=o2.ORGID 
+  		  and o1.STATUS!=2 and o2.STATUS!=2
+  		  and r.FK_ORGNORGID=#{orgid,jdbcType=DECIMAL} 
+  	union
+  	select r.ID,r.FK_TARGETORGID as FK_ORGNORGID,r.FK_ORGNORGID as FK_TARGETORGID,
+  		   o2.NAME as ORGNORGNAME,o1.NAME as TARGETORGNAME,
+  		   o2.STATUS as ORGNORGSTATUS,o1.STATUS as TARGETORGSTATUS
+  	from ORG_RELATIONSHIP r,ORGANIZATION o1,ORGANIZATION o2
+  	where r.FK_ORGNORGID=o1.ORGID and r.FK_TARGETORGID=o2.ORGID 
+  		  and o1.STATUS!=2 and o2.STATUS!=2
+  		  and r.FK_TARGETORGID=#{orgid,jdbcType=DECIMAL} 
+  	order by ID
+  </select>
+</mapper>

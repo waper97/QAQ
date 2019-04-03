@@ -33,30 +33,6 @@ public class PracticeUser {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    private Date entryBeginDate;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    private Date entryEndDate;
-
-    public Date getEntryBeginDate() {
-        return entryBeginDate;
-    }
-
-    public void setEntryBeginDate(Date entryBeginDate) {
-        this.entryBeginDate = entryBeginDate;
-    }
-
-    public Date getEntryEndDate() {
-        return entryEndDate;
-    }
-
-    public void setEntryEndDate(Date entryEndDate) {
-        this.entryEndDate = entryEndDate;
-    }
-
     private String picUrl;
 
     private String thumbnailUrl;

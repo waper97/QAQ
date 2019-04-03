@@ -11,10 +11,8 @@ import javassist.expr.NewArray;
 
 import javax.annotation.Resource;
 
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
@@ -121,24 +119,16 @@ public class DiningOutController extends BaseController {
 	public Object updateSave(DiningOut dining){
 		UserInfo user = this.getTokenUser();
 		dining.setLastOpUser(user.getTrueName());
-		dining.setCreateDate(new Date());
 		dining.setLastOpDate(new Date());
-		dining.setCreator(this.getTokenUser().getTrueName());
-		if(dining.getId()== null){
-			if(dining.getMenuType() == null || dining.getDishName() == null||
-			   dining.getOutDate()== null || dining.getOrgid() == null||
-			   dining.getMaterialName() == null || dining.getCookerName() == null ||
-               dining.getOutTime() == null){
-                    return fail("必填参数不能为空");
-			}
-		}else{
-			//新增的菜单还是自动拉取的，新增的菜单menuCode以Z开头
-			if(StringUtil.isBlank(dining.getCookerName()) ||StringUtil.isBlank(dining.getChecker())
-					||dining.getOutTime()==null){
-				return fail("厨师、验收人、出餐时间不能为空，保存失败！");
-			}
+		if(StringUtil.isBlank(dining.getCookerName()) ||StringUtil.isBlank(dining.getChecker())
+				||dining.getOutTime()==null){
+			return fail("厨师、验收人、出餐时间不能为空，保存失败！");
 		}
+		//新增的菜单还是自动拉取的，新增的菜单menuCode以Z开头
 		dining.setStatus(1);
+		if(dining.getId()==null){
+			return fail("出餐id不能为空，修改失败！");
+		}
 		diningOutService.updateSave(dining);
 		return success("修改成功！");
 	}

@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -345,9 +344,8 @@ public class OrderFormServiceImpl implements OrderFormService {
             newDetail = detailMapper.selectByPrimaryKey(detailid);
             detail.setDetailid(detailid);
             detail.setRealQty(realQty);
-            detail.setDiffQty(realQty.subtract(newDetail.getQtyBasic()));
-            //detail.setDiffStatus(OrderStatusConst.DIFF_STATUS.WAIT_DELIVER_CONFIRM_DIFF.ordinal());
-            detail.setDiffStatus(OrderStatusConst.DIFF_STATUS.WAIT_SELLER_CONFIRM_DIF.ordinal());
+            detail.setDiffQty(newDetail.getQtyBasic().subtract(realQty));
+            detail.setDiffStatus(OrderStatusConst.DIFF_STATUS.WAIT_DELIVER_CONFIRM_DIFF.ordinal());
             detailMapper.updateOrderDetail(detail); 
         }
         OrderForm of = orderMapper.selectByPrimaryKey(orderid);
@@ -391,7 +389,7 @@ public class OrderFormServiceImpl implements OrderFormService {
 
     @Override
     @Transactional
-    public void cancelOrderForSeller(OrderForm of, UserInfo user,String reason) {
+    public void cancelOrderForSeller(OrderForm of, UserInfo user) {
         of.setOrderStatus(OrderStatusConst.SELLER_CANCEL);
         orderMapper.updateOrder(of);
         //更新库存
@@ -399,16 +397,12 @@ public class OrderFormServiceImpl implements OrderFormService {
         for(OrderDetail detail:detailList){
             this.addOrgSkuQty(detail.getQty(), CommUtil.null2Int(detail.getOrgSkuid()));
         }
-        String content = "";
-        if(StringUtils.isNotBlank(reason)){
-            content = ",理由：【"+reason+"】";
-        }
         TmThreadPool.saveOrderLog(logService, of.getId(), user.getUserid(),
-                user.getTrueName(), "卖家用户【"+user.getTrueName()+"】取消订单"+content);
-        //系统消息
+                user.getTrueName(), "卖家用户【"+user.getTrueName()+"】取消订单");
+      //系统消息
         Message msg = new Message();
         msg.setUserid(of.getUserid());
-        msg.setContent("订单号为【"+of.getOrderNo()+"】的订单，商家【"+user.getOrgName()+"】取消订单"+content);
+        msg.setContent("订单号为【"+of.getOrderNo()+"】的订单，商家【"+user.getOrgName()+"】取消订单");
         msgMapper.insertMessage(msg);
      
         
@@ -450,7 +444,6 @@ public class OrderFormServiceImpl implements OrderFormService {
         logisticsMapper.insert(deliver);
         //更新为待收货
         order.setOrderStatus(OrderStatusConst.WAIT_RECEVIE);
-        order.setDeliveryDate(new Date());
         orderMapper.updateOrder(order);
         TmThreadPool.saveOrderLog(logService, order.getId(), user.getUserid(),
                 user.getTrueName(), "卖家用户【"+user.getTrueName()+"】发货");
@@ -487,7 +480,6 @@ public class OrderFormServiceImpl implements OrderFormService {
            OrderForm of = new OrderForm();
            of.setId(orderid);
            of.setOrderStatus(OrderStatusConst.HAVE_RECEIVE);
-           of.setReceiveDate(new Date());
            //更新收货总额
            OrderForm receiveOrder =orderMapper.getReceiveTotalByOrderid(orderid);
            of.setReceiveTotal(receiveOrder.getReceiveTotal());
@@ -541,11 +533,9 @@ public class OrderFormServiceImpl implements OrderFormService {
     @Override
     @Transactional
     public void saveOrderForSeller(String addressInfo, String deliverInfo) {
-        if(StringUtils.isNotBlank(addressInfo)){
-            Map<String,Object> addressMap = JSONObject.parseObject(addressInfo);
-            orderMapper.updateReceiver(addressMap);
-        }        
-        Map<String,Object> deliverMap = JSONObject.parseObject(deliverInfo);       
+        Map<String,Object> addressMap = JSONObject.parseObject(addressInfo);
+        Map<String,Object> deliverMap = JSONObject.parseObject(deliverInfo);
+        orderMapper.updateReceiver(addressMap);
         logisticsMapper.updateByMap(deliverMap);     
     }
 
@@ -603,7 +593,7 @@ public class OrderFormServiceImpl implements OrderFormService {
         if(num == 0){
             OrderForm of = orderMapper.selectByPrimaryKey(o.getId());
             if(of==null||of.getOrderStatus()<OrderStatusConst.HAVE_CONFIRM||of.getOrderStatus()>=OrderStatusConst.WAIT_RECEVIE){
-                return -2;
+                return -1;
             }
             //更新出库数量
             for(OrderDetail detail:o.getOrderDetails()){
@@ -675,19 +665,6 @@ public class OrderFormServiceImpl implements OrderFormService {
             detail.setGoodsTraceList(detailList);
         }
         PageInfo<OrderDetail> info = new PageInfo<OrderDetail>(traceGoodsList);        
-        return info;
-    }
-
-    @Override
-    public PageInfo<OrderForm> getReceiveListForDistributor(
-            Map<String, Object> map,int page,int rows) {
-        PageHelper.startPage(page,rows);
-        List<OrderForm> orderList = orderMapper.getReceiveListForDistributor(map);
-        PageInfo<OrderForm> info = new PageInfo<OrderForm>(orderList);
-        for(OrderForm o:info.getList()){
-            List<OrderDetail> detailList = detailMapper.getDetailListByOrderid(o.getId());
-            o.setOrderDetails(detailList);
-        }
         return info;
     }
 

@@ -26,8 +26,6 @@
     <result column="TOTAL" property="total" jdbcType="DECIMAL" />
     <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR" />
     <result column="STATUS" property="status" jdbcType="VARCHAR" />
-    <result column="VOUCHERCODE" property="voucherCode" jdbcType="VARCHAR" />
-    <result column="LIABLEPERSON" property="liablePerson" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -115,26 +113,6 @@
   		</otherwise>
   	</choose>
   </sql>
-  <sql id="orderBy2">
-  	<choose>
-  		<when test="orderBy!=null and orderBy!=''">
-  			<choose>
-		  		<when test="orderBy=='goodsName' or orderBy=='goodsTypeName' or orderBy=='warehouse'">
-		  			NLSSORT(#{orderBy},'NLS_SORT=SCHINESE_PINYIN_M') 
-		  		</when>
-		  		<otherwise>
-		  			#{orderBy}
-		  		</otherwise>
-		  	</choose>
-		  	<if test="orderType==1">
-		  		desc
-		  	</if>
-  		</when>
-  		<otherwise>
-  			INDATE
-  		</otherwise>
-  	</choose>
-  </sql>
   
   <select id="getStockBill" parameterType="java.util.Map"  resultMap="BaseResultMap">
 	  select * from(
@@ -186,56 +164,40 @@
   
   <select id="getStockBatch"  parameterType="java.util.Map"  resultMap="BaseResultMap">
 	  select * from (
-		  	select i.ID,i.FK_GOODSID,g.GOODSNAME,g.UNIT,g.CODE as GOODSCODE,i.FK_TRACEID,i.TRACENO,i.ORDERNO,
-		  		   i.QTY,i.WAREHOUSE,i.INTYPE,i.INDATE,i.PRODATE,i.INTERVALDATE,i.USELIFEDATE,
+		  	select i.ID,i.FK_GOODSID,g.GOODSNAME,g.UNIT,g.CODE as GOODSCODE,i.TRACENO,i.ORDERNO,
+		  		   i.QTY,i.WAREHOUSE,i.INDATE,i.PRODATE,i.INTERVALDATE,i.USELIFEDATE,
 		  		   case when sysdate>=i.INTERVALDATE and sysdate &lt;=i.USELIFEDATE then '临期'
 		  		   	 	when sysdate>i.USELIFEDATE then '过期'
-		  		   	 	else '新鲜' end as STATUS,
-		  		   t.VOUCHERCODE,t.LIABLEPERSON
-			from INVENTORY i,GOODS g,BVOUCHER_INDEX t,BVOUCHER_DETAIL d
-			where i.FK_GOODSID=g.GOODSID and i.QTY!=0 and i.FK_TRACEID=d.FK_TRACEID
-				  and d.FK_INDEXID=t.ID and t.STATUS=0 and t.VOUCHERTYPE=0 and i.FK_ORGID=#{orgid,jdbcType=DECIMAL}
+		  		   	 	else '新鲜' end as STATUS
+			from INVENTORY i,GOODS g
+			where i.FK_GOODSID=g.GOODSID and i.QTY!=0 and i.FK_ORGID=#{orgid,jdbcType=DECIMAL}
 				  and i.FK_GOODSID=#{goodsid,jdbcType=VARCHAR} 
 			union
-			select i.ID,i.FK_GOODSID,g.GOODSNAME,g.UNIT,g.CODE as GOODSCODE,i.FK_TRACEID,i.TRACENO,i.ORDERNO,
-		  		   i.QTY,i.WAREHOUSE,i.INTYPE,i.INDATE,i.PRODATE,i.INTERVALDATE,i.USELIFEDATE,
+			select i.ID,i.FK_GOODSID,g.GOODSNAME,g.UNIT,g.CODE as GOODSCODE,i.TRACENO,i.ORDERNO,
+		  		   i.QTY,i.WAREHOUSE,i.INDATE,i.PRODATE,i.INTERVALDATE,i.USELIFEDATE,
 		  		   case when sysdate>=i.INTERVALDATE and sysdate &lt;=i.USELIFEDATE then '临期'
 		  		   	 	when sysdate>i.USELIFEDATE then '过期'
-		  		   	 	else '新鲜' end as STATUS,
-		  		   t.VOUCHERCODE,t.LIABLEPERSON
-			from INVENTORY i,SPORADIC_GOODS g,BVOUCHER_INDEX t,BVOUCHER_DETAIL d
-			where i.FK_GOODSID=g.GOODSID and i.QTY!=0 and i.FK_TRACEID=d.FK_TRACEID
-				  and d.FK_INDEXID=t.ID and t.STATUS=0 and t.VOUCHERTYPE=0 and i.FK_ORGID=#{orgid,jdbcType=DECIMAL}
+		  		   	 	else '新鲜' end as STATUS
+			from INVENTORY i,SPORADIC_GOODS g
+			where i.FK_GOODSID=g.GOODSID and i.QTY!=0 and i.FK_ORGID=#{orgid,jdbcType=DECIMAL}
 				  and i.FK_GOODSID=#{goodsid,jdbcType=VARCHAR} 
-	  ) order by <include refid="orderBy2"/>
+	  ) order by <include refid="orderBy"/>
  </select>
  
- <insert id="addInventoryByOrder" parameterType="com.yj.hqbz.model.inventory.Inventory">
+ <insert id="addInventory" parameterType="com.yj.hqbz.model.inventory.Inventory">
  	insert into INVENTORY(<include refid="Base_Column_List"/>)
  	select #{id,jdbcType=VARCHAR},#{orgid,jdbcType=DECIMAL},tr.FK_GOODSID,tr.FK_GOODS_SKUID,
  		   #{inType,jdbcType=DECIMAL},#{inDate,jdbcType=TIMESTAMP},d.REAL_QTY,d.PRICE_BASIC,
- 		   tr.ID,tr.BATCHNO,f.ORDER_NO,tr.FK_ORGID,tr.PRODATE,tr.INTERVALDATE,tr.USELIFEDATE,
+ 		   tr.ID,tr.BATCHNO,f.ORDER_NO,tr.FK_ORGID,tr.PRODATE,tr.INTERVALDATE,
  		   ROUND(d.REAL_QTY*d.PRICE_BASIC,2),#{warehouse,jdbcType=VARCHAR}
  	from ORDERFORM f,ORDER_DETAIL d,GOODS_TRACE tr
  	where f.ID=d.FK_ORDERID and d.FK_ORDERID=tr.FK_ORDERID and d.DETAIL_ID=tr.FK_ORDER_DETAILID and tr.TRACE_TYPE=0
  		  and tr.ID=#{traceid,jdbcType=VARCHAR}
  </insert>
  
- <insert id="addInventoryBySporadic" parameterType="com.yj.hqbz.model.inventory.Inventory">
- 	insert into INVENTORY(<include refid="Base_Column_List"/>)
- 	select #{id,jdbcType=VARCHAR},#{orgid,jdbcType=DECIMAL},tr.FK_GOODSID,tr.FK_GOODS_SKUID,
- 		   #{inType,jdbcType=DECIMAL},#{inDate,jdbcType=TIMESTAMP},d.QTY,d.PRICE,
- 		   tr.ID,tr.BATCHNO,i.VOUCHERCODE,tr.FK_ORGID,tr.PRODATE,tr.INTERVALDATE,tr.USELIFEDATE,
- 		   ROUND(d.QTY*d.PRICE,2),#{warehouse,jdbcType=VARCHAR}
- 	from SPORADIC_INDEX i,SPORADIC_DETAIL d,GOODS_TRACE tr
- 	where i.ID=d.FK_INDEXID and d.FK_INDEXID=tr.FK_ORDERID and d.ID=tr.FK_ORDER_DETAILID and tr.TRACE_TYPE=1
- 		  and tr.ID=#{traceid,jdbcType=VARCHAR}
- </insert>
- 
  <update id="outStock" parameterType="com.yj.hqbz.model.inventory.Inventory">
  	update INVENTORY
- 	set QTY=QTY-#{qty,jdbcType=DECIMAL},
- 	 	TOTAL=ROUND((QTY-#{qty,jdbcType=DECIMAL})*PRICE,2)
+ 	set QTY=QTY-#{qty,jdbcType=DECIMAL}
  	where ID = #{id,jdbcType=VARCHAR}
  </update>
  
@@ -252,6 +214,6 @@
  	update SPORADIC_INDEX
  	set STATUS=1,
  		INSTORE_DATE=sysdate
- 	where ID=#{indexid,jdbcType=VARCHAR}
+ 	where DETAIL_ID=#{indexid,jdbcType=VARCHAR}
  </update>
 </mapper>

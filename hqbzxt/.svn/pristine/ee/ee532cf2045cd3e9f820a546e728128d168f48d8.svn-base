@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.order.ReturnOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.order.ReturnOrder" >
+    <id column="ID" property="orderid" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="FK_ORDERID" property="relOrderid" jdbcType="VARCHAR" />
+    <result column="FK_ORDER_DETAILID" property="relOrderDetailid" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="ORDER_TYPE" property="orderType" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ORG_SKUID" property="orgSkuid" jdbcType="VARCHAR" />
+    <result column="GOODSNAME" property="goodsName" jdbcType="VARCHAR" />
+    <result column="ALIASNAME" property="aliasName" jdbcType="VARCHAR" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="PROPERTY" property="property" jdbcType="VARCHAR" />
+    <result column="picUrl" property="picUrl" jdbcType="VARCHAR" />
+    <result column="thumbnailUrl" property="thumbnailUrl" jdbcType="VARCHAR" />
+    <result column="COUNT" property="count" jdbcType="DECIMAL" />
+    <result column="REASON" property="reason" jdbcType="VARCHAR" />
+    <result column="COSTPRICE" property="costPriceBasic" jdbcType="DECIMAL" />
+    <result column="RETURN_TOTAL" property="returnTotal" jdbcType="DECIMAL" />
+    <result column="RECEIVE_QTY" property="receiveQty" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userid" jdbcType="VARCHAR" />
+    <result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+    <result column="ORG_ID" property="buyerOrgId" jdbcType="DECIMAL" />
+    <result column="BUYERORGNAME" property="buyerOrgName" jdbcType="DECIMAL" />    
+    <result column="STORE_ID" property="orgid" jdbcType="DECIMAL" />
+    <result column="SELLERORGNAME" property="orgName" jdbcType="DECIMAL" />
+    <result column="DELETESTATUS" property="deleteStatus" jdbcType="DECIMAL" />
+    <result column="SPEC_INFO" property="specInfo" jdbcType="VARCHAR" />
+    <result column="AUIXUNIT" property="auixUnit" jdbcType="VARCHAR" />
+    <!-- 购货订单相关信息 -->
+    <result column="salePrice" property="salePrice" jdbcType="DECIMAL" />
+    <result column="buyOrderCostPrice" property="costPrice" jdbcType="DECIMAL" />
+    <result column="buyOrderQty" property="buyOrderQty" jdbcType="DECIMAL" />
+    <result column="buyOrderTotal" property="buyOrderTotal" jdbcType="DECIMAL" />
+    <result column="outQty" property="outQty" jdbcType="DECIMAL" />
+    <result column="outTotal" property="outTotal" jdbcType="DECIMAL" />
+    <result column="buyOrderRealQty" property="buyOrderRealQty" jdbcType="DECIMAL" />
+    <result column="buyOrderRealTotal" property="buyOrderRealTotal" jdbcType="DECIMAL" />
+  </resultMap>  
+  <sql id="Base_Column_List" >
+    ID, ORDER_NO, FK_ORDERID, FK_ORDER_DETAILID, STATUS, CREATE_DATE, ORG_SKUID, COUNT, 
+    REASON, COSTPRICE, RETURN_TOTAL, RECEIVE_QTY, USER_ID, ORG_ID, DELETESTATUS,STORE_ID,ORDER_TYPE
+  </sql>
+  
+  <sql id="param">
+  	<if test="beginTime!=null">
+  		and a.CREATE_DATE >= #{beginTime,jdbcType=TIMESTAMP}
+  	</if>
+  	<if test="endTime!=null">
+  		and a.CREATE_DATE &lt;= #{endTime,jdbcType=TIMESTAMP}
+  	</if>
+  	<if test="orderNo!=null and orderNo!=''">
+  		and a.ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+  	</if>
+  	<if test="buyerOrgName!=null">
+  		and instr(buyer.name,#{scopeType,jdbcType=VARCHAR})>0
+  	</if>
+  	<if test="sellerOrgName!=null and sellerOrgName!=''">
+  		and instr(seller.name,#{sellerOrgName,jdbcType=VARCHAR})>0
+  	</if>
+  	<if test="ordertype!=null">
+  		and a.ORDER_TYPE = #{ordertype,jdbcType=DECIMAL}
+  	</if>
+  	<if test="orgid!=null">
+  		and a.STORE_ID = #{orgid,jdbcType=DECIMAL}
+  	</if>
+  	<choose>
+  		<when test="orderStatus!=null">
+  			and a.STATUS = #{orderStatus}
+  		</when>
+  		<otherwise>
+  			and a.status!=5
+  		</otherwise>
+  	</choose>
+  </sql>
+  
+  <sql id="orderBy">
+  	<choose>
+  		<when test="orderBy!=null and orderBy!=''">
+  			<choose>
+		  		<when test="orderBy=='buyerOrgName' or orderBy=='orgName' or orderBy=='userName'">
+		  			NLSSORT(#{orderBy},'NLS_SORT=SCHINESE_PINYIN_M') 
+		  		</when>
+		  		<otherwise>
+		  			#{orderBy}
+		  		</otherwise>
+		  	</choose>
+		  	<if test="orderType==1">
+		  		desc
+		  	</if>
+  		</when>
+  		<otherwise>
+  			CREATE_DATE
+  		</otherwise>
+  	</choose>
+  </sql>
+  
+  <!-- 取订单详情 -->
+  <select id="selectOrderInfoById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	 select  a.*,
+	    buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
+	    g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL,
+	    od.SPEC_INFO,od.AUIXUNIT,od.QTY as buyOrderQty,od.PRICE as salePrice,od.COSTPRICE as buyOrderCostPrice,od.OUT_QTY as outQty,od.REAL_QTY as buyOrderRealQty,
+	    ROUND(od.QTY*od.PRICE,2) as buyOrderTotal,ROUND(od.OUT_QTY*od.PRICE_BASIC,2) as outTotal,ROUND(od.REAL_QTY*od.PRICE_BASIC,2) as buyOrderRealTotal
+	 from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic,
+	 ORDER_DETAIL od
+	 where a.ID = #{orderid,jdbcType=VARCHAR}         
+	 		and a.FK_ORDER_DETAILID= od.DETAIL_ID
+		    and a.ORG_ID = buyer.ORGID
+		    and a.STORE_ID = seller.ORGID
+		    and a.USER_ID = u.USERID
+		    and a.ORG_SKUID = orgsku.ID
+		    and orgsku.FK_SKUID = sku.SKUID
+		    and sku.FK_GOODSID = g.GOODSID
+		    and sku.SKUID = pic.FK_SKUID 
+  </select>
+  
+  <!-- 根据购货订单ID获取退货订单列表 -->
+  <select id="getReturnOrderListByBuyOrderid" resultMap="BaseResultMap" parameterType="java.util.Map" >
+  	select  a.*,
+    	buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
+    	g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL
+    from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic
+    where a.FK_ORDERID = #{buyOrderid}
+	    and a.ORG_ID = buyer.ORGID
+	    and a.STORE_ID = seller.ORGID
+	    and a.USER_ID = u.USERID
+	    and a.ORG_SKUID = orgsku.ID
+	    and orgsku.FK_SKUID = sku.SKUID
+	    and sku.FK_GOODSID = g.GOODSID
+	    and sku.SKUID = pic.FK_SKUID 
+	    and a.STATUS!=5
+	    <if test="orgSkuid!=null">
+	    	and a.ORG_SKUID = #{orgSkuid}
+	    </if>
+	    
+	 order by a.CREATE_DATE 
+  </select>
+  
+  <!-- 根据购货订单ID获取相应的退货订单状态 -->
+  <select id="getReturnOrderStatusByBuyOrderid" resultType="java.lang.String" parameterType="java.util.Map" >
+  	select  distinct a.STATUS
+    from RETURN_ORDER a
+    where a.FK_ORDERID = #{buyOrderid}
+    and a.ORG_SKUID = #{orgSkuid}
+	and a.STATUS!=5
+  </select>
+  
+  <!-- 根据购货订单ID和ORG SKUID 汇总退货信息 -->
+  <select id="getOrderListForBuyerWithSummary" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select * from (
+  		select  a.fk_orderid as id,o.order_no,o.addtime as CREATE_DATE,o.order_type,a.org_skuid,a.costprice,sum(a.count) as count,sum(a.count*a.costprice) as return_total,
+	    	buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
+	    	g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL
+    	from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic,ORDERFORM o
+    	where a.fk_orderid=o.ID
+	      	and a.ORG_ID = buyer.ORGID
+		    and a.STORE_ID = seller.ORGID
+		    and a.USER_ID = u.USERID
+		    and a.ORG_SKUID = orgsku.ID
+		    and orgsku.FK_SKUID = sku.SKUID
+		    and sku.FK_GOODSID = g.GOODSID
+		    and sku.SKUID = pic.FK_SKUID 
+		    and a.USER_ID = #{userid}
+		    <choose>
+		  		<when test="orderStatus!=null">
+		  			and a.STATUS = #{orderStatus}
+		  		</when>
+		  		<otherwise>
+		  			and a.STATUS!=5
+		  		</otherwise>
+		  	</choose>
+		    
+    	group by a.fk_orderid,o.order_no,o.addtime,o.order_type,a.org_skuid,a.costprice,
+    		buyer.name,seller.name,u.TRUENAME,
+    		g.goodsname,g.aliasname,g.unit,sku.property,pic.PIC_URL,pic.THUMBNAIL_URL
+     	 )
+	 order by CREATE_DATE  desc
+  </select>
+  
+  <!-- 卖家退货订单列表 -->
+  <select id="getOrderListForSeller" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select * from (
+	  	select  a.*,
+	    	buyer.name as BUYERORGNAME,seller.name as SELLERORGNAME,u.TRUENAME as username,
+	    	g.goodsname,g.aliasname,g.unit,sku.property,
+	    	od.SPEC_INFO,od.AUIXUNIT,od.QTY as buyOrderQty,od.PRICE as salePrice,od.COSTPRICE as buyOrderCostPrice,od.OUT_QTY as outQty,od.REAL_QTY as buyOrderRealQty,
+	    ROUND(od.QTY*od.PRICE,2) as buyOrderTotal,ROUND(od.OUT_QTY*od.PRICE_BASIC,2) as outTotal,ROUND(od.REAL_QTY*od.PRICE_BASIC,2) as buyOrderRealTotal
+	    from RETURN_ORDER a,ORGANIZATION seller,ORGANIZATION buyer,HQXT_USER u,ORG_SKU orgsku,GOODS g,SKU sku,SKUPIC pic,ORDER_DETAIL od
+	    where a.ORG_ID = buyer.ORGID
+	    	and a.FK_ORDER_DETAILID= od.DETAIL_ID
+		    and a.STORE_ID = seller.ORGID
+		    and a.USER_ID = u.USERID
+		    and a.ORG_SKUID = orgsku.ID
+		    and orgsku.FK_SKUID = sku.SKUID
+		    and sku.FK_GOODSID = g.GOODSID
+		    and sku.SKUID = pic.FK_SKUID 
+		    <if test="distributorid!=null">
+		    	and exists(select 1 from ORDER_LOGISTICS log where log.FK_ORDERID = a.ID 
+		    	and log.DISTRIBUTORID = #{distributorid,jdbcType=VARCHAR})
+		    </if> 
+	    <include refid="param"/> 
+  	)
+    order by <include refid="orderBy"/>
+  </select>
+  
+  <!-- 根据参数获取该商品可退货数（实收数-状态包括申请中，待取货，退货中和退货已完成） -->
+  <select id="selectReturnQtyCountByBuyOrderDetailId" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+  	select sum(qty) from (
+		select REAL_QTY as qty  from order_detail
+		where DETAIL_ID = #{relOrderDetailid}
+		union
+		select sum(COUNT)*(-1) as qty 
+	  	FROM RETURN_ORDER
+	  	WHERE STATUS IN (0,2,3,4,6)
+	  	AND FK_ORDER_DETAILID = #{relOrderDetailid}
+	 )
+  </select>
+  
+  <!-- 插入退货申请表 -->
+  <insert id="insertReturnOrder" parameterType="com.yj.hqbz.model.order.ReturnOrder">
+  	insert into RETURN_ORDER(<include refid="Base_Column_List"/>)
+  	values(#{orderid,jdbcType=VARCHAR},#{orderNo,jdbcType=VARCHAR},#{relOrderid,jdbcType=VARCHAR},#{relOrderDetailid,jdbcType=VARCHAR},#{status},
+  	#{createDate},#{orgSkuid},#{count},#{reason,jdbcType=VARCHAR},#{costPriceBasic},#{returnTotal},0,#{userid,jdbcType=VARCHAR},
+  	#{buyerOrgId},0,#{orgid},#{orderType})
+  </insert>
+  
+  <!-- 修改退货订单状态 -->
+  <update id="updateOrderStatus" parameterType="com.yj.hqbz.model.order.ReturnOrder">
+  	update RETURN_ORDER
+  	set STATUS = #{status}
+  	where ID = #{orderid}
+  </update>
+  
+  <!-- 确认退货 -->
+  <update id="updateRealReturnQty" parameterType="com.yj.hqbz.model.order.ReturnOrder">
+  	update RETURN_ORDER
+  	set STATUS = 4,
+  	RECEIVE_QTY = #{receiveQty,jdbcType=DECIMAL}
+  	where ID = #{orderid,jdbcType=VARCHAR}
+  </update>
+  
+ 
+</mapper>

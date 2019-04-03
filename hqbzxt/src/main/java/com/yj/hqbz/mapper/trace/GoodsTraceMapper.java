@@ -16,7 +16,6 @@ public interface GoodsTraceMapper {
     int updateTrace(GoodsTrace trace);
     
     GoodsTrace getTraceInfoByDetailid(String orderDetailid);
-    
     GoodsTrace getTraceByDetailid(String orderDetailid);
 
     
@@ -35,11 +34,9 @@ public interface GoodsTraceMapper {
     
     Map<String,Object> getTraceByInStock(String traceid);
     
-    List<Map<String,Object>> getTraceByOutStock(Map<String,Object> param);
+    Map<String,Object> getTraceByOutStock(Map<String,Object> param);
     
-    List<Map<String,Object>> getAdditiveUse(String detailid);
-    
-    List<Map<String,Object>> getGoodsUse(String detailid);
+    Map<String,Object> getTraceByUse(Map<String,Object> param);
     
     List<Map<String,Object>> getSchoolStock(Map<String,Object> param);
     
@@ -57,6 +54,5 @@ public interface GoodsTraceMapper {
     
     List<Map<String,Object>> getStoreRanking();
     
-    List<String> getParentGoodsTypeid();
 
 }

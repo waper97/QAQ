@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
@@ -95,8 +94,8 @@ public class RetentionSampleController extends BaseController {
 	/**
 	 * 新增留样保存
 	 */
-	@PostMapping(value = "/sample/school/addSave")
-	public Object addSave(@RequestBody RetentionSample sample){
+	@PostMapping("/sample/school/addSave")
+	public Object addSave(RetentionSample sample){
 		UserInfo user = this.getTokenUser();
 		sample.setCreator(user.getTrueName());
 		sample.setCreateDate(new Date());
@@ -106,7 +105,7 @@ public class RetentionSampleController extends BaseController {
 			return fail("用户机构id为空，新增失败！");
 		}
 		if(sample.getDishName()==null||sample.getRsDate()==null||sample.getMenuType()==null||
-				sample.getCookerName()==null||sample.getAttachmentList().isEmpty()||
+				sample.getCookerName()==null||sample.getPicUrl()==null||sample.getThumbnailUrl()==null||
 				sample.getQty()==null||sample.getRsUser()==null||sample.getTemperature()==null||
 				sample.getRsTime()==null||sample.getRsEndTime()==null||sample.getConductor()==null){
 			return fail("必选数据为空，新增失败！");
@@ -123,12 +122,12 @@ public class RetentionSampleController extends BaseController {
 	 * 修改留样保存
 	 */
 	@PostMapping("/sample/school/updateSave")
-	public Object updateSave(@RequestBody RetentionSample sample){
+	public Object updateSave(RetentionSample sample){
 		if(StringUtil.isBlank(sample.getRsid())){
 			return fail("留样id为空，修改失败！");
 		}
 		if(sample.getDishName()==null||sample.getRsDate()==null||sample.getMenuType()==null||
-				sample.getCookerName()==null||sample.getAttachmentList().isEmpty()||
+				sample.getCookerName()==null||sample.getPicUrl()==null||sample.getThumbnailUrl()==null||
 				sample.getQty()==null||sample.getRsUser()==null||sample.getTemperature()==null||
 				sample.getRsTime()==null||sample.getRsEndTime()==null||sample.getConductor()==null){
 			return fail("必选数据为空，修改失败！");
@@ -152,8 +151,6 @@ public class RetentionSampleController extends BaseController {
 			return fail("留样id为空，查询失败！");
 		}
 		RetentionSample sample=retentionSampleService.selectByPrimaryKey(rsid);
-		//查询留样附件（图片）
-		sample.setAttachmentList(retentionSampleService.getRentionSampleAttachment(rsid));
 		return success(sample);
 	}
 	

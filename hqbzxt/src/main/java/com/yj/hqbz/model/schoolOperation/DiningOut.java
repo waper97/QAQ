@@ -23,8 +23,6 @@ public class DiningOut {
 
     private String cookerName;
 
-    private String cookerId;
-
     private String materialName;
 
     private String checker;
@@ -49,15 +47,7 @@ public class DiningOut {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastOpDate;
 
-	public String getCookerId() {
-		return cookerId;
-	}
-
-	public void setCookerId(String cookerId) {
-		this.cookerId = cookerId;
-	}
-
-	public String getId() {
+    public String getId() {
         return id;
     }
 

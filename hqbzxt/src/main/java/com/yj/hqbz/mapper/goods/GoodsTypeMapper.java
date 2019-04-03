@@ -38,7 +38,5 @@ public interface GoodsTypeMapper {
 	List<GoodsType> getChildGoodsTypes(int typeid);
 
 	List<GoodsType> getFatherTree(Integer typeid);
-	//根据当天类型id查询是否有子类
-	List<GoodsType> getIsExistChilden(Integer typeid);
 
 }

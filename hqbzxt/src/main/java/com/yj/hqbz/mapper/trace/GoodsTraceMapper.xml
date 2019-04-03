@@ -139,30 +139,27 @@
   
   
   <select id="getTraceByPurchase"  parameterType="java.lang.String" resultType="map">
-  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(f.ADDTIME,'yyyy/MM/dd HH24:mi:ss') as "time",
+  	select tr.FK_GOODSID as "goodsid",to_char(f.ADDTIME,'yyyy/MM/dd HH24:mi:ss') as "time",
   		   o.NAME as "orgName",o2.NAME as "storeName",d.UNIT as "unit",d.REAL_QTY as "qty",
-  		   null as "licensePic",0 as "style",sp.PIC_URL as "picUtl",sp.THUMBNAIL_URL as "thumbnailUrl"
-  	from ORDER_DETAIL d,ORDERFORM f,ORGANIZATION o,ORGANIZATION o2,GOODS g,GOODS_TRACE tr
-  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
+  		   null as "licensePic",0 as "style"
+  	from GOODS_TRACE tr,ORDER_DETAIL d,ORDERFORM f,ORGANIZATION o,ORGANIZATION o2
   	where tr.FK_ORDERID=d.FK_ORDERID and tr.FK_ORDER_DETAILID=d.DETAIL_ID
   		  and d.FK_ORDERID=f.ID and f.ORG_ID=o.ORGID and f.STORE_ID=o2.ORGID 
-  		  and tr.TRACE_TYPE=0 and tr.FK_GOODSID=g.GOODSID and tr.ID=#{traceid,jdbcType=VARCHAR}
+  		  and tr.TRACE_TYPE=0 and tr.ID=#{traceid,jdbcType=VARCHAR}
   	union
-  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  	select tr.FK_GOODSID as "goodsid",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
   		   o.NAME as "orgName",tr.SUPPLIER as "storeName",g.UNIT as "unit",d.QTY as "qty",
-  		   null as "licensePic",1 as "style",sp.PIC_URL as "picUtl",sp.THUMBNAIL_URL as "thumbnailUrl"
-  	from SPORADIC_DETAIL d,SPORADIC_INDEX i,ORGANIZATION o,GOODS g,GOODS_TRACE tr
-  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
+  		   null as "licensePic",1 as "style"
+  	from GOODS_TRACE tr,SPORADIC_DETAIL d,SPORADIC_INDEX i,ORGANIZATION o,GOODS g
   	where tr.FK_ORDERID=d.FK_INDEXID and tr.FK_ORDER_DETAILID=d.ID 
   		  and d.FK_INDEXID=i.ID and i.FK_ORGID=o.ORGID and d.FK_GOODSID=g.GOODSID
-  		  and tr.TRACE_TYPE=1 and tr.FK_GOODSID=g.GOODSID  and tr.ID=#{traceid,jdbcType=VARCHAR}
+  		  and tr.TRACE_TYPE=1 and tr.ID=#{traceid,jdbcType=VARCHAR}
   	union
-  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  	select tr.FK_GOODSID as "goodsid",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
   		   o.NAME as "orgName",tr.SUPPLIER as "storeName",null as "unit",null  as "qty",
-  		   o.LICENSE_PIC as "licensePic",1 as "style",sp.PIC_URL as "picUtl",sp.THUMBNAIL_URL as "thumbnailUrl"
-  	from ORGANIZATION o,GOODS g,GOODS_TRACE tr
-  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
-  	where tr.FK_ORGID=o.ORGID and tr.TRACE_TYPE=0 and tr.FK_GOODSID=g.GOODSID 
+  		   o.LICENSE_PIC as "licensePic",1 as "style"
+  	from GOODS_TRACE tr,SKUPIC s,ORGANIZATION o
+  	where tr.FK_GOODS_SKUID=s.FK_SKUID and tr.FK_ORGID=o.ORGID and tr.TRACE_TYPE=0 
   		  and tr.ID=#{traceid,jdbcType=VARCHAR}
   	order by "time"
   </select>
@@ -191,25 +188,20 @@
   		  and d.FK_TRACEID=#{traceid,jdbcType=VARCHAR}
   </select>
   <select id="getTraceByOutStock"  parameterType="java.util.Map" resultType="map">
-  	select d.ID as "detailid",d.FK_GOODSID as "goodsid",to_char(i.BUSINESSDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  	select d.FK_GOODSID as "goodsid",to_char(i.BUSINESSDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
   		   o.NAME as "orgName",5 as "style"
   	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORGANIZATION o
   	where i.ID=d.FK_INDEXID and i.FK_ORGID=o.ORGID and i.VOUCHERTYPE=1 and i.STATUS=0   
   		  and d.FK_TRACEID=#{traceid,jdbcType=VARCHAR} 
-  		  and to_char(i.BUSINESSDATE,'yyyy-MM-dd')=#{time,jdbcType=VARCHAR}
+  		  and to_char(i.USEDATE,'yyyy-MM-dd')=#{time,jdbcType=VARCHAR}
   </select>
-  
-  <select id="getAdditiveUse" parameterType="java.lang.String" resultType="map">
-  	select to_char(a.USEDATE,'yyyy/MM/dd HH24:mi:ss') as "time",6 as "style"
-  	from FOOD_ADDITIVE a
-  	where a.FK_OUTDETAILID=#{detailid,jdbcType=VARCHAR}
-  </select>
-  
-  <select id="getGoodsUse"  parameterType="java.lang.String" resultType="map">
-  	select to_char(i.USEDATE,'yyyy/MM/dd HH24:mi:ss') as "time",6 as "style"
-  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d
-  	where i.ID=d.FK_INDEXID and i.VOUCHERTYPE=1 and i.STATUS=0   
-  		  and d.ID=#{detailid,jdbcType=VARCHAR} 
+  <select id="getTraceByUse"  parameterType="java.util.Map" resultType="map">
+  	select d.FK_GOODSID as "goodsid",to_char(i.USEDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",6 as "style"
+  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORGANIZATION o
+  	where i.ID=d.FK_INDEXID and i.FK_ORGID=o.ORGID and i.VOUCHERTYPE=1 and i.STATUS=0   
+  		  and d.FK_TRACEID=#{traceid,jdbcType=VARCHAR} 
+  		  and to_char(i.USEDATE,'yyyy-MM-dd')=#{time,jdbcType=VARCHAR}
   </select>
   
   <select id="getSchoolStock" parameterType="java.util.Map" resultType="map">
@@ -222,13 +214,11 @@
 	  	from ORG_BELONG b,INVENTORY i,GOODS g
 	  	where instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 and b.STATUS=0
 	  		  and i.FK_GOODSID=g.GOODSID and b.FK_YJORGID=#{schoolid,jdbcType=DECIMAL} and g.UNIT='斤' 
-	  		  <if test="typeid!=null">
-		  		  and exists(select 1 from GOODSTYPE t 
-		  		  			 where t.TYPEID=#{typeid,jdbcType=DECIMAL}
-			  		  			   start with t.TYPEID=g.FK_GOODSTYPEID
-			  							connect by prior t.FK_PARENTID=t.TYPEID
-		  		  			 )
-	  		  </if>
+	  		  and exists(select 1 from GOODSTYPE t 
+	  		  			 where t.TYPEID=#{typeid,jdbcType=DECIMAL}
+		  		  			   start with t.TYPEID=g.FK_GOODSTYPEID
+		  							connect by prior t.FK_PARENTID=t.TYPEID
+	  		  			 )
   	)
   	group by STATUS
   	order by STATUS
@@ -370,9 +360,5 @@
 	  	group by t.ORGID,t.NAME
 	  	order by "quarterTotal" desc
     ) t2
-  </select>
-  
-  <select id="getParentGoodsTypeid" resultType="java.lang.String">
-  	select t.TYPEID from GOODSTYPE t where t.FK_PARENTID=0
   </select>
 </mapper>
