@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.yj.springboot</groupId>
-	<artifactId>syglxt</artifactId>
+	<artifactId>hqbzxt</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>syglxt</name>
+	<name>hqbzxt</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -156,19 +156,15 @@
    			<artifactId>spring-boot-starter-velocity</artifactId>
    			<version>1.2.2.RELEASE</version>
 		</dependency>
-<!--lombok-->
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.4</version>
-			<scope>provided</scope>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.1.0</version>
 		</dependency>
-
-
 	</dependencies>	
 	
 	<build>
-		<finalName>sygl</finalName>
+		<finalName>hqbz</finalName>
 		<resources>
 	        <resource>
 	            <directory>src/main/resources</directory>
@@ -193,10 +189,7 @@
 			 <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				 <configuration>
-					 <fork>false</fork>
-				 </configuration>
-			</plugin>
+			</plugin> 
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -204,7 +197,11 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                  	<compilerArgument>-XDignore.symbol.file</compilerArgument>
+                   <compilerArgument>-XDignore.symbol.file</compilerArgument> 
+                <compilerArguments>
+               
+                    <extdirs>${project.basedir}/src/main/webapp/WEB-INF/lib</extdirs>
+                </compilerArguments>
                 </configuration>
             </plugin>
 		</plugins>

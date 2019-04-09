@@ -28,7 +28,7 @@
   
   <insert id="addGoods" parameterType="com.yj.hqbz.model.sporadic.SporadicGoods">
   	insert into SPORADIC_GOODS(<include refid="Base_Column_List" />)
-  	select #{goodsid,jdbcType=DECIMAL},#{code,jdbcType=VARCHAR}||trim(to_char(to_number(nvl(substr(g.CODE,3),0))+1,'00000009')),
+  	select #{goodsid,jdbcType=DECIMAL},#{code,jdbcType=VARCHAR}||trim(to_char(to_number(nvl(max(substr(g.CODE,3)),0))+1,'00000009')),
   		   #{goodsTypeid,jdbcType=DECIMAL},#{goodsName,jdbcType=VARCHAR},#{namepy,jdbcType=VARCHAR},
   		   #{unit,jdbcType=VARCHAR},#{orgid,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},
   		   #{createDate,jdbcType=TIMESTAMP},#{lastOpUser,jdbcType=VARCHAR},#{lastOpDate,jdbcType=TIMESTAMP}

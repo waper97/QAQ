@@ -3,6 +3,7 @@
 */
 package com.yj.hqbz.services.schoolOperation;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -24,6 +25,13 @@ public interface PracticeUserService {
 	 * @return
 	 */
 	PageInfo<PracticeUser> getList(Map<String, Object> param, int page, int rows);
+
+	/**
+	 * 查询人员列表(不分页)
+	 * @param params
+	 * @return
+	 */
+	List<PracticeUser> getListByCondition(Map<String,Object> params);
 
 	/**
 	 * @param user

@@ -49,7 +49,7 @@ public class AttendanceController extends BaseController {
 	 */
 	@GetMapping("/attendance/school/getList")
 	public Object getList(String beginDate,String endDate,String summary,
-			String userid,Integer orgid,DataGridModel model){
+			String name,Integer orgid,DataGridModel model){
 		Date beginTime=null;
 		Date endTime=null;
 		if(StringUtil.isNotBlank(beginDate)) {
@@ -68,8 +68,8 @@ public class AttendanceController extends BaseController {
 		if(StringUtil.isNotBlank(summary)){
 			param.put("summary", summary);
 		}
-		if(StringUtil.isNotBlank(userid)){
-			param.put("userid", userid);
+		if(StringUtil.isNotBlank(name)){
+			param.put("name", name);
 		}
 		
 		if(orgid != null){

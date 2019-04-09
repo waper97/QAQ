@@ -23,7 +23,7 @@
   <insert id="addBanner" parameterType="com.yj.hqbz.model.org.CustomerBanner">
   	insert into CUSTOMERBANNER(<include refid="Base_Column_List"/>)
   	values (CUSTOMERBANNER_SEQ_ID.NEXTVAL,#{orgid,jdbcType=DECIMAL},#{picUrl,jdbcType=VARCHAR},
-  			#{thumbnailUrl,jdbcType=VARCHAR},#{linkUrl,jdbcType=VARCHAR},#{sortno,jdbcType=DECIMAL},
+  			#{thumbnailUrl,jdbcType=VARCHAR},#{linkUrl,jdbcType=VARCHAR},#{sortno,jdbcType=DECIMAL}
   			)
   </insert>
   

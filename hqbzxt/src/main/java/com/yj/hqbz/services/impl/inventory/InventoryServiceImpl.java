@@ -73,7 +73,6 @@ public class InventoryServiceImpl implements InventoryService{
 	
 	@Transactional
 	public void addInventory(List<Inventory> stocks,BVoucherIndex index) {
-		boolean noIndex=true;
 		for (Inventory stock:stocks) {
 			if(StringUtil.isBlank(stock.getTraceid())||StringUtil.isBlank(stock.getWarehouse())||stock.getInType()==null) {
 				throw new RuntimeException("溯源ID、库存位置、入库类型不能为空！");
@@ -82,14 +81,27 @@ public class InventoryServiceImpl implements InventoryService{
 			stock.setId(StringUtil.getUUID());
 			stock.setOrgid(index.getOrgid());
 			stock.setInDate(index.getBusinessDate());
-			int count = inventoryMapper.addInventory(stock);
-			if(count>0&&stock.getInType()!=2) {
-				//添加买家入库信息
-				addBVoucher(noIndex,stock.getInType(),stock.getId(),index);
-				//修改入库时间
-				updateInStockDate(stock.getTraceid());
-				
+			
+			if(stock.getInType()==0) {
+				int count = inventoryMapper.addInventoryByOrder(stock);
+				if(count>0) {
+					//添加买家入库信息
+					addBVoucherByIn(stocks.indexOf(stock),stock.getId(),index);
+					//修改入库时间
+					updateInStockDate(stock.getTraceid());
+					
+				}
+			}else if(stock.getInType()==1){
+				int count = inventoryMapper.addInventoryBySporadic(stock);
+				if(count>0) {
+					//添加买家入库信息
+					addBVoucherByIn(stocks.indexOf(stock),stock.getId(),index);
+					//修改入库时间
+					updateInStockDate(stock.getTraceid());
+					
+				}
 			}
+			
 		}
 	}
 	
@@ -108,33 +120,57 @@ public class InventoryServiceImpl implements InventoryService{
 	
 	@Transactional
 	public void outStock(BVoucherIndex index) {
-		boolean noIndex=true;
-		for (Inventory stock : index.getStocks()) {
+		List<Inventory> stocks = index.getStocks();
+		for (Inventory stock : stocks) {
 			int count = inventoryMapper.outStock(stock);
 			if(count>0) {
 				//添加买家入库信息
-				addBVoucher(noIndex,2,stock.getId(),index);
+				addBVoucherByOut(stocks.indexOf(stock),stock,index);
 			}
 		}
 	}
 	
 	
-	//添加买家出入库信息
-	private void addBVoucher(boolean noIndex,Integer type,String stockid,BVoucherIndex index) {
-		//保存买家出入库主表
-		if(noIndex) {
-			index.setVoucherType(type);
+	//添加买家入库信息
+	private void addBVoucherByIn(int i,String stockid,BVoucherIndex index) {
+		//保存买家入库主表
+		if(i==0) {
+			index.setVoucherType(0);
 			index.setVoucherCode(DateUtil.getStrByDate(new Date(), "yyyyMMddHHmmss")+index.getVoucherType()+StringUtil.getRandomNum(1000));
 			bVchIndexMapper.addBVoucherIndex(index);
-			noIndex=false;
+		}
+		//设置买家入库明细
+		BVoucherDetail detail=new BVoucherDetail();
+		detail.setId(StringUtil.getUUID());
+		detail.setIndexid(index.getId());
+		detail.setStockid(stockid);
+		//保存买家入库明细
+		bvchDetailMapper.addBVoucherDetailByIn(detail);
+	}
+	
+	//添加买家出库信息
+	private void addBVoucherByOut(int i,Inventory stock,BVoucherIndex index) {
+		//保存买家出入库主表
+		if(i==0) {
+			index.setVoucherType(1);
+			index.setVoucherCode(DateUtil.getStrByDate(new Date(), "yyyyMMddHHmmss")+index.getVoucherType()+StringUtil.getRandomNum(1000));
+			bVchIndexMapper.addBVoucherIndex(index);
 		}
 		//设置买家出入库明细
 		BVoucherDetail detail=new BVoucherDetail();
 		detail.setId(StringUtil.getUUID());
 		detail.setIndexid(index.getId());
-		detail.setStockid(stockid);
+		detail.setStockid(stock.getId());
+		detail.setQty(stock.getQty());
 		//保存买家出入库明细
-		bvchDetailMapper.addBVoucherDetail(detail);
+		bvchDetailMapper.addBVoucherDetailByOut(detail);
 	}
 	
+	
+	public PageInfo<Map<String, Object>> getOutInDetail(String id, int page, int rows) {
+		PageHelper.startPage(page, rows);
+		List<Map<String, Object>> list = bvchDetailMapper.getOutInDetail(id);
+		PageInfo<Map<String, Object>> info=new PageInfo<Map<String, Object>>(list);
+		return info;
+	}
 }

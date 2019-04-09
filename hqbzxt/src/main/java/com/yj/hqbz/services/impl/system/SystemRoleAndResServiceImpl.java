@@ -111,7 +111,15 @@ public class SystemRoleAndResServiceImpl implements SystemRoleAndResService {
 		tree.setText("资源权限树");
 		tree.setType("0");
 		tree.setIconCls("icon-root");		
-		
+		tree.setParentid("");
+		tree.setRemark("");
+		tree.setSortno(0);
+		tree.setIsshow(1); //0:不显示，1：显示
+		tree.setStatus(0);
+		tree.setHtmlUrl("");
+		tree.setApiUrl("");
+		tree.setApiUrl("");
+		tree.setScope(3);
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("parentId", 0);
 		if(resType!=null){
@@ -133,7 +141,16 @@ public class SystemRoleAndResServiceImpl implements SystemRoleAndResService {
 				node.setId(res.getId().toString());
 				node.setText(res.getName());
 				node.setUrl(res.getHtmlUrl());
-				node.setType(res.getRightType().toString());				
+				node.setType(res.getRightType().toString());
+				node.setApiUrl(res.getApiUrl());
+				node.setHtmlUrl(res.getHtmlUrl());
+				node.setStatus(res.getStatus());
+				node.setIsshow(res.getIsshow());
+				node.setSortno(res.getSortno());
+				node.setRemark(res.getRemark());
+				node.setParentid(res.getParentid().toString());
+				node.setIconCls(res.getIcon());
+				node.setScope(res.getScope());
 				List<TreeNode> _child = buildResChild(resList,res.getId(),i+1);
 				if(_child!=null && _child.size()>0){
 					node.setChildren(_child);
@@ -207,7 +224,10 @@ public class SystemRoleAndResServiceImpl implements SystemRoleAndResService {
 	 * @return
 	 */
 	private List getUserHaveMenus(String userid,int roleType){
-		List<Resources> menusList = resMapper.getUserHaveMenusRights(userid, roleType);
+		Map<String,Object> parmas = new HashMap<>();
+		parmas.put("userid",userid);
+		parmas.put("roleType",roleType);
+		List<Resources> menusList = resMapper.getUserHaveMenusRights(parmas);
 		return buildResChild(menusList,0,0);
 	}
 	

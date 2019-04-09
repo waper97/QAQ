@@ -21,7 +21,9 @@ public interface InventoryMapper {
     
     List<Inventory> getStockBatch(Map<String,Object> param);
     
-    int addInventory(Inventory stock);
+    int addInventoryByOrder(Inventory stock);
+    
+    int addInventoryBySporadic(Inventory stock);
     
     int outStock(Inventory stock);
     

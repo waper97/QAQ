@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yj.hqbz.model.system.Resources;
+import org.apache.ibatis.annotations.Param;
 
 public interface ResourcesMapper {
     int insert(Resources record);
@@ -26,8 +27,8 @@ public interface ResourcesMapper {
 	void insertRoleHavedRes(Map<String,Object> param);
 	
 	//根据用户ID和角色类型获取该用户所拥有的所有权限
-	List<Resources> getUserHaveRights(String userid,Integer resType);
+	List<Resources> getUserHaveRights(@Param("userid") String userid, @Param("resType") Integer resType);
 	
-	List<Resources> getUserHaveMenusRights(String userid,Integer resType);
+	List<Resources> getUserHaveMenusRights(Map<String,Object> param);
 	
 }

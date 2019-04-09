@@ -56,7 +56,7 @@
   	select 
     <include refid="Base_Column_List" />
     from SKU
-    where FK_GOODSID=#{goodsId} and STATUS = 0
+    where FK_GOODSID=#{goodsId} and STATUS &lt;&gt; 2
   </select>
   <update id="updateGoodsSKUStaus" parameterType="com.yj.hqbz.model.goods.GoodsSKU">
   	update SKU t 

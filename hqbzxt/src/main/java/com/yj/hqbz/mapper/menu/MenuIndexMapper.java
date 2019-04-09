@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.yj.hqbz.model.menu.MenuIndex;
+import com.yj.hqbz.model.menu.MenuInfo;
 
 public interface MenuIndexMapper {
     MenuIndex selectByPrimaryKey(String menuid);
     
     List<MenuIndex> getMenuList(Map<String,Object> param);
+
+    List<MenuInfo> getMenuInfoAndMenuDishAndMaterial(String menuid);
     
     int addSave(MenuIndex menu);
     

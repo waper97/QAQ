@@ -35,13 +35,13 @@
   	insert into ORG_BELONG(<include refid="Base_Column_List"/>)
   	values (ORG_BELONG_SEQ_ID.NEXTVAL,#{orgids,jdbcType=VARCHAR},#{yjOrgid,jdbcType=DECIMAL},
   			#{yjOrgName,jdbcType=VARCHAR},#{areaid,jdbcType=DECIMAL},#{status,jdbcType=DECIMAL},
-  			#{opendate,jdbcType=TIMESTAMP}
+  			#{openDate,jdbcType=TIMESTAMP}
   			)
   </insert>
   
   <update id="updateBelong" parameterType="com.yj.hqbz.model.org.OrgBelong">
   	update ORG_BELONG
-  	set FK_ORGIDS=#{orgids}
+  	set FK_ORGIDS=#{orgids,jdbcType=VARCHAR}
   	where ID = #{id,jdbcType=DECIMAL} 
   </update>
   
@@ -53,12 +53,15 @@
   	order by b.FK_AREAID
   </select>
   
-  <select id="getSchoolByArea" parameterType="java.lang.Integer" resultType="map">
+  <select id="getSchoolByArea" parameterType="java.util.Map" resultType="map">
   	select distinct b.FK_YJORGID as "schoolid",b.YJORGNAME as "schoolName"
   	from ORG_BELONG b
   	where b.STATUS=0 
-  	<if test="_parameter!=null">
+  	<if test="areaid!=null">
 	  	and b.FK_AREAID=#{areaid,jdbcType=DECIMAL}
+  	</if>
+  	<if test="schoolid!=null">
+	  	and b.FK_YJORGID=#{schoolid,jdbcType=DECIMAL}
   	</if>
   	order by b.FK_YJORGID
   </select>

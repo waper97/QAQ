@@ -19,7 +19,7 @@ public interface OrgBelongMapper {
     //=========================溯源=========================
     List<Map<String,Object>> getBelongArea();
     
-    List<Map<String,Object>> getSchoolByArea(Integer areaid);
+    List<Map<String,Object>> getSchoolByArea(Map<String,Object> paramMap);
     
     List<Map<String,Object>> getOrgBySchool(Integer schoolid);
 }
