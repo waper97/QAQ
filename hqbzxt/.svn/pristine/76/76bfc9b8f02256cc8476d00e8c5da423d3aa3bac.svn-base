@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.trace.GoodsTraceMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.trace.GoodsTrace" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FK_ORDERID" property="orderid" jdbcType="VARCHAR" />
+    <result column="FK_ORDER_DETAILID" property="orderDetailid" jdbcType="VARCHAR" />
+    <result column="TRACE_TYPE" property="traceType" jdbcType="DECIMAL" />
+    <result column="FK_GOODSID" property="goodsid" jdbcType="VARCHAR" />
+    <result column="FK_GOODS_SKUID" property="goodsSkuid" jdbcType="VARCHAR" />
+    <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
+    <result column="ADD_DATE" property="addDate" jdbcType="TIMESTAMP" />
+    <result column="BATCHNO" property="batchNo" jdbcType="VARCHAR" />
+    <result column="SORT_QTY" property="sortQty" jdbcType="DECIMAL" />
+    <result column="SUPPLIER" property="supplier" jdbcType="VARCHAR" />
+    <result column="PRODATE" property="proDate" jdbcType="TIMESTAMP" />
+    <result column="INTERVALDATE" property="intervalDate" jdbcType="TIMESTAMP" />
+    <result column="USELIFEDATE" property="uselifeDate" jdbcType="TIMESTAMP" />
+    <result column="BUYDATE" property="buyDate" jdbcType="TIMESTAMP" />
+    <result column="SUPPLIER_TYPE" property="supplierType" jdbcType="DECIMAL" />
+    <result column="FACTORY" property="factory" jdbcType="VARCHAR" />
+    <result column="SKUCODE" property="skuCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, FK_ORDERID, FK_ORDER_DETAILID, TRACE_TYPE, FK_GOODSID, FK_GOODS_SKUID, FK_ORGID, 
+    ADD_DATE, BATCHNO, SORT_QTY, SUPPLIER, PRODATE, INTERVALDATE, USELIFEDATE, BUYDATE,SUPPLIER_TYPE,FACTORY
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from GOODS_TRACE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="addTrace" parameterType="com.yj.hqbz.model.trace.GoodsTrace">
+  	insert into GOODS_TRACE(<include refid="Base_Column_List" />)
+  	values (#{id,jdbcType=VARCHAR},#{orderid,jdbcType=VARCHAR},#{orderDetailid,jdbcType=VARCHAR},
+  			#{traceType,jdbcType=DECIMAL},#{goodsid,jdbcType=VARCHAR},#{goodsSkuid,jdbcType=VARCHAR},
+  			#{orgid,jdbcType=DECIMAL},#{addDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},
+  			#{sortQty,jdbcType=DECIMAL},#{supplier,jdbcType=VARCHAR},#{proDate,jdbcType=TIMESTAMP},
+  			#{intervalDate,jdbcType=TIMESTAMP},#{uselifeDate,jdbcType=TIMESTAMP},#{buyDate,jdbcType=TIMESTAMP},
+  			#{supplierType,jdbcType=DECIMAL},#{factory,jdbcType=VARCHAR}
+  			)
+  </insert>
+  
+  <select id="getTraceBySporadicid" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" />
+    from GOODS_TRACE
+    where FK_ORDERID = #{indexid,jdbcType=VARCHAR} and TRACE_TYPE=1
+  </select>
+  
+  <select id="getTraceInfoByDetailid" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select o.id as FK_ORDERID,g.goodsid as FK_GOODSID,s.skuid as FK_GOODS_SKUID,o.store_id as FK_ORGID,s.skucode as SKUCODE
+  	from order_detail od 
+	left join orderform o on od.fk_orderid=o.id
+	left join ORG_SKU os on od.org_skuid=os.id
+	left join SKU s on s.skuid=os.fk_skuid
+	left join goods g on g.goodsid=s.fk_goodsid
+	where od.detail_id=#{orderDetailid,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="getTraceByDetailid" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+    from GOODS_TRACE
+    where FK_ORDER_DETAILID = #{orderDetailid,jdbcType=VARCHAR} and TRACE_TYPE=0
+  </select>
+  
+  
+  <update id="updateTrace"  parameterType="com.yj.hqbz.model.trace.GoodsTrace">
+  	update GOODS_TRACE
+  	set SORT_QTY=#{sortQty,jdbcType=DECIMAL}, 
+  		SUPPLIER=#{supplier,jdbcType=VARCHAR}, 
+  		PRODATE=#{proDate,jdbcType=TIMESTAMP}, 
+  		INTERVALDATE=#{intervalDate,jdbcType=TIMESTAMP}, 
+  		USELIFEDATE=#{uselifeDate,jdbcType=TIMESTAMP}, 
+  		BUYDATE=#{buyDate,jdbcType=TIMESTAMP},
+  		SUPPLIER_TYPE=#{supplierType,jdbcType=DECIMAL},
+  		FACTORY=#{factory,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  
+  
+  <!-- ===============================溯源统计==================================== -->
+  
+  <sql id="getGoodsSQL">
+  	<!-- 订单出库商品 -->
+  	select g.GOODSID,g.GOODSNAME,g.UNIT,t.TYPEID,d.FK_TRACEID,d.QTY,
+		   i.FK_ORGID,to_char(i.BUSINESSDATE,'yyyy-MM-dd') as OUTTIME,p.THUMBNAIL_URL
+	from BVOUCHER_INDEX i,GOODSTYPE t,BVOUCHER_DETAIL d ,GOODS g
+  	left join SKUPIC p on g.goodsid = p.fk_goodsid and p.fk_skuid is null
+	where i.ID=d.FK_INDEXID and d.FK_GOODSID=g.GOODSID and g.FK_GOODSTYPEID=t.TYPEID 
+		  and t.BUSINESSATTR=1 and i.VOUCHERTYPE=1 and i.STATUS=0 
+  	<!-- 零星出库商品 -->
+  	union
+  	select g.GOODSID,g.GOODSNAME,g.UNIT,t.TYPEID,d.FK_TRACEID,d.QTY,
+		   i.FK_ORGID,to_char(i.BUSINESSDATE,'yyyy-MM-dd') as OUTTIME,p.THUMBNAIL_URL
+	from BVOUCHER_INDEX i,GOODSTYPE t,BVOUCHER_DETAIL d ,SPORADIC_GOODS g
+  	left join SKUPIC p on g.goodsid = p.fk_goodsid and p.fk_skuid is null
+	where i.ID=d.FK_INDEXID and d.FK_GOODSID=g.GOODSID and g.FK_GOODSTYPEID=t.TYPEID 
+		  and t.BUSINESSATTR=1 and i.VOUCHERTYPE=1 and i.STATUS=0 
+	<!-- 订单不需入库商品（生鲜） -->
+	union
+	select g.GOODSID,g.GOODSNAME,g.UNIT,t.TYPEID,tr.ID as FK_TRACEID,d.REAL_QTY as QTY,
+		   f.ORG_ID as FK_ORGID,to_char(f.RECEIVE_DATE,'yyyy-MM-dd') as OUTTIME,p.THUMBNAIL_URL
+	from ORDERFORM f,GOODS_TRACE tr,GOODSTYPE t,ORDER_DETAIL d,GOODS g
+  	left join SKUPIC p on g.goodsid = p.fk_goodsid and p.fk_skuid is null
+	where f.ID=d.FK_ORDERID and d.FK_ORDERID=tr.FK_ORDERID and d.DETAIL_ID=tr.FK_ORDER_DETAILID
+		  and tr.TRACE_TYPE=0 and tr.FK_GOODSID=g.GOODSID and g.FK_GOODSTYPEID=t.TYPEID 
+		  and t.BUSINESSATTR=0
+	<!-- 零星采购不需入库商品（直接使用） -->
+	union
+	select g.GOODSID,g.GOODSNAME,g.UNIT,t.TYPEID,tr.ID as FK_TRACEID,d.QTY,
+		   i.FK_ORGID,to_char(i.USEDATE,'yyyy-MM-dd') as OUTTIME,p.THUMBNAIL_URL
+	from SPORADIC_INDEX i,SPORADIC_DETAIL d,SPORADIC_GOODS g,GOODSTYPE t,GOODS_TRACE tr
+  	left join GOODS_TRACE_PIC p on tr.ID = p.fk_traceid and p.PICTYPE = 2 and rownum=1
+	where i.ID=d.FK_INDEXID and d.FK_INDEXID=tr.FK_ORDERID and d.ID=tr.FK_ORDER_DETAILID
+		  and tr.TRACE_TYPE=1 and tr.FK_GOODSID=g.GOODSID and g.FK_GOODSTYPEID=t.TYPEID 
+		  and i.PUTINWAREHOUSE=1 
+  </sql>
+  
+  <select id="getGoodsBySchool" parameterType="java.util.Map" resultType="map">
+  	select GOODSID as "goodsid",GOODSNAME as "goodsName",UNIT as "unit",
+  		   FK_TRACEID as "traceid",sum(QTY) as "qty",THUMBNAIL_URL as "picUrl"
+  	from(<include refid="getGoodsSQL"/>) 
+  	where FK_ORGID=#{orgid,jdbcType=DECIMAL} and OUTTIME=#{time,jdbcType=VARCHAR}
+  		  	<if test="isAdditive==0">
+	  		  	and TYPEID!=#{additiveTypid,jdbcType=DECIMAL} 
+  		  	</if>
+  		  	<if test="isAdditive==1">
+	  		  	and TYPEID=#{additiveTypid,jdbcType=DECIMAL} 
+  		  	</if>
+  	group by GOODSID,GOODSNAME,UNIT,FK_TRACEID,THUMBNAIL_URL
+  	order by GOODSID
+  </select>
+  
+  <select id="getMenuBySchool" parameterType="java.util.Map" resultType="map">
+  	select d.DISHID as "dishid",d.DISHNAME as "dishName"
+  	from MENU_INDEX i,MENU_DISH d
+  	where i.ID=d.FK_MENUID and i.STATUS=2 and i.DELETESTATUS=0
+  		  and i.MENUTYPE=#{menuType,jdbcType=DECIMAL} and i.FK_ORGID=#{orgid,jdbcType=DECIMAL}
+  		  and to_char(i.MEALSDATE,'yyyy-MM-dd')=#{time,jdbcType=VARCHAR}
+  	order by d.DISHID
+  </select>
+  
+  <select id="getStoreBySchool"  parameterType="java.util.Map" resultType="map">
+  	select c.ORGID as "storeid",c.NAME as "storeName",c.TRADEMARK as "tradeMark",REPLACE(WMSYS.WM_CONCAT(a.GOODSNAME),',','、') as "goodsName"
+  	from(<include refid="getGoodsSQL"/>) a,GOODS_TRACE b,ORGANIZATION c
+  	where a.FK_TRACEID=b.ID and b.FK_ORGID=c.ORGID and a.FK_ORGID=#{orgid,jdbcType=DECIMAL} 
+  		  and a.OUTTIME=#{time,jdbcType=VARCHAR}
+  	group by c.ORGID,c.NAME,c.TRADEMARK
+  	order by c.ORGID
+  </select>
+  
+  
+  <select id="getTraceByPurchase"  parameterType="java.lang.String" resultType="map">
+  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(f.ADDTIME,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",o2.NAME as "storeName",d.UNIT as "unit",d.REAL_QTY as "qty",
+  		   null as "licensePic",0 as "style",sp.PIC_URL as "picUrl",sp.THUMBNAIL_URL as "thumbnailUrl"
+  	from ORDER_DETAIL d,ORDERFORM f,ORGANIZATION o,ORGANIZATION o2,GOODS g,GOODS_TRACE tr
+  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
+  	where tr.FK_ORDERID=d.FK_ORDERID and tr.FK_ORDER_DETAILID=d.DETAIL_ID
+  		  and d.FK_ORDERID=f.ID and f.ORG_ID=o.ORGID and f.STORE_ID=o2.ORGID 
+  		  and tr.TRACE_TYPE=0 and tr.FK_GOODSID=g.GOODSID and tr.ID=#{traceid,jdbcType=VARCHAR}
+  	union
+  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",tr.SUPPLIER as "storeName",g.UNIT as "unit",d.QTY as "qty",
+  		   null as "licensePic",1 as "style",sp.PIC_URL as "picUrl",sp.THUMBNAIL_URL as "thumbnailUrl"
+  	from SPORADIC_DETAIL d,SPORADIC_INDEX i,ORGANIZATION o,SPORADIC_GOODS g,GOODS_TRACE tr
+  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
+  	where tr.FK_ORDERID=d.FK_INDEXID and tr.FK_ORDER_DETAILID=d.ID 
+  		  and d.FK_INDEXID=i.ID and i.FK_ORGID=o.ORGID and d.FK_GOODSID=g.GOODSID
+  		  and tr.TRACE_TYPE=1 and tr.FK_GOODSID=g.GOODSID  and tr.ID=#{traceid,jdbcType=VARCHAR}
+  	union
+  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",tr.SUPPLIER as "storeName",null as "unit",null  as "qty",
+  		   o.LICENSE_PIC as "licensePic",1 as "style",sp.PIC_URL as "picUrl",sp.THUMBNAIL_URL as "thumbnailUrl"
+  	from ORGANIZATION o,GOODS g,GOODS_TRACE tr
+  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
+  	where tr.FK_ORGID=o.ORGID and tr.TRACE_TYPE=0 and tr.FK_GOODSID=g.GOODSID 
+  		  and tr.ID=#{traceid,jdbcType=VARCHAR}
+  	union
+  	select tr.FK_GOODSID as "goodsid",g.GOODSNAME as "goodsName",to_char(tr.BUYDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",tr.SUPPLIER as "storeName",null as "unit",null  as "qty",
+  		   o.LICENSE_PIC as "licensePic",1 as "style",sp.PIC_URL as "picUrl",sp.THUMBNAIL_URL as "thumbnailUrl"
+  	from ORGANIZATION o,SPORADIC_GOODS g,GOODS_TRACE tr
+  	left join SKUPIC sp on sp.FK_SKUID=tr.FK_GOODS_SKUID
+  	where tr.FK_ORGID=o.ORGID and tr.TRACE_TYPE=0 and tr.FK_GOODSID=g.GOODSID 
+  		  and tr.ID=#{traceid,jdbcType=VARCHAR}
+  	order by "time"
+  </select>
+  
+  <select id="getTraceByDeliver"  parameterType="java.lang.String" resultType="map">
+	 select tr.FK_GOODSID as "goodsid",to_char(f.DELIVERY_DATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+	 	   o.NAME as "orgName",2 as "style"
+	 from GOODS_TRACE tr,ORDERFORM f,ORGANIZATION o
+	 where tr.FK_ORDERID=f.ID and tr.FK_ORGID=o.ORGID and tr.TRACE_TYPE=0 
+	 	   and tr.ID=#{traceid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getTraceByReceive"  parameterType="java.lang.String" resultType="map">
+  	select tr.FK_GOODSID as "goodsid",to_char(f.RECEIVE_DATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+	  	   o.NAME as "orgName",3 as "style"
+	from GOODS_TRACE tr,ORDERFORM f,ORGANIZATION o
+	where tr.FK_ORDERID=f.ID and tr.FK_ORGID=o.ORGID and tr.TRACE_TYPE=0 
+		  and tr.ID=#{traceid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getTraceByInStock"  parameterType="java.lang.String" resultType="map">
+  	select d.FK_GOODSID as "goodsid",to_char(d.INDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",4 as "style"
+  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORGANIZATION o
+  	where i.ID=d.FK_INDEXID and i.FK_ORGID=o.ORGID and i.VOUCHERTYPE=0 and i.STATUS=0 
+  		  and d.FK_TRACEID=#{traceid,jdbcType=VARCHAR}
+  </select>
+  <select id="getTraceByOutStock"  parameterType="java.util.Map" resultType="map">
+  	select d.ID as "detailid",d.FK_GOODSID as "goodsid",to_char(i.BUSINESSDATE,'yyyy/MM/dd HH24:mi:ss') as "time",
+  		   o.NAME as "orgName",5 as "style"
+  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORGANIZATION o
+  	where i.ID=d.FK_INDEXID and i.FK_ORGID=o.ORGID and i.VOUCHERTYPE=1 and i.STATUS=0   
+  		  and d.FK_TRACEID=#{traceid,jdbcType=VARCHAR} 
+  		  and to_char(i.BUSINESSDATE,'yyyy-MM-dd')=#{time,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getAdditiveUse" parameterType="java.lang.String" resultType="map">
+  	select to_char(a.USEDATE,'yyyy/MM/dd HH24:mi:ss') as "time",6 as "style"
+  	from FOOD_ADDITIVE a
+  	where a.FK_OUTDETAILID=#{detailid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getGoodsUse"  parameterType="java.lang.String" resultType="map">
+  	select to_char(i.USEDATE,'yyyy/MM/dd HH24:mi:ss') as "time",6 as "style"
+  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d
+  	where i.ID=d.FK_INDEXID and i.VOUCHERTYPE=1 and i.STATUS=0   
+  		  and d.ID=#{detailid,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="getSchoolByAllStock" resultType="map">
+  	select b.FK_YJORGID as "schoolid",b.YJORGNAME as "schoolName",nvl(sum(t.QTY),0) as "qtyTotal"
+  	from ORG_BELONG b
+ 	left join 
+ 	(
+ 		select i.FK_ORGID,i.QTY
+ 		from INVENTORY i,GOODS g
+ 		where i.FK_GOODSID=g.GOODSID and g.UNIT='斤'
+ 		union all
+ 		select i.FK_ORGID,i.QTY
+ 		from INVENTORY i,SPORADIC_GOODS g
+ 		where i.FK_GOODSID=g.GOODSID and g.UNIT='斤'
+ 	) t on instr(','||b.FK_ORGIDS||',',','||t.FK_ORGID||',')>0
+  	where b.STATUS=0
+  	group by b.FK_YJORGID,b.YJORGNAME
+  	order by "qtyTotal" desc,"schoolid"
+  </select>
+  
+  
+  <select id="getSchoolStock" parameterType="java.util.Map" resultType="map">
+  	select STATUS as "status",sum(QTY) as "qty",'斤' as "unit"
+  	from (
+	  	select i.QTY,
+	  		   case when sysdate>=i.INTERVALDATE and sysdate &lt;=i.USELIFEDATE then '临期'
+	  		   	 	when sysdate>i.USELIFEDATE then '过期'
+	  		   	 	else '新鲜' end as STATUS
+	  	from ORG_BELONG b,INVENTORY i,GOODS g
+	  	where instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 and b.STATUS=0
+	  		  and i.FK_GOODSID=g.GOODSID and b.FK_YJORGID=#{schoolid,jdbcType=DECIMAL} and g.UNIT='斤' 
+	  		  <if test="typeid!=null">
+		  		  and exists(select 1 from GOODSTYPE t 
+		  		  			 where t.TYPEID=#{typeid,jdbcType=DECIMAL}
+			  		  			   start with t.TYPEID=g.FK_GOODSTYPEID
+			  							connect by prior t.FK_PARENTID=t.TYPEID
+		  		  			 )
+	  		  </if>
+	  	union all
+	  	select i.QTY,
+	  		   case when sysdate>=i.INTERVALDATE and sysdate &lt;=i.USELIFEDATE then '临期'
+	  		   	 	when sysdate>i.USELIFEDATE then '过期'
+	  		   	 	else '新鲜' end as STATUS
+	  	from ORG_BELONG b,INVENTORY i,SPORADIC_GOODS g
+	  	where instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 and b.STATUS=0
+	  		  and i.FK_GOODSID=g.GOODSID and b.FK_YJORGID=#{schoolid,jdbcType=DECIMAL} and g.UNIT='斤' 
+	  		  <if test="typeid!=null">
+		  		  and exists(select 1 from GOODSTYPE t 
+		  		  			 where t.TYPEID=#{typeid,jdbcType=DECIMAL}
+			  		  			   start with t.TYPEID=g.FK_GOODSTYPEID
+			  							connect by prior t.FK_PARENTID=t.TYPEID
+		  		  			 )
+	  		  </if>
+  	)
+  	group by STATUS
+  	order by STATUS
+  </select>
+  
+  <select id="getSchoolByExpireFood" parameterType="java.util.Map" resultType="map">
+  	select t.FK_YJORGID as "schoolid",t.YJORGNAME as "schoolName"
+  	from (
+	  	select b.FK_YJORGID,b.YJORGNAME,sum(d.QTY) as QTY
+	  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORG_BELONG b,GOODS g
+	  	where i.ID=d.FK_INDEXID and i.STATUS=0  and instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 
+	  		  and g.GOODSID=d.FK_GOODSID and b.STATUS=0 and i.PURPOSE=3 
+	  		  and to_char(i.BUSINESSDATE,'yyyy-MM-dd')=#{outDate,jdbcType=VARCHAR}
+	  		  and exists(select 1 from GOODSTYPE t 
+	  		  			 where instr(','||#{goodsTypeid,jdbcType=VARCHAR}||',',','||t.TYPEID||',')>0
+		  		  			 start with t.TYPEID=g.FK_GOODSTYPEID
+		  							connect by prior t.FK_PARENTID=t.TYPEID
+	  		  			 )
+	  		  and g.UNIT='斤' 
+	  		  <if test="areaid!=null">
+	  		  	and b.FK_AREAID=#{areaid,jdbcType=DECIMAL}
+	  		  </if>
+	  	group by b.FK_YJORGID,b.YJORGNAME
+	  	union all
+	  	select b.FK_YJORGID,b.YJORGNAME,sum(d.QTY) as QTY
+	  	from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORG_BELONG b,SPORADIC_GOODS g
+	  	where i.ID=d.FK_INDEXID and i.STATUS=0  and instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 
+	  		  and g.GOODSID=d.FK_GOODSID and b.STATUS=0 and i.PURPOSE=3 
+	  		  and to_char(i.BUSINESSDATE,'yyyy-MM-dd')=#{outDate,jdbcType=VARCHAR}
+	  		  and exists(select 1 from GOODSTYPE t 
+	  		  			 where instr(','||#{goodsTypeid,jdbcType=VARCHAR}||',',','||t.TYPEID||',')>0
+		  		  			 start with t.TYPEID=g.FK_GOODSTYPEID
+		  							connect by prior t.FK_PARENTID=t.TYPEID
+	  		  			 )
+	  		  and g.UNIT='斤' 
+	  		  <if test="areaid!=null">
+	  		  	and b.FK_AREAID=#{areaid,jdbcType=DECIMAL}
+	  		  </if>
+	  	group by b.FK_YJORGID,b.YJORGNAME
+  	) t 
+  	order by t.QTY
+  	<if test="orderType==1">
+		desc
+	</if>
+  </select>
+  
+  <select id="getExpireFood" parameterType="java.util.Map" resultType="map">
+  	select a.TYPEID as "typeid",a.TYPENAME as "typeName",a.UNIT as "unit",sum(a.QTY) as "qty"
+  	from(
+	  	select d.ID,t.TYPEID ,t.TYPENAME,d.QTY,g.UNIT
+		from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORG_BELONG b,GOODS g,GOODSTYPE t
+		where i.ID=d.FK_INDEXID and i.STATUS=0  and instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 
+		  	  and g.GOODSID=d.FK_GOODSID and b.STATUS=0 and i.PURPOSE=3 
+		  	  and b.FK_YJORGID=#{schoolid,jdbcType=DECIMAL}
+		  	  and to_char(i.BUSINESSDATE,'yyyy-MM-dd')=#{outDate,jdbcType=VARCHAR}
+		  	  and g.UNIT='斤' and instr(','||#{goodsTypeid,jdbcType=VARCHAR}||',',','||t.TYPEID||',')>0
+			  start with t.TYPEID=g.FK_GOODSTYPEID
+			  		connect by prior t.TYPEID=t.FK_PARENTID
+		union 
+	  	select d.ID,t.TYPEID ,t.TYPENAME,d.QTY,g.UNIT
+		from BVOUCHER_INDEX i,BVOUCHER_DETAIL d,ORG_BELONG b,SPORADIC_GOODS g,GOODSTYPE t
+		where i.ID=d.FK_INDEXID and i.STATUS=0  and instr(','||b.FK_ORGIDS||',',','||i.FK_ORGID||',')>0 
+		  	  and g.GOODSID=d.FK_GOODSID and b.STATUS=0 and i.PURPOSE=3 
+		  	  and b.FK_YJORGID=#{schoolid,jdbcType=DECIMAL}
+		  	  and to_char(i.BUSINESSDATE,'yyyy-MM-dd')=#{outDate,jdbcType=VARCHAR}
+		  	  and g.UNIT='斤' and instr(','||#{goodsTypeid,jdbcType=VARCHAR}||',',','||t.TYPEID||',')>0
+			  start with t.TYPEID=g.FK_GOODSTYPEID
+			  		connect by prior t.TYPEID=t.FK_PARENTID
+	) a	  		
+   group by a.TYPEID,a.TYPENAME,a.UNIT
+   order by a.TYPEID
+  </select>
+  
+  
+  <select id="getMaterial" parameterType="java.util.Map" resultType="map">
+  	select t.GOODSID as "goodsid",t.GOODSNAME as "goodsName",t.UNIT as "unit",t.PRICE as "price",sum(t.QTY) as "qty"
+  	from(
+	  	select g.GOODSID,g.GOODSNAME,g.UNIT,g.FK_GOODSTYPEID,f.RECEIVE_DATE,o.AREA,d.REAL_QTY as QTY,d.PRICE_BASIC as PRICE
+	  	from GOODS_TRACE tr,GOODS g,ORDER_DETAIL d,ORDERFORM f,ORGANIZATION o
+	  	where tr.FK_GOODSID=g.GOODSID and tr.FK_ORDERID=d.FK_ORDERID and tr.FK_ORDER_DETAILID=d.DETAIL_ID 
+	  		  and d.FK_ORDERID=f.ID and f.ORG_ID=o.ORGID and tr.TRACE_TYPE=0 and f.ORDER_STATUS=60 and g.UNIT='斤'
+	  	union all
+	  	select g.GOODSID,g.GOODSNAME,g.UNIT,g.FK_GOODSTYPEID,tr.BUYDATE as RECEIVE_DATE,o.AREA,d.QTY,d.PRICE
+	  	from GOODS_TRACE tr,SPORADIC_GOODS g,SPORADIC_DETAIL d,SPORADIC_INDEX i,ORGANIZATION o
+	  	where tr.FK_GOODSID=g.GOODSID and tr.FK_ORDERID=d.FK_INDEXID and tr.FK_ORDER_DETAILID=d.ID 
+	  		  and d.FK_INDEXID=i.ID and i.FK_ORGID=o.ORGID and tr.TRACE_TYPE=1 	and g.UNIT='斤'  
+  	) t
+  	where 1=1
+  		  <if test="goodsTypeid!=null and goodsTypeid!=''">
+  		  	and exists(select 1 from GOODSTYPE t1 
+  		  			   where t1.TYPEID=t.FK_GOODSTYPEID
+  		  			   start with instr(','||#{goodsTypeid,jdbcType=VARCHAR}||',',','||t1.TYPEID||',')>0
+  							connect by prior t1.TYPEID=t1.FK_PARENTID
+  		  			  )
+  		  </if>
+  		  <if test="buyDate!=null and buyDate!=''">
+  		  	and to_char(t.RECEIVE_DATE,'yyyy-MM-dd')=#{buyDate,jdbcType=VARCHAR}
+  		  </if>
+  		  <if test="areaid!=null">
+  		  	and (t.AREA=#{areaid,jdbcType=DECIMAL}
+  		  		or
+  		  		exists(select 1 from AREA a where a.FK_PARENTID=#{areaid,jdbcType=DECIMAL} and a.ID=t.AREA)
+  		  		)
+  		  </if>
+  	group by t.GOODSID,t.GOODSNAME,t.UNIT,t.PRICE
+  	order by "qty"
+  	<if test="orderType==1">
+		desc
+	</if>
+  </select>
+  
+  <select id="getStoreInfo" parameterType="java.lang.Integer" resultType="map">
+  	select o.ORGID as "orgid",o.NAME as "orgName",o.TRADEMARK as "tradeMark", 
+  		   REPLACE(WMSYS.WM_CONCAT(gt.TYPENAME),',','、') as "scopeTypeName"
+  	from ORGANIZATION o
+  	left join GOODSTYPE gt on instr(','||o.SCOPE_TYPE||',',','||gt.TYPEID||',')>0
+  	where o.ORGID=#{orgid,jdbcType=DECIMAL}
+  	group by o.ORGID,o.NAME,o.TRADEMARK
+  </select>
+  
+  <select id="getCountByStore" parameterType="java.util.Map" resultType="int">
+  	select count(*)
+  	from ORDERFORM
+  	where DELETESTATUS=0 and ORDER_STATUS=60 and STORE_ID=#{orgid,jdbcType=DECIMAL}
+  		  <if test="isMonth==1">
+  		  	and to_char(RECEIVE_DATE,'yyyy-MM')=to_char(SYSDATE,'yyyy-MM')
+  		  </if>
+  		  <if test="isQuarter==1"><!--'yyyy_q'表示，年_季度  -->
+  		  	and to_char(RECEIVE_DATE,'yyyy_q')=to_char(SYSDATE,'yyyy_q')
+  		  </if>
+  </select>
+  
+  <select id="getOrderInfoByStore" parameterType="java.util.Map" resultType="map">
+  	select f.ID as "id",f.ORDER_NO as "orderNo",to_char(f.RECEIVE_DATE,'yyyy/MM/dd') as "receiveDate",
+  		   g.GOODSNAME||'-'||s.PROPERTY as "goodsName",d.UNIT as "unit",d.REAL_QTY as "qty"
+  	from ORDERFORM f,ORDER_DETAIL d,ORG_SKU os,SKU s,GOODS g
+  	where f.ID=d.FK_ORDERID and d.ORG_SKUID=os.ID and os.FK_SKUID=s.SKUID and s.FK_GOODSID=g.GOODSID
+  	 	  and f.DELETESTATUS=0 and f.ORDER_STATUS=60 and f.STORE_ID=#{orgid,jdbcType=DECIMAL} 
+  		  and f.RECEIVE_DATE >=#{beginDate,jdbcType=TIMESTAMP}
+  		  and f.RECEIVE_DATE &lt;=#{endDate,jdbcType=TIMESTAMP}
+  	order by f.RECEIVE_DATE,f.ORDER_NO
+  </select>
+  
+  <sql id="getStockCountAndTotal">
+  	select o.ORGID,o.NAME,count(f.ID) as SUMCOUNT,0 as MONTHCOUNT,0 as QUARTERCOUNT,0 as TOTAL
+  	from ORGANIZATION o
+  	left join ORDERFORM f on f.STORE_ID=o.ORGID and f.DELETESTATUS=0 and f.ORDER_STATUS=60
+  	where o.STATUS!=2 and o.ORGSTYLE=1
+  	group by o.ORGID,o.NAME
+  	union
+  	select o.ORGID,o.NAME,0 as SUMCOUNT,count(f.ID) as MONTHCOUNT,0 as QUARTERCOUNT,0 as TOTAL
+  	from ORGANIZATION o
+  	left join ORDERFORM f on f.STORE_ID=o.ORGID and f.DELETESTATUS=0 and f.ORDER_STATUS=60 and to_char(f.RECEIVE_DATE,'yyyy-MM')=to_char(SYSDATE,'yyyy-MM')
+  	where o.STATUS!=2 and o.ORGSTYLE=1
+  	group by o.ORGID,o.NAME
+  	union
+  	select o.ORGID,o.NAME,0 as SUMCOUNT,0 as MONTHCOUNT,count(f.ID) as QUARTERCOUNT,nvl(sum(f.RECEIVE_TOTAL),0) as TOTAL
+  	from ORGANIZATION o
+  	left join ORDERFORM f on f.STORE_ID=o.ORGID and f.DELETESTATUS=0 and f.ORDER_STATUS=60  and to_char(f.RECEIVE_DATE,'yyyy_q')=to_char(SYSDATE,'yyyy_q')
+  	where o.STATUS!=2  and o.ORGSTYLE=1
+  	group by o.ORGID,o.NAME
+  </sql>
+  
+  <select id="getStoreRanking" resultType="map">
+  	select t2.*,rownum as "rankNo"
+  	from (
+	  	select t.ORGID as "orgid",t.NAME as "orgName",sum(SUMCOUNT) as "sumCount",
+	  		   sum(MONTHCOUNT) as "monthCount",sum(QUARTERCOUNT) as "quarterCount",
+	  		   sum(TOTAL) as "quarterTotal"
+	  	from (<include refid="getStockCountAndTotal"/>) t
+	  	group by t.ORGID,t.NAME
+	  	order by "quarterTotal" desc
+    ) t2
+  </select>
+  
+  <select id="getParentGoodsTypeid" resultType="java.lang.String">
+  	select t.TYPEID from GOODSTYPE t where t.FK_PARENTID=0
+  </select>
+</mapper>

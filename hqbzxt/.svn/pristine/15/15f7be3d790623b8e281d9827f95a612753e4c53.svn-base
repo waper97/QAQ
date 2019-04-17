@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.hqbz.mapper.menu.MenuIndexMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.hqbz.model.menu.MenuIndex" >
+    <id column="ID" property="menuid" jdbcType="VARCHAR" />
+    <result column="FK_ORGID" property="orgid" jdbcType="DECIMAL" />
+    <result column="ORGNAME" property="orgName" jdbcType="VARCHAR" />
+    <result column="SCHOOLNAME" property="schoolName" jdbcType="VARCHAR" />
+    <result column="MENUCODE" property="menuCode" jdbcType="VARCHAR" />
+    <result column="MENUTYPE" property="menuType" jdbcType="DECIMAL" />
+    <result column="MEALSDATE" property="mealsDate" jdbcType="TIMESTAMP" />
+    <result column="COUNT" property="count" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="DELETESTATUS" property="deleteStatus" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LASTOPUSER" property="lastOpUser" jdbcType="VARCHAR" />
+    <result column="LASTOPDATE" property="lastOpDate" jdbcType="TIMESTAMP" />
+    <result column="CHECKERID" property="checkerid" jdbcType="VARCHAR" />
+    <result column="CHECKNAME" property="checkName" jdbcType="VARCHAR" />
+    <result column="CHECKDATE" property="checkDate" jdbcType="TIMESTAMP" />
+    <result column="SUBMITCHECKDATE" property="submitCheckDate" jdbcType="TIMESTAMP" />
+    <result column="CHECKOPINION" property="checkOpinion" jdbcType="VARCHAR" />
+  </resultMap>
+
+	<resultMap id="MenuInfoResultMap" type="com.yj.hqbz.model.menu.MenuInfo">
+		<id property="menuid" column="ID"/>
+		<result property="orgid" column="ORGID"/>
+		<result property="menuCode" column="MENUCODE"/>
+		<result property="menuType" column="MENUTYPE"/>
+		<result property="mealsDate" column="MEALSDATE"/>
+		<result property="dishName" column="DISHNAME"/>
+		<result property="cookerid" column="COOKERID"/>
+		<result property="cookerName" column="COOKERNAME"/>
+		<result property="materialName" column="MATERIALNAME"/>
+	</resultMap>
+  <sql id="Base_Column_List" >
+    ID, FK_ORGID, MENUCODE, MENUTYPE, MEALSDATE, COUNT, REMARK, STATUS, DELETESTATUS, 
+    CREATOR, CREATEDATE, LASTOPUSER, LASTOPDATE, CHECKERID, CHECKNAME, CHECKDATE,SUBMITCHECKDATE, CHECKOPINION
+  </sql>
+  
+  <sql id="param">
+  	<if test="menuType!=null">
+  		and m.MENUTYPE=#{menuType,jdbcType=DECIMAL}
+  	</if>
+  	<if test="beginDate!=null">
+  		and m.MEALSDATE>=#{beginDate,jdbcType=TIMESTAMP}
+  	</if>
+  	<if test="endDate!=null">
+  		and m.MEALSDATE &lt;=#{endDate,jdbcType=TIMESTAMP}
+  	</if>
+  	<if test="status!=null">
+  		and m.STATUS=#{status,jdbcType=DECIMAL}
+  	</if>
+  	<if test="showDraft==0">
+  		and m.STATUS!=0
+  	</if>
+  	<if test="creator!=null and creator!=''">
+  		and instr(m.CREATOR,#{creator,jdbcType=VARCHAR})>0
+  	</if>
+  	<if test="orgid!=null">
+  		and m.FK_ORGID=#{orgid,jdbcType=DECIMAL}
+  	</if>
+  </sql>
+  
+  <sql id="orderBy">
+  	<choose>
+  		<when test="orderBy!=null and orderBy!=''">
+  			<choose>
+		  		<when test="orderBy=='orgName' or orderBy=='schoolName' or orderBy=='remark' or orderBy=='checkName' or
+		  					orderBy=='checkOpinion' or orderBy=='creator' or orderBy=='lastOpUser'">
+		  			NLSSORT(#{orderBy},'NLS_SORT=SCHINESE_PINYIN_M') 
+		  		</when>
+		  		<otherwise>
+		  			#{orderBy}
+		  		</otherwise>
+		  	</choose>
+		  	<if test="orderType==1">
+		  		desc
+		  	</if>
+  		</when>
+  		<otherwise>
+  			MENUCODE
+  		</otherwise>
+  	</choose>
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" />
+    from MENU_INDEX
+    where ID = #{menuid,jdbcType=VARCHAR}
+  </select>
+
+	<select id="getMenuInfoAndMenuDishAndMaterial" resultMap="MenuInfoResultMap" parameterType="java.lang.String">
+	  SELECT A.ID,A.FK_ORGID,A.MENUCODE,A.MENUTYPE,A.MEALSDATE,
+	  B.DISHNAME,B.COOKERID,B.COOKERNAME,C.MATERIALNAME,D.ORGID from MENU_INDEX A
+	  LEFT JOIN MENU_DISH B  on A.ID = B.FK_MENUID
+	  LEFT  JOIN MENU_MAIN_MATERIAL C on B.DISHID = C.FK_DISHID
+	  LEFT JOIN ORGANIZATION D on D.ORGID = A.FK_ORGID
+	  WHERE  A.ID = #{menuid,jdbcType=VARCHAR}
+	</select>
+  
+  <select id="getMenuList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select * from (
+	  	select m.ID,m.FK_ORGID,m.MENUCODE,m.MENUTYPE,m.MEALSDATE,m.STATUS,m.CREATOR,m.CREATEDATE,m.SUBMITCHECKDATE,
+	  		   m.COUNT,m.CHECKERID,m.CHECKNAME,m.CHECKDATE,o.NAME as ORGNAME,ob.YJORGNAME as SCHOOLNAME
+	  	from MENU_INDEX m,ORGANIZATION o
+	  	left join ORG_BELONG ob on instr(','||ob.FK_ORGIDS||',',','||o.ORGID||',')>0
+	  	where m.FK_ORGID=o.ORGID and m.DELETESTATUS=0 <include refid="param"/>
+  	) order by <include refid="orderBy"/>
+  </select>
+   
+  <insert id="addSave" parameterType="com.yj.hqbz.model.menu.MenuIndex">
+  	insert into MENU_INDEX(<include refid="Base_Column_List" />)
+  	select #{menuid,jdbcType=VARCHAR},#{orgid,jdbcType=DECIMAL},#{menuCode,jdbcType=VARCHAR}||trim(to_char(to_number(nvl(max(substr(m.MENUCODE,length(m.MENUCODE)-3)),0))+1,'0009')),
+  		   #{menuType,jdbcType=DECIMAL},#{mealsDate,jdbcType=TIMESTAMP},#{count,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR},#{status,jdbcType=DECIMAL},
+  		   #{deleteStatus,jdbcType=DECIMAL},#{creator,jdbcType=VARCHAR},#{createDate,jdbcType=TIMESTAMP},#{lastOpUser,jdbcType=VARCHAR},
+  		   #{lastOpDate,jdbcType=TIMESTAMP},#{checkerid,jdbcType=VARCHAR},#{checkName,jdbcType=VARCHAR},#{checkDate,jdbcType=TIMESTAMP},
+  		   #{submitCheckDate,jdbcType=TIMESTAMP},#{checkOpinion,jdbcType=VARCHAR}
+  	from MENU_INDEX m
+  	where m.DELETESTATUS=0 and m.FK_ORGID=#{orgid,jdbcType=DECIMAL}
+  		  and instr(m.MENUCODE,#{menuCode,jdbcType=VARCHAR})>0
+  </insert>
+  
+  <update id="updateSave" parameterType="com.yj.hqbz.model.menu.MenuIndex">
+  	update MENU_INDEX
+  	set MENUTYPE=#{menuType,jdbcType=DECIMAL},
+  		MEALSDATE=#{mealsDate,jdbcType=TIMESTAMP},
+  		COUNT=#{count,jdbcType=DECIMAL},
+  		REMARK=#{remark,jdbcType=VARCHAR},
+  		STATUS=#{status,jdbcType=DECIMAL},
+  		LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
+  		LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP},
+  		SUBMITCHECKDATE=#{submitCheckDate,jdbcType=TIMESTAMP},
+  		CHECKERID=#{checkerid,jdbcType=VARCHAR},
+  		CHECKNAME=#{checkName,jdbcType=VARCHAR}
+  	where ID = #{menuid,jdbcType=VARCHAR} 
+  </update>
+  
+  <update id="checkBill" parameterType="com.yj.hqbz.model.menu.MenuIndex">
+  	update MENU_INDEX
+  	set STATUS=#{status,jdbcType=DECIMAL},
+  		CHECKERID=#{checkerid,jdbcType=VARCHAR},
+  		CHECKNAME=#{checkName,jdbcType=VARCHAR},
+  		CHECKDATE=#{checkDate,jdbcType=TIMESTAMP},
+  		CHECKOPINION=#{checkOpinion,jdbcType=VARCHAR},
+  		LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
+  		LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+  	where ID = #{menuid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="deleteBill" parameterType="com.yj.hqbz.model.menu.MenuIndex">
+  	update MENU_INDEX
+  	set DELETESTATUS=#{deleteStatus,jdbcType=DECIMAL},
+  		LASTOPUSER=#{lastOpUser,jdbcType=VARCHAR},
+  		LASTOPDATE=#{lastOpDate,jdbcType=TIMESTAMP}
+  	where ID = #{menuid,jdbcType=VARCHAR}
+  </update>
+</mapper>
