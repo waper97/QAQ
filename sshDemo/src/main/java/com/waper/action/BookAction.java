@@ -23,6 +23,15 @@ public class BookAction extends ActionSupport {
     public void setBookService(BookService bookService) {
         this.bookService = bookService;
     }
+    private  String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     Book book = new Book();
 
@@ -39,6 +48,9 @@ public class BookAction extends ActionSupport {
         return SUCCESS;
     }
     public String getBookById(){
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String id = request.getParameter("id");
+        System.out.println(id);
        Book book =  bookService.getBookById("2");
         System.out.println(book);
         return SUCCESS ;
@@ -46,6 +58,12 @@ public class BookAction extends ActionSupport {
     public String getBookList(){
        List<Book> list  = bookService.getBookList();
         ActionContext.getContext().put("list",list);
+        return "list";
+    }
+
+    public String delBookById(){
+        bookService.deleteById(book.getId());
+        getBookList();
         return "list";
     }
 

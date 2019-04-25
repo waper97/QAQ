@@ -17,5 +17,11 @@
         <action name="getBookList" class="com.waper.action.BookAction" method="getBookList">
             <result name="list">/index.jsp</result>
         </action>
+        <action name="getBookById" class="com.waper.action.BookAction" method="getBookById">
+            <result name="success">/index.jsp</result>
+        </action>
+        <action name="delBookById" class="com.waper.action.BookAction" method="delBookById">
+            <result name="list">/index.jsp</result>
+        </action>
     </package>
 </struts>

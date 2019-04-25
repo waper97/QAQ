@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 </head>
 <body>
+<form action="getBookById" method="get">
     <table width="500px"  class="table" >
         <tr>
             <td>ID</td>
@@ -21,13 +22,14 @@
                 <td>${page}</td>
                 <td>${publishdate}</td>
                 <td>
-                    <button class="btn-danger">删除</button>
+                    <a class="btn-danger" type="submit" href="delBookById?book.id=${id}">删除</a>
                     <button class="btn-success">修改</button>
                 </td>
         </tr>
         </s:iterator>
 
     </table>
+</form>
 <script src="jquery-3.4.0.js"></script>
 </body>
 </html>
