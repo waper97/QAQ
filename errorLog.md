@@ -26,7 +26,7 @@
 # 在本地maven仓库里添加jar包
 ###      [oracle驱动官方下载地址](https://www.oracle.com/technetwork/cn/articles/oem/jdbc-112010-094555-zhs.html)
 ```
-		oracle 驱动放入本仓库 mvn install:install-file -Dfile={Path/to/your/ojdbc.jar} -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
+		oracle 驱动放入本仓库 mvn install:install-file -Dfile=你的jar包位置 -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
 ```
 # springboot遇到的坑
 	 springboot项目设置数据源的时候 spring.datasource.data-username 会报错 ：invalid username/password; logon denied；
