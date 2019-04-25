@@ -83,3 +83,16 @@
 
 # 调用支付接口（官方demo）出现的问题：“支付宝调试错误，请回到请求来源地，重新发起请求”（2019年4月16日）
 	原因是支付宝沙箱里的网关没有填导致的
+# ssh(20190425) ①	框架遇到：org.hibernate.HibernateException: Could not obtain transaction-synchronized Session for current thread
+	   原因是：直接通过sessionFactory.getCurrentSession getCurrentSession是从当前上下文中获取Session并且会绑定到当前线程，第一次调用时会创建一个Session实例，如果该Session未关闭，后续多次获取的是同一个Session实例；事务提交或者回滚时会自动关闭Sesison,无需人工关闭
+	   [参考链接](https://www.cnblogs.com/chyu/p/4817291.html)
+# ② org.hibernate.UnknownEntityTypeException: Unable to locate persister: com.xxx.xxx.xx
+	原因是:在hibernate 配置中没有设置实体位置
+	  <property name="packagesToScan">
+                    <list>
+                        <value>com.waper.entity</value>
+                    </list>
+                </property>
+	   
+
+
