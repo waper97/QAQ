@@ -94,5 +94,16 @@
                     </list>
                 </property>
 	   
-
+#  git常用命令总结
+		git add .           					 		将当前工作区下所有修改的内容添加到git暂存区
+		git commit -m"描述"				 				提交到git版本库
+		git pull                         				拉取远程仓库代码到本地
+		git push    					 				推送到远程仓库
+		git branch   					 				查看分支
+		git checkout -b branch           				创建一个分支名称为branch 并切换分支到branch
+		git checkout branch              				切换分支到branch
+		git status						 				查看暂存区的状态
+		git push --set-upstream origin branch_01		推送分支branch到远程仓库
+		git log											查看提交日志			
+		git reflog										查看从创建开始的提交日志
 
