@@ -56,7 +56,7 @@ public class BookAction extends ActionSupport {
         return SUCCESS ;
     }
     public String getBookList(){
-       List<Book> list  = bookService.getBookList();
+       List<Book> list  = bookService.getBookList(book);
         ActionContext.getContext().put("list",list);
         return "list";
     }
@@ -67,11 +67,17 @@ public class BookAction extends ActionSupport {
         return "list";
     }
 
+    public String getBookByName(){
+        bookService.getBookList(book);
+        return SUCCESS;
+    }
 
     @Override
     public String execute() throws Exception {
         return SUCCESS;
     }
+
+
 
 
 }

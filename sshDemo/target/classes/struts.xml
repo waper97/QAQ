@@ -23,5 +23,8 @@
         <action name="delBookById" class="com.waper.action.BookAction" method="delBookById">
             <result name="list">/index.jsp</result>
         </action>
+        <action name="getBookList" class="com.waper.action.BookAction" method="getBookList">
+            <result name="list">/index.jsp</result>
+        </action>
     </package>
 </struts>

@@ -12,7 +12,7 @@ import java.util.List;
 public interface BookService {
     public Book getBookById(String id);
 
-    List<Book> getBookList();
+    List<Book> getBookList(Book book);
 
     void deleteById(String id);
 

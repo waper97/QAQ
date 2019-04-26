@@ -11,7 +11,7 @@ import java.util.List;
 public interface BookDao {
     public Book getBookById(String id);
     //查询所有书
-    List<Book> getBookList();
+    List<Book> getBookList(Book book);
 
     void deleteById(String id);
 

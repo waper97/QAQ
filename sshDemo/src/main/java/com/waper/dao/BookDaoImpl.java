@@ -28,8 +28,9 @@ public class BookDaoImpl implements  BookDao {
     }
 
     @Override
-    public List<Book> getBookList() {
-        Query query = sessionFactory.getCurrentSession().createQuery("from Book ");
+    public List<Book> getBookList(Book book) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from Book where name = ?");
+        query.setParameter(0,book.getName());
         return query.list();
     }
 

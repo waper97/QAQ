@@ -5,31 +5,58 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 </head>
 <body>
-<form action="getBookById" method="get">
-    <table width="500px"  class="table" >
-        <tr>
-            <td>ID</td>
-            <td>书名</td>
-            <td>页数</td>
-            <td>出版时间</td>
-            <td>操作</td>
-        </tr>
 
-        <s:iterator value="#list">
-        <tr>
-                <td>${id}</td>
-                <td>${name}</td>
-                <td>${page}</td>
-                <td>${publishdate}</td>
-                <td>
-                    <a class="btn-danger" type="submit" href="delBookById?book.id=${id}">删除</a>
-                    <button class="btn-success">修改</button>
-                </td>
-        </tr>
-        </s:iterator>
+    <div class="input-group-text">
+        书名:
+        <input type="text" id="bookName" class="form-control;" placeholder="请输入名称"  aria-describedby="emailHelp" style="width: 250px;"/>
+        <a class="btn btn-success"  id="query">查询</a>
+    </div>
+    <div class="tab tab-content ">
+        <form action="getBookById" method="get">
+            <table width="500px"  class="table table-bordered" >
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" >书名</th>
+                    <th scope="col">页数</th>
+                    <th scope="col">出版时间</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <s:iterator value="#list">
+                    <tbody>
+                    <tr>
+                        <th>${id}</th>
+                        <th>${name}</th>
+                        <th>${page}</th>
+                        <th>${publishdate}</th>
+                        <th>
+                            <a class="btn btn-danger" type="submit" href="delBookById?book.id=${id}">删除</a>
+                            <button class="btn btn-primary">修改</button>
+                        </th>
+                    </tr>
+                    </tbody>
+                </s:iterator>
 
-    </table>
-</form>
+            </table>
+        </form>
+    </div>
+
+
 <script src="jquery-3.4.0.js"></script>
+<script>
+    $(function(){
+        $("#query").click(function () {
+            var name =  $("#bookName").val()
+            $.ajax({
+                url:'getBookList?book.name='+name,
+                method:'get',
+                success:function (data) {
+                    alert(data)
+                }
+            })
+        })
+    })
+</script>
 </body>
 </html>

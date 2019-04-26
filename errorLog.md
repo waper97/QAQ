@@ -106,4 +106,6 @@
 		git push --set-upstream origin branch_01		推送分支branch到远程仓库
 		git log											查看提交日志			
 		git reflog										查看从创建开始的提交日志
+		git reset --hard HEAD^							回退到上个版本
+		git reset tt									回退
 
