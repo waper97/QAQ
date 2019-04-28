@@ -29,8 +29,7 @@ public class BookDaoImpl implements  BookDao {
 
     @Override
     public List<Book> getBookList(Book book) {
-        Query query = sessionFactory.getCurrentSession().createQuery("from Book where name = ?");
-        query.setParameter(0,book.getName());
+        Query query = sessionFactory.getCurrentSession().createQuery("from Book");;
         return query.list();
     }
 
@@ -44,5 +43,13 @@ public class BookDaoImpl implements  BookDao {
     @Override
     public void update(Book book) {
         sessionFactory.getCurrentSession().update(book);
+    }
+
+    @Override
+    public List<Book> getBookByName(Book book) {
+        String name = book.getName();
+        Query query = sessionFactory.getCurrentSession().createQuery("from Book where name = ?0 ");
+        query.setParameter(0,book.getName());
+        return query.list();
     }
 }

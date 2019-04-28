@@ -17,5 +17,5 @@ public interface BookDao {
 
     void update(Book book);
 
-
+    List<Book> getBookByName(Book book);
 }

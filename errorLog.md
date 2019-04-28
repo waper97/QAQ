@@ -93,7 +93,16 @@
                         <value>com.waper.entity</value>
                     </list>
                 </property>
-	   
+# ③hibernate使用自定义查询语句HSQL时,使用占位符报错：java.lang.IllegalArgumentException: org.hibernate.QueryException: Legacy-style query parameters (`?`) are no longer supported; use JPA-style ordinal parameters (e.g., `?1`) instead :				
+##### 解决方案	[参考链接](https://www.cnblogs.com/wjjFJ/p/5947076.html)	   
+		1.命名参数的方式：
+			Query query = sessionFactory.getCurrentSession().createQuery("from Book where name = :name ");
+            query.setParameter("name",book.getName());
+		2.JPA(java persistens api)的方式
+			Query query = sessionFactory.getCurrentSession().createQuery("from Book where name = ?0 ");
+            query.setParameter(0,book.getName());
+		
+
 #  git常用命令总结
 		git add .           					 		将当前工作区下所有修改的内容添加到git暂存区
 		git commit -m"描述"				 				提交到git版本库

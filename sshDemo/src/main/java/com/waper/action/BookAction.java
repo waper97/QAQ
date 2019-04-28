@@ -10,7 +10,10 @@ import org.apache.struts2.ServletActionContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -20,6 +23,18 @@ import java.util.List;
 public class BookAction extends ActionSupport {
 
     private BookService bookService;
+    private InputStream inputStream;
+    private Map<String,Object> map;
+
+    public Map<String, Object> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
+    }
+
+
     public void setBookService(BookService bookService) {
         this.bookService = bookService;
     }
@@ -77,7 +92,15 @@ public class BookAction extends ActionSupport {
         return SUCCESS;
     }
 
-
-
+    /**
+     * 返回json格式数据
+     * @return
+     */
+    public String getJsonData(){
+        List<Book> list =  bookService.getBookByName(book);
+        map = new HashMap<>();
+        map.put("list",list);
+        return "hehe";
+    }
 
 }

@@ -2,7 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"  %>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="rescource/css/bootstrap.css">
 </head>
 <body>
 
@@ -43,16 +43,17 @@
     </div>
 
 
-<script src="jquery-3.4.0.js"></script>
+<script src="rescource/js/jquery-3.4.0.js"></script>
 <script>
     $(function(){
         $("#query").click(function () {
             var name =  $("#bookName").val()
+            console.log(name)
             $.ajax({
-                url:'getBookList?book.name='+name,
+                url:'getJsonData?book.name='+name,
                 method:'get',
                 success:function (data) {
-                    alert(data)
+                    console.log(data)
                 }
             })
         })

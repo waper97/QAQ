@@ -34790,7 +34790,7 @@
     </table>
     <table id="5000" parent="29" name="MVIEW$_ADV_FJG">
       <ObjectId>4118</ObjectId>
-      <Comment>Representation for query join sub-graph not in AJG </Comment>
+      <Comment>Representation for query join sub-graph not in AJG</Comment>
       <CreatedTimestamp>2010-03-30.18:08:55</CreatedTimestamp>
       <ModifiedTimestamp>2010-03-30.18:08:55</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
@@ -42451,7 +42451,7 @@ DATA_TYPE_ID</ColNames>
                   data_length is not null)
               or (data_type_id not in (2, 4, 5, 6, 7) and
                   data_length is null)
-                 </Predicate>
+</Predicate>
     </check>
     <column id="6520" parent="5021" name="SNAME">
       <Position>1</Position>

@@ -7,7 +7,7 @@
 <struts>
     <!--<constant name="struts.objectFactory" value="spring"/>-->
     <constant name="struts.devMode" value="true"/>
-    <package name="test" namespace="/" extends="struts-default">
+    <package name="test" namespace="/" extends="struts-default,json-default">
         <action name="test" class="com.waper.action.BookAction" method="test">
             <result name="success">/index.jsp</result>
         </action>
@@ -23,8 +23,8 @@
         <action name="delBookById" class="com.waper.action.BookAction" method="delBookById">
             <result name="list">/index.jsp</result>
         </action>
-        <action name="getBookList" class="com.waper.action.BookAction" method="getBookList">
-            <result name="list">/index.jsp</result>
+        <action name="getJsonData" class="com.waper.action.BookAction" method="getJsonData">
+            <result name="hehe" type="json"><param name="root">map</param></result>
         </action>
     </package>
 </struts>
