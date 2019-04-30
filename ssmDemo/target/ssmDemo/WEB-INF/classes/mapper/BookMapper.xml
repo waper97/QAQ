@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.waper.dao.BookMapper">
+    <select id="getBookList" resultType="com.waper.entity.Book">
+        select * from Book
+    </select>
+    <select id="getBookById" resultType="com.waper.entity.Book" parameterType="int">
+        select * from Book where id =#{id}
+    </select>
+    <delete id="deleteById" parameterType="string">
+        delete from Book where id =#{id}
+    </delete>
+
+    <update id="updateById" parameterType="com.waper.entity.Book">
+        update
+          <trim prefix="set" suffix=",">
+              <if test="name!=null">name =#{name}</if>
+              <if test="page!=null">page =#{page}</if>
+              <if test="publishDate!=null">publishDate =#{publishDate}</if>
+          </trim>id
+          where id =#{}
+    </update>
+</mapper>
