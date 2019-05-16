@@ -102,7 +102,13 @@
 			Query query = sessionFactory.getCurrentSession().createQuery("from Book where name = ?0 ");
             query.setParameter(0,book.getName());
 		
-
+# xml中转移符
+	 | 符号 |     xml  |     英语|
+	 | ------ | ------ | ------ |
+	 | 大于   |  &gt;  | greater than |
+	 | 小于   | &lt;   | less than |
+	 | 单引号   | &lt;   | less than |
+	 | 双引号   | &quot;   | apostrophe|		
 #  git常用命令总结
 		git add .           					 		将当前工作区下所有修改的内容添加到git暂存区
 		git commit -m"描述"				 				提交到git版本库
@@ -117,4 +123,20 @@
 		git reflog										查看从创建开始的提交日志
 		git reset --hard HEAD^							回退到上个版本
 		git reset tt									回退
-
+## 再操作多张表时要注意主从关系（2019年5月10 15：20）
+①业务场景：
+	公司项目有个菜品制作过程，其中涉及到上传图片，这边设计了图片，用一张附件表存，在添加的时候应该先操作菜品制作过程主表，然后再去操作附件表，不然先操作的附件表拿不到关联数据会报错
+	
+# sql问题：今天发现一个严重的问题(18年写了一年都不知道，什么鬼哦。。。)，也就是 表连接的 on 和 where的区别即：
+join on 是生成临时表，where是在	临时表生成后再去过滤数据
+examp:
+	select a.name from a
+	left join b on b.id = a.id 
+	where a.status = 0 and b.age = 18;
+	这段sql是有问题的，
+	真确是：
+	select a.name from a
+	left join b on b.id = a.id and b.age = 18
+	where a.status = 0 ;
+	通俗的来说就是，left join 会先去执行，where后执行，也就是说where是在left join 过滤数据之后再去过滤
+	
