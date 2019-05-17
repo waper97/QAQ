@@ -140,3 +140,15 @@ examp:
 	where a.status = 0 ;
 	通俗的来说就是，left join 会先去执行，where后执行，也就是说where是在left join 过滤数据之后再去过滤
 	
+# mysql 安装后用navicat连接时出现的问题：
+Navicat连接Mysql报错：Client does not support authentication protocol requested by server；
+①解决方案：[参考链接](https://www.cnblogs.com/zichuan/p/9203129.html)
+命令如下：
+
+1、use mysql;
+
+2、alter user 'root'@'localhost' identified with mysql_native_password by '********';
+
+3、flush privileges;
+
+# idea 2019 1.2破解版本[参考链接](https://blog.csdn.net/SIMPLE1995/article/details/89354031)
