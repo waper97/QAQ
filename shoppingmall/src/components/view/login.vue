@@ -1,6 +1,10 @@
 <template>
     <div class="login">
       <el-form :model="loginForm" ref="loginForm" label-width="80px" :rules="rules" class="lf" >
+        <el-form-item >
+          <span>注册登录页面</span>
+        </el-form-item>
+
         <el-form-item label="用户名" prop="username" class="input">
           <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
@@ -43,12 +47,27 @@
                   let params = {...this.loginForm}
                   login(params).then(res =>{
                     this.$refs[loginForm].resetFields()
+                    if(res.data.success){
+                      // this.setCookies(this.loginForm.username,this.loginForm.password,7)
+                    }
                     console.log(res)
                   }).catch(error =>{
                     console.log(error)
                   })
                 }
               })
+          },
+          setCookies(username,password,exdays){
+            var exdate = new Date(); //获取时间
+            exdate.setTime(exdate.getDate()+24 * 60 * 60 * 1000 * exdays)
+            window.document.cookie = username;
+            window.document.cookie =  password;
+
+          },
+          getCookie(){
+            if(document.cookie.length > 0){
+
+            }
           }
         }
     }

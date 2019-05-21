@@ -26,7 +26,12 @@ public class UserController {
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
         System.out.println(md5Password);
         User user = userDao.getUserByUsernameAndPassword(username,md5Password);
-       return new BaseResponse(200,"添加成功",user);
+        if (user == null){
+            return new BaseResponse(false,"用户不存在");
+
+        }else{
+            return new BaseResponse(true,"登录成功",user);
+        }
     }
 
     /**
@@ -47,7 +52,7 @@ public class UserController {
         user.setRole(1);
         user.setStatus(0);
         userDao.save(user);
-        return  new BaseResponse(200,"添加成功");
+        return  new BaseResponse(true,"添加成功");
     }
 
 

@@ -12,51 +12,38 @@ public class BaseResponse {
     public static final Integer SUCCESS_CODE = 200;// 成功
     public static final Integer FAILURE_CODE = 499;//失败
 
-    public BaseResponse(Integer code, String message, Object data) {
-        this.code = code;
-        this.message = message;
-        this.data = data;
-    }
-
-    public BaseResponse(Integer code, Object data) {
-        this.code = code;
-        this.data = data;
-    }
-
-
 
     // 状态码
-    private Integer code;
+    private Integer code = 200;
+
+    // 成功
+    private boolean success = true;
     // 信息
-    private String message;
+    private String msg;
     // 数据
     private Object data;
 
-    private Integer pageCount; //总数
-
-
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
+    public BaseResponse(boolean success, String msg, Object data) {
+        this.success = success;
+        this.msg = msg;
         this.data = data;
     }
+
+    public BaseResponse(String msg) {
+        this.success = true;
+        this.msg = msg;
+    }
+
+    public BaseResponse(boolean success, Object data) {
+        this.success = success;
+        this.data = data;
+    }
+
+
+    public BaseResponse(boolean success, String msg) {
+        this.success = success;
+        this.msg = msg;
+    }
+
+
 }
