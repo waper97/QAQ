@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import {login} from "../../api/global"
+  import {login} from "../api/global"
   export default {
         name: "login",
         data(){
