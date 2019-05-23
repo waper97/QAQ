@@ -18,9 +18,20 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/index',
+      path: '/',
       name: 'index',
-      component: Home
+      component: Home,
+      children:[{
+        path: '/goods',
+        name: 'goods',
+        component: Goods
+      },
+        {
+          path: '/goodsType',
+          name: 'goodsType',
+          component: GoodsType
+        }
+      ]
     },
 
     {
