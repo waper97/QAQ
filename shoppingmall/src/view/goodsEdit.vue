@@ -7,7 +7,14 @@
 
 
         <el-form-item label="类型" prop="type" >
-          <el-input v-model="form.type" auto-complete="off"></el-input>
+          <el-select v-model="form.type" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item prop="pircture">
@@ -42,7 +49,7 @@
 </template>
 
 <script>
-  import {insertGoods,updateGoods} from "@/api/global";
+  import {insertOrUpdateGoods,goodsTypeList} from "@/api/global";
 
   export default {
         name: "goodsEdit",
@@ -61,6 +68,7 @@
                   name:'',
                   type:''
                 },
+              options:[],
                 rules:{
                   name: [
                     { required: true, message: '不能为空', trigger: 'blur' },
@@ -89,7 +97,7 @@
               this.$refs[form].validate((valid) =>{
                 if(valid){
                   let params = {...this.form}
-                  insertGoods(params).then(res =>{
+                  insertOrUpdateGoods(params).then(res =>{
                       if(res.data.success){
                         this.$message(res.data.msg)
                         this.$emit('dialogFormClose')
@@ -106,12 +114,18 @@
               for(let i in this.form){
                   this.form[i] = data[i]
               }
+          },
+          _goodsTypeList(){
+            goodsTypeList().then(res =>{
+               this.options = res.data
+            })
           }
         },
         mounted() {
           if(!this.isAdd){
             this._setForm(this.data)
           }
+          this._goodsTypeList()
         }
     }
 </script>

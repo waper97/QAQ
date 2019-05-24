@@ -21,23 +21,27 @@ public class GoodsController {
     /**
      * 添加商品
      * @param goods
+     * TODO：太耦合了要修改
      * @return
      */
-    @RequestMapping("shop/goods/insertGoods")
-    public Object insertGoods(Goods goods){
-        if(goods.getId() == null){
-            if (goods.getName() == null || goods.getType() == null) {
-                throw new RuntimeException("商品参数不能为空");
-            }
+    @RequestMapping("shop/goods/insertOrUpdateGoods")
+    public Object insertOrUpdateGoods(Goods goods){
+        if(goods.getId() == null && "".equals(goods.getId())){
             goods.setId(UUIDUtil.getUUID());
             goods.setStatus(0);
             goodsDao.save(goods);
         }else{
+            Goods goodsFind = goodsDao.findById(goods.getId()).get();
+            goodsFind.setName(goods.getName());
+            goodsFind.setStatus(goods.getStatus());
+            goodsFind.setPircture(goods.getPircture());
+            goodsFind.setType(goods.getType());
             goodsDao.save(goods);
         }
 
         return new BaseResponse(true,"操作成功");
     }
+
 
     /**
      * 商品列表
