@@ -48,6 +48,7 @@
                   login(params).then(res =>{
                     this.$refs[loginForm].resetFields()
                     if(res.data.success){
+                      this.$router.replace('/home');
                       // this.setCookies(this.loginForm.username,this.loginForm.password,7)
                     }
                     console.log(res)

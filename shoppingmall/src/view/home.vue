@@ -1,9 +1,20 @@
 <template>
     <div class="home">
           <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+              <el-dropdown>
+                <i class="el-icon-setting" style="margin-right: 15px"></i>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>查看</el-dropdown-item>
+                  <el-dropdown-item>新增</el-dropdown-item>
+                  <el-dropdown-item>删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+              <span>{{username}}</span>
+            </el-header>
               <el-container>
                <el-aside width="200px" >
-              <el-row >
+                <el-row >
                 <el-col :span="24">
                   <el-menu
                     default-active="/goods"
@@ -39,6 +50,7 @@
               </el-row>
 
             </el-aside>
+
               <el-main>
                     <div>
                       <router-view></router-view>
@@ -74,6 +86,7 @@
                 total:0,
                 currentPage:1, //初始页
                 pagesize:10,
+                username:''
             }
         },
         methods: {
@@ -158,6 +171,7 @@
 
         },
         mounted() {
+          this.username = '哈哈'
         }
     }
 </script>
