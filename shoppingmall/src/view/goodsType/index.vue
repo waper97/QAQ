@@ -64,6 +64,7 @@
           dialogClose(isFlash){
               if(isFlash) {
                 this.dialogVisible = false
+                this.getGoodsTypeList()
               }
           },
           handleAdd(){
@@ -78,7 +79,7 @@
             deleteGoodTypeById({id:row.id}).then( res =>{
                if (res.data.success){
                   this.$message(res.data.msg)
-                 this.tableData.splice(index, 1)
+                  this.tableData.splice(index, 1)
                }
             })
           }

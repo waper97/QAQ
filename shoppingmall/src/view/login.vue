@@ -49,9 +49,11 @@
                     this.$refs[loginForm].resetFields()
                     if(res.data.success){
                       this.$router.replace('/home');
-                      // this.setCookies(this.loginForm.username,this.loginForm.password,7)
+
+                      var username = this.loginForm.username;
+                      var password = this.loginForm.password
+                      this.setCookies(this.loginForm.username,this.loginForm.password,7)
                     }
-                    console.log(res)
                   }).catch(error =>{
                     console.log(error)
                   })
@@ -63,11 +65,12 @@
             exdate.setTime(exdate.getDate()+24 * 60 * 60 * 1000 * exdays)
             window.document.cookie = username;
             window.document.cookie =  password;
+            console.log(document.cookie)
 
           },
           getCookie(){
             if(document.cookie.length > 0){
-
+                console.log(document.cookie)
             }
           }
         }

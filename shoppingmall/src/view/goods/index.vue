@@ -3,8 +3,7 @@
       <el-button @click="handleAdd">新增</el-button>
         <el-table :data="tableData"  style="width: 100%">
           <el-table-column prop="name" label="名称" width="120"></el-table-column>
-          <el-table-column prop="pircture" label="照片"></el-table-column>
-          <el-table-column prop="status" label="状态"></el-table-column>
+<!--          <el-table-column prop="pircture" label="照片"></el-table-column>-->
           <el-table-column prop="type" label="分类"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -45,7 +44,7 @@
 
 <script>
   import {goodList,deleteGoodsById} from "@/api/global";
-  import GoodsEdit from '../goodsEdit';  // 引入组件(注意命名规范，大小写)
+  import GoodsEdit from './goodsEdit';  // 引入组件(注意命名规范，大小写)
     export default {
       components:{GoodsEdit},
         name: "index",
@@ -103,6 +102,7 @@
             deleteGoodsById({id:row.id}).then(res =>{
               if(res.data.code == 200){
                 this.$message(res.data.msg);
+                this.getGoodList()
               }else{
                 this.$message('删除失败');
               }
@@ -114,8 +114,10 @@
           dialogFormClose(isClose){
             if(isClose){
               this.dialogVisible = false
+              this.getGoodList()
             }else{
               this.dialogVisible = false
+              this.getGoodList()
             }
           },
           handleSizeChange(val) {

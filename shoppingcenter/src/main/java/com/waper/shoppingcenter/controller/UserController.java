@@ -2,8 +2,13 @@ package com.waper.shoppingcenter.controller;
 
 import com.waper.shoppingcenter.common.UUIDUtil;
 import com.waper.shoppingcenter.dao.UserDao;
+import com.waper.shoppingcenter.model.Goods;
 import com.waper.shoppingcenter.model.User;
+import com.waper.shoppingcenter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     UserDao userDao;
-
+    @Autowired
+    UserService userService;
     /**
      * 用户登陆
      * @return
@@ -54,7 +60,13 @@ public class UserController {
         userDao.save(user);
         return  new BaseResponse(true,"添加成功");
     }
-
-
+    // 获取用户列表
+    @RequestMapping("shop/user/getUserList")
+    public Object getUserList(Integer pageNum, Integer pageSize){
+        pageNum = 1;
+        pageSize = 10;
+        Page<User> user = userService.getUseList(pageNum,pageSize);
+        return  new BaseResponse(true,user);
+    }
 
 }

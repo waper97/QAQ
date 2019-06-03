@@ -12,7 +12,7 @@
               v-for="item in options"
               :key="item.id"
               :label="item.name"
-              :value="item.id">
+              :value="item.typeId">
             </el-option>
           </el-select>
         </el-form-item>
@@ -97,11 +97,13 @@
               this.$refs[form].validate((valid) =>{
                 if(valid){
                   let params = {...this.form}
+                  console.log(params.type)
                   insertOrUpdateGoods(params).then(res =>{
                       if(res.data.success){
                         this.$message(res.data.msg)
                         this.$emit('dialogFormClose')
                         this.$refs[form].resetFields()
+                        this._goodsTypeList()
                       }
                   })
                 }

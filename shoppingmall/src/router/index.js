@@ -7,6 +7,7 @@ import Home from '../view/home'
 import GoodsType from  '../view/goodsType/index'
 import Home1 from  '../view/goodsType/home1'
 import Goods from '../view/goods/index'
+import User from '../view/user/index'
 Vue.use(Router)
 
 export default new Router({
@@ -30,6 +31,11 @@ export default new Router({
           path: '/goodsType',
           name: 'goodsType',
           component: GoodsType
+        },
+        {
+          path: '/user',
+          name: 'user',
+          component: User
         }
       ]
     },

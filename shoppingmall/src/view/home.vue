@@ -5,11 +5,12 @@
               <el-dropdown>
                 <i class="el-icon-setting" style="margin-right: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>查看</el-dropdown-item>
-                  <el-dropdown-item>新增</el-dropdown-item>
-                  <el-dropdown-item>删除</el-dropdown-item>
+                  <el-dropdown-item>个人中心</el-dropdown-item>
+                  <el-dropdown-item divided
+                                    @click.native="logout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
+
               <span>{{username}}</span>
             </el-header>
               <el-container>
@@ -35,6 +36,7 @@
                       <el-menu-item-group>
                         <el-menu-item index="1" >商品</el-menu-item>
                         <el-menu-item index="2" >商品分类</el-menu-item>
+                        <el-menu-item index="3" >用户管理</el-menu-item>
                       </el-menu-item-group>
                     </el-submenu>
                     <el-menu-item index="2">
@@ -68,7 +70,7 @@
 
   import {goodList,deleteGoodsById} from "@/api/global";
   import GoodsType from '../view/goodsType/index'
-  import GoodsEdit from "./goodsEdit";  // 引入组件(注意命名规范，大小写)
+  import GoodsEdit from "./goods/goodsEdit";  // 引入组件(注意命名规范，大小写)
   import Goods from './goods/index'
   export default {
         name: "home",
@@ -161,6 +163,8 @@
                 break;
               case '2':
                 this.$router.push('/goodsType')
+              case '3':
+                this.$router.push('/user')
                 break;
             }
             this.$router.push(keyPath)

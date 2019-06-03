@@ -39,3 +39,7 @@ export const getGoodsTypeList = params =>{
 export const goodsTypeList = params =>{
   return axios.post('apis/shop/goodsType/goodsTypeList',qs.stringify(params));
 }
+/***用户**/
+export const getUserList = params =>{
+  return axios.post('apis/shop/user/getUserList',qs.stringify(params));
+}

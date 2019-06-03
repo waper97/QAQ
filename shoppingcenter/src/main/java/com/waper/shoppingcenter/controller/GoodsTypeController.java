@@ -66,6 +66,7 @@ public class GoodsTypeController {
             goodsType.setId(UUIDUtil.getUUID());
             goodsType.setStatus(0);
             goodsType.setAddTime(new Date());
+            goodsType.setUpdateTime(new Date());
             goodsType.setCreator("");
             goodsType.setCreatorId("");
             goodsTypeDao.save(goodsType);

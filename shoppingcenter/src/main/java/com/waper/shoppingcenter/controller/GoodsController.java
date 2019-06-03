@@ -26,8 +26,9 @@ public class GoodsController {
      */
     @RequestMapping("shop/goods/insertOrUpdateGoods")
     public Object insertOrUpdateGoods(Goods goods){
-        if(goods.getId() == null && "".equals(goods.getId())){
+        if(goods.getId() == null || "".equals(goods.getId())){
             goods.setId(UUIDUtil.getUUID());
+            System.out.println(goods.getType());
             goods.setStatus(0);
             goodsDao.save(goods);
         }else{
