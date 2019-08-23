@@ -19,7 +19,7 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/',
+      path: '/index',
       name: 'index',
       component: Home,
       children:[{
