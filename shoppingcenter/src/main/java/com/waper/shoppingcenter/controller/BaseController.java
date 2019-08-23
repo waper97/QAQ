@@ -7,6 +7,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class BaseController {
     @Autowired
@@ -33,6 +35,10 @@ public class BaseController {
         goodsDao.save(goods);
         modelMap.put("test",goods);
         return "hellospringboot";
+    }
+
+    public Object getSession(HttpServletRequest request){
+      return   request.getAttribute("USER_SESSION");
     }
 
 }

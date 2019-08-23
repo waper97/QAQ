@@ -2,7 +2,7 @@
     <div class="login">
       <el-form :model="loginForm" ref="loginForm" label-width="80px" :rules="rules" class="lf" >
         <el-form-item >
-          <span>注册登录页面</span>
+          <span></span>
         </el-form-item>
 
         <el-form-item label="用户名" prop="username" class="input">
@@ -15,19 +15,20 @@
         <span  style="cursor: pointer;color: #f19149;font-size: 0.75rem;margin-left: 5px;">忘记密码？</span>
 
       </el-form>
-      <el-button type="primary" @click="submit('loginForm')">登陆</el-button>
+      <el-button type="primary" @click="submit('loginForm')" :loading="isLoading">登陆</el-button>
     </div>
 </template>
 
 <script>
-  import {login} from "../api/global"
+  import {login,getSession} from "../api/global"
   export default {
         name: "login",
         data(){
           return {
             loginForm:{
               username:'',
-              password:''
+              password:'',
+              isLoading:false
             },
             rules:{
               username: [
@@ -53,6 +54,11 @@
                       var username = this.loginForm.username;
                       var password = this.loginForm.password
                       this.setCookies(this.loginForm.username,this.loginForm.password,7)
+                        getSession(params).then(res =>{
+console.log(res)
+                        })
+
+
                     }
                   }).catch(error =>{
                     console.log(error)
@@ -73,6 +79,11 @@
                 console.log(document.cookie)
             }
           }
+        },
+        computed:{
+            btnText(){
+                if(this.isLoading){return '登录中...'}
+            }
         }
     }
 </script>

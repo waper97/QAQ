@@ -2,16 +2,16 @@ package com.waper.shoppingcenter.controller;
 
 import com.waper.shoppingcenter.common.UUIDUtil;
 import com.waper.shoppingcenter.dao.UserDao;
-import com.waper.shoppingcenter.model.Goods;
 import com.waper.shoppingcenter.model.User;
 import com.waper.shoppingcenter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class UserController {
@@ -19,12 +19,13 @@ public class UserController {
     UserDao userDao;
     @Autowired
     UserService userService;
+
     /**
      * 用户登陆
      * @return
      */
     @RequestMapping("shop/user/login")
-    public Object doLogin(String username,String password){
+    public Object doLogin(String username, String password, HttpServletRequest request, HttpServletResponse response){
         if(username == null || password == null){
             throw new RuntimeException("用户名或密码不能为空");
         }
@@ -36,8 +37,14 @@ public class UserController {
             return new BaseResponse(false,"用户不存在");
 
         }else{
+            request.setAttribute("USER_SESSION",user);
             return new BaseResponse(true,"登录成功",user);
         }
+    }
+    @RequestMapping("shop/user/getSession")
+    public Object getSession(HttpServletRequest request){
+
+        return request.getAttribute("USER_SESSIOIN");
     }
 
     /**
@@ -67,6 +74,16 @@ public class UserController {
         pageSize = 10;
         Page<User> user = userService.getUseList(pageNum,pageSize);
         return  new BaseResponse(true,user);
+    }
+
+    /**
+     * 注销
+     * @return
+     */
+    @RequestMapping("shop/user/logout")
+    public Object logout(HttpServletRequest request, HttpServletResponse response){
+        request.removeAttribute("USER_SESSION");
+        return new BaseResponse(true,"退出成功");
     }
 
 }
