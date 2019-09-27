@@ -74,12 +74,25 @@
 	,要在之前url后面的#号后面加path就可以访问到了，如果不想要在#号后面加path，想直接url后面加path的话，就在路由文件里
 	，加上`mode:'history'就可以了	
 
-#mybatis遇到的问题：
+# mybatis遇到的问题：
 ###     ①    There is no getter for property named 'companyId' in 'class java.lang.String'
 				原因是mapper接口的`参数`没有映射上,可以用@param 注解来解决 即：
 				Staff getPersonnelStatisticsByOrgId(@Param("orgid") String orgid);
 ###	②myabtis 里resultMap 如果对应实体实体没有设置getter 和settter会报红报错2019年4月15日	
 [图片](img-storage)
+
+## mybatis if判断如果是类型是int ，直接判断为空就可以了，不用判断是== ''
+
+```java
+  <if test="type !=null and type !='' ">
+           and GENRE =#{type}
+  </if>
+  这样的话会进入不了判断，英文当type 为int类型是 不等于字符空的，所以判断都进不了
+  直接改为：
+   <if test="type !=null">
+           and GENRE =#{type}
+  </if>
+```
 
 # 调用支付接口（官方demo）出现的问题：“支付宝调试错误，请回到请求来源地，重新发起请求”（2019年4月16日）
 	原因是支付宝沙箱里的网关没有填导致的
@@ -152,3 +165,4 @@ Navicat连接Mysql报错：Client does not support authentication protocol reque
 3、flush privileges;
 
 # idea 2019 1.2破解版本[参考链接](https://blog.csdn.net/SIMPLE1995/article/details/89354031)
+
