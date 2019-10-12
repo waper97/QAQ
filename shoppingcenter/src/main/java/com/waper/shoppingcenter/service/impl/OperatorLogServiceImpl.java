@@ -1,6 +1,6 @@
 package com.waper.shoppingcenter.service.impl;
 
-import com.waper.shoppingcenter.dao.OperatorLogDao;
+import com.waper.shoppingcenter.dao.OperatorLogMapper;
 import com.waper.shoppingcenter.model.OperatorLog;
 import com.waper.shoppingcenter.service.OperatorLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import javax.transaction.Transactional;
 public class OperatorLogServiceImpl implements OperatorLogService {
 
     @Autowired
-    private OperatorLogDao operatorLogDao;
+    private OperatorLogMapper operatorLogDao;
 
 
     @Override

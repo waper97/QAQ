@@ -1,7 +1,7 @@
 package com.waper.shoppingcenter.controller;
 
 import com.waper.shoppingcenter.common.UUIDUtil;
-import com.waper.shoppingcenter.dao.UserDao;
+import com.waper.shoppingcenter.dao.UserMapper;
 import com.waper.shoppingcenter.model.User;
 import com.waper.shoppingcenter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class UserController {
     @Autowired
-    UserDao userDao;
+    UserMapper userMapper;
     @Autowired
     UserService userService;
 
@@ -32,7 +32,7 @@ public class UserController {
         // md5加密
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
         System.out.println(md5Password);
-        User user = userDao.getUserByUsernameAndPassword(username,md5Password);
+        User user = userMapper.getUserByUsernameAndPassword(username,md5Password);
         if (user == null){
             return new BaseResponse(false,"用户不存在");
 
@@ -64,7 +64,7 @@ public class UserController {
         user.setPassword(md5Password);
         user.setRole(1);
         user.setStatus(0);
-        userDao.save(user);
+        userMapper.save(user);
         return  new BaseResponse(true,"添加成功");
     }
     // 获取用户列表

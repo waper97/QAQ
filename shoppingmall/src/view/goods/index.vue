@@ -19,6 +19,7 @@
         </el-table>
         <div class="block">
           <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
@@ -65,12 +66,13 @@
         },
         methods: {
           getGoodList(){
-            goodList().then(res =>{
-              console.log(res)
-              console.log(res.data.data.content)
-              this.tableData = res.data.data.content
+            let params = {};
+            goodList(params).then(res =>{
+              // console.log(res)
+              // console.log(res.data.data.list)
+              this.tableData = res.data.data.list
               // 总条数
-              this.total = res.data.data.totalElements
+              this.total = res.data.data.total
             })
           }
         ,
@@ -122,10 +124,28 @@
           },
           handleSizeChange(val) {
             this.pagesize = val
+            let params = {};
+            params.pageSize = val
+            goodList(params).then(res =>{
+              // console.log(res)
+              // console.log(res.data.data.list)
+              this.tableData = res.data.data.list
+              // 总条数
+              this.total = res.data.data.total
+            })
             console.log(`每页 ${val} 条`);
           },
           handleCurrentChange(val) {
             this.currentPage = val
+            let params = {};
+            params.page = val
+            goodList(params).then(res =>{
+              // console.log(res)
+              // console.log(res.data.data.list)
+              this.tableData = res.data.data.list
+              // 总条数
+              this.total = res.data.data.total
+            })
             console.log(`当前 ${val} 条`);
           },
         },

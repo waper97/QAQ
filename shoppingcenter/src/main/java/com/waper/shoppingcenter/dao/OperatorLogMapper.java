@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * 操作日志服务
  * *
  **/
-public interface OperatorLogDao extends JpaRepository<OperatorLog,String> {
+public interface OperatorLogMapper extends JpaRepository<OperatorLog,String> {
 }

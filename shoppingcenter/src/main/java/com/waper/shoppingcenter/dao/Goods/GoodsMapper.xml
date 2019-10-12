@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.waper.shoppingcenter.dao.Goods.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.waper.shoppingcenter.model.Goods">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="ADD_TIME" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PIRCTURE" jdbcType="VARCHAR" property="pircture" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="ADDTIME" jdbcType="TIMESTAMP" property="addtime" />
+    <result column="UPDATETIME" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, ADD_TIME, NAME, PIRCTURE, STATUS, TYPE, UPDATE_TIME, ADDTIME, UPDATETIME
+  </sql>
+
+  <select id="listGoods" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from GOODS where status = 0
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from SYSTEM.GOODS
+    where ID = #{id,jdbcType=VARCHAR} and status = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update set GOODS set status =2 where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.waper.shoppingcenter.model.Goods">
+    insert into SYSTEM.GOODS (ID, ADD_TIME, NAME,
+      PIRCTURE, STATUS, TYPE,
+      UPDATE_TIME, ADDTIME, UPDATETIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
+      #{pircture,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{addtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.waper.shoppingcenter.model.Goods">
+    insert into SYSTEM.GOODS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="addTime != null">
+        ADD_TIME,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="pircture != null">
+        PIRCTURE,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="addtime != null">
+        ADDTIME,
+      </if>
+      <if test="updatetime != null">
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pircture != null">
+        #{pircture,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addtime != null">
+        #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.waper.shoppingcenter.model.Goods">
+    update SYSTEM.GOODS
+    <set>
+      <if test="addTime != null">
+        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pircture != null">
+        PIRCTURE = #{pircture,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addtime != null">
+        ADDTIME = #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.waper.shoppingcenter.model.Goods">
+    update SYSTEM.GOODS
+    set ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      NAME = #{name,jdbcType=VARCHAR},
+      PIRCTURE = #{pircture,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=DECIMAL},
+      TYPE = #{type,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      ADDTIME = #{addtime,jdbcType=TIMESTAMP},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,21 +1,22 @@
 package com.waper.shoppingcenter.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.waper.shoppingcenter.common.UUIDUtil;
-import com.waper.shoppingcenter.dao.GoodsDao;
 import com.waper.shoppingcenter.model.Goods;
 import com.waper.shoppingcenter.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.awt.print.Pageable;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class GoodsController {
-    @Autowired
-    GoodsDao goodsDao;
+
     @Autowired
     GoodsService goodsService;
     /**
@@ -25,19 +26,19 @@ public class GoodsController {
      * @return
      */
     @RequestMapping("shop/goods/insertOrUpdateGoods")
-    public Object insertOrUpdateGoods(Goods goods){
+    public Object insertOrUpdateGoods(@RequestBody Goods goods){
         if(goods.getId() == null || "".equals(goods.getId())){
             goods.setId(UUIDUtil.getUUID());
             System.out.println(goods.getType());
             goods.setStatus(0);
-            goodsDao.save(goods);
+            goodsService.insertGoods(goods);
         }else{
-            Goods goodsFind = goodsDao.findById(goods.getId()).get();
+            Goods goodsFind = goodsService.selectGoodsById(goods.getId());
             goodsFind.setName(goods.getName());
             goodsFind.setStatus(goods.getStatus());
             goodsFind.setPircture(goods.getPircture());
             goodsFind.setType(goods.getType());
-            goodsDao.save(goods);
+            goodsService.insertGoods(goods);
         }
 
         return new BaseResponse(true,"操作成功");
@@ -49,8 +50,15 @@ public class GoodsController {
      * @return
      */
     @RequestMapping("shop/goods/goodList")
-    public Object goodList(){
-        Page<Goods> goodsList = goodsService.getGoodsList(1,10);
+    public Object goodList(Integer page, Integer pageSize){
+        if(StringUtils.isEmpty(page)) {
+            page = 1;
+        }
+        if(StringUtils.isEmpty(pageSize)){
+            pageSize = 10;
+        }
+        Map<String,Object> paramMap = new HashMap<>();
+        PageInfo<Goods> goodsList = goodsService.getGoodsList(page, pageSize, paramMap);
         return new BaseResponse(true,goodsList);
     }
 
@@ -61,10 +69,13 @@ public class GoodsController {
      */
     @RequestMapping("shop/goods/deleteGoodsById")
     public Object deleteGoodsById( String id){
-            goodsDao.deleteById(id);
-        return new BaseResponse(true,"成功");
+            goodsService.deleteGoodsByPrimaryKey(id);
+        return new BaseResponse(true,"删除成功");
     }
-//    @RequestMapping("shop/goods/updateGoodById")
-//    public Object updateGoodById()
-//    }
+
+    @RequestMapping("shop/goods/updateGoodById")
+    public Object updateGoodById(@RequestBody Goods goods){
+        int result = goodsService.updateById(goods);
+        return new BaseResponse(true,"修改成功");
+    }
 }

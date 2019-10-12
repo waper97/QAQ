@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import {login,getSession} from "../api/global"
+  import {login,getSession} from "../../api/global"
   export default {
         name: "login",
         data(){
@@ -43,9 +43,11 @@
         methods:{
           submit(loginForm){
             console.log(loginForm)
+            this.isLoading = true
               this.$refs[loginForm].validate((valid) =>{
                 if(valid){
                   let params = {...this.loginForm}
+                  this.isLoading = false
                   login(params).then(res =>{
                     this.$refs[loginForm].resetFields()
                     if(res.data.success){
@@ -62,6 +64,7 @@ console.log(res)
                     }
                   }).catch(error =>{
                     console.log(error)
+                    this.isLoading = false
                   })
                 }
               })
@@ -89,12 +92,23 @@ console.log(res)
 </script>
 
 <style scoped>
+
   .login{
     min-width: 350px;
     width: 25%;
-    margin: auto
+    margin: auto;
+  }
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
   }
   .lf{
     margin-top: 60%;
   }
+
+
+
 </style>
+
+<style></style>

@@ -1,13 +1,12 @@
 package com.waper.shoppingcenter.service.impl;
 
-import com.waper.shoppingcenter.dao.UserDao;
+import com.waper.shoppingcenter.dao.UserMapper;
 import com.waper.shoppingcenter.model.User;
 import com.waper.shoppingcenter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,10 +16,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserDao userDao;
+    UserMapper userMapper;
     @Override
     public Page<User> getUseList(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1,pageSize);
-        return  userDao.findAll(pageable);
+        return  userMapper.findAll(pageable);
     }
 }

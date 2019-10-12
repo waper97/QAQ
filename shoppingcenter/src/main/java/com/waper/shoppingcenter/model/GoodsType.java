@@ -12,11 +12,9 @@ import java.util.Date;
  * *
  **/
 
-@Entity(name = "GOODSTYPE")
 @Data
 public class GoodsType {
-    @Id
-    @NonNull
+
     private String id;
 
     private Integer typeId;
@@ -34,9 +32,6 @@ public class GoodsType {
     private String creator;
 
     private String creatorId;
-
-    public GoodsType() {
-    }
 
 
 }

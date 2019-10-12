@@ -1,6 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
-// axios.defaults.baseURL= 'http://localhost:8080'
+
+
+
 export const login = params =>{
   return axios.post('apis/shop/user/login',qs.stringify(params));
 }
@@ -18,11 +20,11 @@ export const deleteGoodsById = params =>{
 }
 // 添加商品
 export const insertOrUpdateGoods = params =>{
-  return axios.post('apis/shop/goods/insertOrUpdateGoods',qs.stringify(params));
+  return axios.post('apis/shop/goods/insertOrUpdateGoods',qs.stringify(params),{headers:{'Content-Type':'application/json'}});
 }
 // 修改商品
 export const updateGoods = params =>{
-  return axios.post('apis/shop/goods/insertGoods',qs.stringify(params));
+  return axios.post('apis/shop/goods/insertGoods',qs.stringify(params),{headers:{'Content-Type':'application/json'}});
 }
 /****商品分类******/
 export const insertOrUpdateGoodsTypeById = params =>{
