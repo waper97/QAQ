@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import {insertOrUpdateGoodsTypeById} from "@/api/global";
+  import {insertGoodsType} from "@/api/global";
   export default {
         name: "editor",
         props:{
@@ -51,12 +51,15 @@
               this.$refs[form].resetFields();
           },
           dialogFormSure(form){
+
             this.$refs[form].validate((valide) =>{
               if(valide){
                 let params = {...this.form}
-                insertOrUpdateGoodsTypeById(params).then(res =>{
+                insertGoodsType(params).then(res =>{
+                  alert()
                   if(res.data.success){
                     this.$message(res.data.msg)
+
                   }
                 })
               }
@@ -72,8 +75,6 @@
           if(!this.isAdd){
             this._setForm(this.data)
           }
-          console.log(this.data)
-          alert(this.isAdd)
         }
     }
 </script>

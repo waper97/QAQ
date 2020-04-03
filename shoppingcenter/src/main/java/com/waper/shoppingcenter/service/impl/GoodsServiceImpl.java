@@ -2,16 +2,12 @@ package com.waper.shoppingcenter.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.waper.shoppingcenter.dao.Goods.GoodsMapper;
+import com.waper.shoppingcenter.dao.goods.GoodsMapper;
 import com.waper.shoppingcenter.model.Goods;
 import com.waper.shoppingcenter.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 

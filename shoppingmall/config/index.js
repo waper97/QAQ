@@ -12,8 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {
-        target: 'http://localhost:8078', // 接口域名
-        changeOrigin: true, //是否跨域
+        // target: 'http://localhost:8078', // 接口域名
+        target: 'http://192.168.111.128:8078', // 接口域名
+        changeOrigin: false, //是否跨域
         pathRewrite: {
           '^/apis': '' //需要rewrite重写的,
         }
@@ -28,7 +29,7 @@ module.exports = {
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+
     /**
      * Source Maps
      */

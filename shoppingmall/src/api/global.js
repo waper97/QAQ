@@ -27,7 +27,7 @@ export const updateGoods = params =>{
   return axios.post('apis/shop/goods/insertGoods',qs.stringify(params),{headers:{'Content-Type':'application/json'}});
 }
 /****商品分类******/
-export const insertOrUpdateGoodsTypeById = params =>{
+export const insertGoodsType = params =>{
   return axios.post('apis/shop/goodsType/insertOrUpdateGoodsTypeById',qs.stringify(params));
 }
 export const deleteGoodTypeById = params =>{

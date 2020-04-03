@@ -52,7 +52,10 @@
         data() {
             return {
                 form: {},
-                tableData:[]
+                tableData:[],
+                currentPage:10,
+                total:0,
+
             }
         },
         methods: {
@@ -61,7 +64,16 @@
                   this.tableData = res.data.data.content
                    console.log(res.data.data)
               })
-            }
+            },
+           handleAdd(){
+
+           },
+           handleSizeChange(){
+
+           },
+          handleCurrentChange(){
+
+          }
         },
         mounted() {
             this._getUserList();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.waper.shoppingcenter.dao.goodstype.GoodsTypeMapper">
+
+    <resultMap id="base_resultMap" type="com.waper.shoppingcenter.model.GoodsType" >
+        <id property="id" column="ID"/>
+        <result property="typeId" column="TYPEID"/>
+        <result property="parentId" column="PARENTID"/>
+        <result property="name" column="NAME"/>
+        <result property="status" column="STATUS"/>
+        <result property="addTime" column="ADDTIME"/>
+        <result property="updateTime" column="UPDATETIME"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="creatorId" column="CREATORID"/>
+    </resultMap>
+
+    <select id="listGoodsTypes" parameterType="map" resultType="com.waper.shoppingcenter.model.GoodsType" >
+        select * from GOODSTYPE
+    </select>
+
+    <select id="getGoodsType" parameterType="string" resultType="com.waper.shoppingcenter.model.GoodsType" >
+        select * from GOODSTYPE where id =#{id}
+    </select>
+
+    <delete id="delGoodsType" parameterType="string">
+
+    </delete>
+
+    <insert id="insertGoodsType" parameterType="com.waper.shoppingcenter.model.GoodsType">
+            INSERT INTO SYSTEM.GOODSTYPE(ID, TYPEID, NAME, PARENTID, STATUS, ADDTIME, UPDATETIME, CREATOR, CREATORID)
+             VALUES (#{id}, #{typeId}, #{name}, #{parentId},#{status}, #{addTime}, #{updateTime}
+             , #{creator}, #{creatorId})
+
+    </insert>
+
+    <select id="getGoodsTypeById" parameterType="string">
+
+    </select>
+
+    <update id="updateGoodsType">
+
+    </update>
+
+
+
+</mapper>   

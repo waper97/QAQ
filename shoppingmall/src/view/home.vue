@@ -163,6 +163,7 @@
                 break;
               case '2':
                 this.$router.push('/goodsType')
+                break;
               case '3':
                 this.$router.push('/user')
                 break;

@@ -1,4 +1,4 @@
-package com.waper.shoppingcenter.dao.Goods;
+package com.waper.shoppingcenter.dao.goods;
 
 import com.waper.shoppingcenter.model.Goods;
 

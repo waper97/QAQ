@@ -22,7 +22,7 @@
         :visible.sync="dialogVisible"
         width="30%"
         center>
-        <goods-type-editor  @handleCancle="dialogClose" :data="data" :isAdd="isAdd" v-if="reset"></goods-type-editor>
+        <editor  @handleCancle="dialogClose" :data="data" :isAdd="isAdd" v-if="reset"></editor>
       </el-dialog>
     </div>
 </template>
@@ -30,9 +30,10 @@
 <script>
   import {getGoodsTypeList} from "@/api/global";
   import GoodsTypeEditor from '../goodsType/editor'
+  import Editor from "./editor";
   export default {
         name: "index",
-        components:{GoodsTypeEditor},
+        components:{Editor, GoodsTypeEditor},
         data() {
             return {
                 form: {

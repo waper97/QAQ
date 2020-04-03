@@ -11,13 +11,13 @@
     </commentGenerator>
 
     <!-- <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.0.182:3307/zhdj" userId="zhdj" password="123456" /> -->
-    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@localhost:1521:orcl" userId="system" password="123456" />
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@192.168.111.128:1521:orcl" userId="system" password="123456" />
     <!-- model文件存放路径 -->
-    <javaModelGenerator targetPackage="com.waper.shoppingcenter.dao.Goods" targetProject="D:\QAQ\shoppingcenter\src\main\java" />
+    <javaModelGenerator targetPackage="com.waper.shoppingcenter.dao.goods" targetProject="D:\QAQ\shoppingcenter\src\main\java" />
     <!-- 生成映射文件存放路径 -->
-    <sqlMapGenerator targetPackage="com.waper.shoppingcenter.dao.Goods" targetProject="D:\QAQ\shoppingcenter\src\main\java" />
+    <sqlMapGenerator targetPackage="com.waper.shoppingcenter.dao.goods" targetProject="D:\QAQ\shoppingcenter\src\main\java" />
     <!-- 生成DAO存放路径 -->
-    <javaClientGenerator targetPackage="com.waper.shoppingcenter.dao.Goods" targetProject="D:\QAQ\shoppingcenter\src\main\java" type="XMLMAPPER" />
+    <javaClientGenerator targetPackage="com.waper.shoppingcenter.dao.goods" targetProject="D:\QAQ\shoppingcenter\src\main\java" type="XMLMAPPER" />
     <!--
     	enableInsert（默认true）：指定是否生成insert语句；
         enableSelectByPrimaryKey（默认true）：指定是否生成按照主键查询对象的语句（就是getById或get,必须要）；
