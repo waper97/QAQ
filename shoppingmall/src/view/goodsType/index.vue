@@ -1,5 +1,10 @@
 <template>
     <div>
+      <el-form ref="form" :model="form" label-width="200px" inline>
+        <el-form-item label="活动名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+      </el-form>
       <el-button @click="handleAdd">新增</el-button>
       <el-table :data="tableData"  style="width: 100%">
         <el-table-column prop="name" label="名称" ></el-table-column>
@@ -28,7 +33,7 @@
 </template>
 
 <script>
-  import {getGoodsTypeList} from "@/api/global";
+  import {getGoodsTypeList,deleteGoodType} from "@/api/global";
   import GoodsTypeEditor from '../goodsType/editor'
   import Editor from "./editor";
   export default {
@@ -50,7 +55,8 @@
             getGoodsTypeList(){
               let res = null
               getGoodsTypeList(res).then(res =>{
-               this.tableData =  res.data.data.content
+                console.log(res.data.data)
+               this.tableData =  res.data.data
               })
             },
           handleEdit(index,row){
@@ -64,6 +70,9 @@
           },
           dialogClose(isFlash){
               if(isFlash) {
+                this.dialogVisible = true
+                this.getGoodsTypeList()
+              }else {
                 this.dialogVisible = false
                 this.getGoodsTypeList()
               }
@@ -77,7 +86,7 @@
               })
           },
           handleDelete(index,row){
-            deleteGoodTypeById({id:row.id}).then( res =>{
+            deleteGoodType({goodsTypeId:row.id}).then( res =>{
                if (res.data.success){
                   this.$message(res.data.msg)
                   this.tableData.splice(index, 1)

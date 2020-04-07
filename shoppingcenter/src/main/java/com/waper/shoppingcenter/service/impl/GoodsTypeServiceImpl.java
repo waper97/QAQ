@@ -47,7 +47,6 @@ public class GoodsTypeServiceImpl implements GoodsTypeService {
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public GoodsType getGoodsTypeById(String goodsId) {
         return goodsTypeMapper.getGoodsTypeById(goodsId);
     }

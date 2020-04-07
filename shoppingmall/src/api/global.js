@@ -27,15 +27,19 @@ export const updateGoods = params =>{
   return axios.post('apis/shop/goods/insertGoods',qs.stringify(params),{headers:{'Content-Type':'application/json'}});
 }
 /****商品分类******/
+// 添加商品类型
 export const insertGoodsType = params =>{
-  return axios.post('apis/shop/goodsType/insertOrUpdateGoodsTypeById',qs.stringify(params));
+  return axios.post('apis/shop/goodsType/insert',qs.stringify(params));
 }
-export const deleteGoodTypeById = params =>{
-  return axios.post('apis/shop/goodsType/deleteGoodTypeById',qs.stringify(params));
+export const updateGoodsType = params =>{
+  return axios.post('apis/shop/goodsType/update',qs.stringify(params));
+}
+export const deleteGoodType = params =>{
+  return axios.post('apis/shop/goodsType/deleteGoodType',qs.stringify(params));
 }
 // 商品分类（分页）
 export const getGoodsTypeList = params =>{
-  return axios.post('apis/shop/goodsType/getGoodsTypeList',qs.stringify(params));
+  return axios.get('apis/shop/goodsType/getGoodsTypeList',qs.stringify(params));
 }
 // 商品分类
 export const goodsTypeList = params =>{

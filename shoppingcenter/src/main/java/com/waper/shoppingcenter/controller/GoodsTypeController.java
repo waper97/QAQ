@@ -32,9 +32,9 @@ public class GoodsTypeController {
      */
     @GetMapping("shop/goodsType/getGoodsTypeList")
     public Object getGoodsTypeList(Integer pageNum,Integer pageSize){
-        Map<String,Object> paramMap = new HashMap<>();
+        Map<String,Object> paramMap = new HashMap<>(16);
         PageInfo<GoodsType> pageInfo = goodsTypeService.listGoodsTypeList(paramMap, 1,10);
-        return  new BaseResponse(true, pageInfo.getList());
+        return  new BaseResponse(true, pageInfo.getList(), pageInfo.getTotal(), pageInfo.getPages());
     }
 
 
@@ -43,7 +43,7 @@ public class GoodsTypeController {
      * @param goodsTypeId
      * @return
      */
-    @RequestMapping("shop/goodsType/deleteGoodTypeById")
+    @RequestMapping("shop/goodsType/deleteGoodType")
     public Object deleteGoodTypeById(String goodsTypeId){
         if(goodsTypeId == null ){
             return new BaseResponse("商品分类id不能为空");
@@ -57,13 +57,13 @@ public class GoodsTypeController {
      * @param goodsType
      * @return
      */
-    @RequestMapping("shop/goodsType/updateGoodsTypeById")
+    @RequestMapping("shop/goodsType/update")
     @Transactional
     public Object updateGoodsTypeById(GoodsType goodsType){
         if(goodsType.getTypeId() == null ){
             return new BaseResponse("商品分类id不能为空");
         }
-        goodsTypeService.insertGoodsType(goodsType);
+        goodsTypeService.updateGoodsType(goodsType);
         return new BaseResponse(true,"修改成功");
     }
 
@@ -72,7 +72,7 @@ public class GoodsTypeController {
      * @param goodsType
      * @return
      */
-    @RequestMapping("shop/goodsType/insertOrUpdateGoodsTypeById")
+    @RequestMapping("shop/goodsType/insert")
     @Transactional
     public Object insertGoodsType(GoodsType goodsType){
         if(goodsType.getName() == null ){

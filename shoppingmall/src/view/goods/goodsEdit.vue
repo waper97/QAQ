@@ -12,7 +12,7 @@
               v-for="item in options"
               :key="item.id"
               :label="item.name"
-              :value="item.typeId">
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-  import {insertOrUpdateGoods,goodsTypeList} from "@/api/global";
+  import {insertOrUpdateGoods,getGoodsTypeList} from "@/api/global";
 
   export default {
         name: "goodsEdit",
@@ -58,7 +58,7 @@
             type:Boolean
           },
           data:{
-            type:Object
+            type:Array
           }
         },
         data() {
@@ -97,7 +97,6 @@
               this.$refs[form].validate((valid) =>{
                 if(valid){
                   let params = {...this.form}
-                  console.log(params.type)
                   insertOrUpdateGoods(params).then(res =>{
                       if(res.data.success){
                         this.$message(res.data.msg)
@@ -118,9 +117,19 @@
               }
           },
           _goodsTypeList(){
-            goodsTypeList().then(res =>{
-               this.options = res.data
+            let res = null
+            getGoodsTypeList(res).then(res =>{
+              // console.log(res)
+               this.options =  res.data.data
+              console.log(this.options)
             })
+            // console.log(this.options)
+
+            // let res = null
+            // getGoodsTypeList(res).then(res =>{
+            //   console.log(res.data.data)
+            //   this.tableData =  res.data.data
+            // })
           }
         },
         mounted() {

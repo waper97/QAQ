@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import {insertGoodsType} from "@/api/global";
+  import {insertGoodsType,updateGoodsType} from "@/api/global";
   export default {
         name: "editor",
         props:{
@@ -31,9 +31,10 @@
         data() {
             return {
                 form: {
-                  typeId:'',
-                  name:'',
-                  parentId:'',
+                  id:null,
+                  typeId:null,
+                  name:null,
+                  parentId:null,
                 },
               rules:{
                 name: [
@@ -47,21 +48,31 @@
         methods: {
           dialogFormCancel(form){
 
-              this.$emit('handleCancle',true)
+              this.$emit('handleCancle',false)
               this.$refs[form].resetFields();
           },
           dialogFormSure(form){
-
             this.$refs[form].validate((valide) =>{
               if(valide){
                 let params = {...this.form}
-                insertGoodsType(params).then(res =>{
-                  alert()
-                  if(res.data.success){
-                    this.$message(res.data.msg)
+                if (params.id == null) {
 
-                  }
-                })
+                  insertGoodsType(params).then(res =>{
+                    if(res.data.success){
+                      this.$message(res.data.msg)
+                      // 传值给父组件的@handleCancle方法
+                      this.$emit('handleCancle',false)
+                    }
+                  })
+                }else{
+                  updateGoodsType(params).then(res =>{
+                    if(res.data.success){
+                      this.$message(res.data.msg)
+                      // 传值给父组件的@handleCancle方法
+                      this.$emit('handleCancle',false)
+                    }
+                  })
+                }
               }
             })
           },

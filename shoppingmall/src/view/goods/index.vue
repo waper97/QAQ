@@ -28,17 +28,17 @@
           </el-pagination>
         </div>
 
-<!--      <el-dialog-->
-<!--        :title="dynamicTitle"-->
-<!--        :visible.sync="dialogVisible"-->
-<!--        width="30%"-->
-<!--        :before-close="handleClose"-->
-<!--        center-->
-<!--      >-->
-<!--        <goods-edit :data="data" :isAdd="isAdd" @dialogFormClose="dialogFormClose" v-if="hackReset"></goods-edit>-->
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--            </span>-->
-<!--      </el-dialog>-->
+      <el-dialog
+        :title="dynamicTitle"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose"
+        center
+      >
+        <goods-edit :data="data" :isAdd="isAdd" @dialogFormClose="dialogFormClose" v-if="hackReset"></goods-edit>
+        <span slot="footer" class="dialog-footer">
+            </span>
+      </el-dialog>
 
     </div>
 </template>
@@ -68,11 +68,9 @@
           getGoodList(){
             let params = {};
             goodList(params).then(res =>{
-              // console.log(res)
-              // console.log(res.data.data.list)
-              this.tableData = res.data.data.list
+              this.tableData = res.data.data
               // 总条数
-              this.total = res.data.data.total
+              this.total = res.data.total
             })
           }
         ,

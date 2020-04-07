@@ -17,7 +17,7 @@
     </resultMap>
 
     <select id="listGoodsTypes" parameterType="map" resultType="com.waper.shoppingcenter.model.GoodsType" >
-        select * from GOODSTYPE
+        select * from GOODSTYPE where status = 0
     </select>
 
     <select id="getGoodsType" parameterType="string" resultType="com.waper.shoppingcenter.model.GoodsType" >
@@ -25,13 +25,16 @@
     </select>
 
     <delete id="delGoodsType" parameterType="string">
-
+        update GOODSTYPE
+        set STATUS =1
+        where id = #{id,jdbcType=VARCHAR}
     </delete>
 
     <insert id="insertGoodsType" parameterType="com.waper.shoppingcenter.model.GoodsType">
-            INSERT INTO SYSTEM.GOODSTYPE(ID, TYPEID, NAME, PARENTID, STATUS, ADDTIME, UPDATETIME, CREATOR, CREATORID)
-             VALUES (#{id}, #{typeId}, #{name}, #{parentId},#{status}, #{addTime}, #{updateTime}
-             , #{creator}, #{creatorId})
+            INSERT INTO GOODSTYPE(ID, TYPEID, NAME, PARENTID, STATUS, ADDTIME, UPDATETIME, CREATOR, CREATORID)
+             VALUES (#{id,jdbcType=VARCHAR}, #{typeId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR},
+             #{status,jdbcType=DECIMAL}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+             , #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR})
 
     </insert>
 
@@ -39,8 +42,13 @@
 
     </select>
 
-    <update id="updateGoodsType">
-
+    <update id="updateGoodsType" parameterType="com.waper.shoppingcenter.model.GoodsType">
+        update GOODSTYPE
+        set TYPEID = #{typeId,jdbcType=VARCHAR},
+            NAME =#{name,jdbcType=VARCHAR},
+            PARENTID =#{parentId,jdbcType=VARCHAR},
+            UPDATETIME =#{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=VARCHAR}
     </update>
 
 
