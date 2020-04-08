@@ -1,7 +1,6 @@
 package com.waper.shoppingcenter.service;
 
 import com.github.pagehelper.PageInfo;
-import com.waper.shoppingcenter.model.Goods;
 import com.waper.shoppingcenter.model.GoodsType;
 
 import java.util.Map;

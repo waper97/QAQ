@@ -6,8 +6,8 @@
         </el-form-item>
 
 
-        <el-form-item label="类型" prop="type" >
-          <el-select v-model="form.type" placeholder="请选择">
+        <el-form-item label="类型" prop="goodsTypId" >
+          <el-select v-model="form.goodsTypId" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.id"
@@ -66,7 +66,7 @@
                 form: {
                   id:'',
                   name:'',
-                  type:''
+                  goodsTypId:''
                 },
               options:[],
                 rules:{
@@ -97,6 +97,7 @@
               this.$refs[form].validate((valid) =>{
                 if(valid){
                   let params = {...this.form}
+                  console.log(params)
                   insertOrUpdateGoods(params).then(res =>{
                       if(res.data.success){
                         this.$message(res.data.msg)
@@ -121,7 +122,6 @@
             getGoodsTypeList(res).then(res =>{
               // console.log(res)
                this.options =  res.data.data
-              console.log(this.options)
             })
             // console.log(this.options)
 

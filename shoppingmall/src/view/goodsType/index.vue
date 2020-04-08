@@ -55,7 +55,6 @@
             getGoodsTypeList(){
               let res = null
               getGoodsTypeList(res).then(res =>{
-                console.log(res.data.data)
                this.tableData =  res.data.data
               })
             },

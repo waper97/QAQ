@@ -4,7 +4,9 @@
         <el-table :data="tableData"  style="width: 100%">
           <el-table-column prop="name" label="名称" width="120"></el-table-column>
 <!--          <el-table-column prop="pircture" label="照片"></el-table-column>-->
-          <el-table-column prop="type" label="分类"></el-table-column>
+          <el-table-column prop="typeName" label="分类"></el-table-column>
+          <el-table-column prop="createtime" label="创建时间"></el-table-column>
+          <el-table-column prop="createor" label="创建人"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
@@ -33,8 +35,7 @@
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose"
-        center
-      >
+        center>
         <goods-edit :data="data" :isAdd="isAdd" @dialogFormClose="dialogFormClose" v-if="hackReset"></goods-edit>
         <span slot="footer" class="dialog-footer">
             </span>
@@ -68,7 +69,8 @@
           getGoodList(){
             let params = {};
             goodList(params).then(res =>{
-              this.tableData = res.data.data
+              console.log(res.data.data)
+              this.tableData = res.data.data.list
               // 总条数
               this.total = res.data.total
             })
@@ -124,8 +126,8 @@
             let params = {};
             params.pageSize = val
             goodList(params).then(res =>{
-              // console.log(res)
-              // console.log(res.data.data.list)
+              console.log(res)
+              console.log(res.data.data.list)
               this.tableData = res.data.data.list
               // 总条数
               this.total = res.data.data.total

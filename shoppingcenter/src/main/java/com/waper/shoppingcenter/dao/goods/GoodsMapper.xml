@@ -3,145 +3,178 @@
 <mapper namespace="com.waper.shoppingcenter.dao.goods.GoodsMapper">
   <resultMap id="BaseResultMap" type="com.waper.shoppingcenter.model.Goods">
     <id column="ID" jdbcType="VARCHAR" property="id" />
-    <result column="ADD_TIME" jdbcType="TIMESTAMP" property="addTime" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="PIRCTURE" jdbcType="VARCHAR" property="pircture" />
+    <result column="FK_GOODTYPE" jdbcType="DECIMAL" property="goodsTypId" />
     <result column="STATUS" jdbcType="DECIMAL" property="status" />
-    <result column="TYPE" jdbcType="VARCHAR" property="type" />
-    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="ADDTIME" jdbcType="TIMESTAMP" property="addtime" />
+    <result column="PICTURE" jdbcType="VARCHAR" property="picture" />
+    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="CREATEOR" jdbcType="VARCHAR" property="createor" />
     <result column="UPDATETIME" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="UPDATEOR" jdbcType="VARCHAR" property="updateor" />
+    <result column="UPDATEOR_ID" jdbcType="VARCHAR" property="updateorId" />
+    <result column="CREATEOR_ID" jdbcType="VARCHAR" property="createorId" />
+    <result column="TYPENAME" jdbcType="VARCHAR" property="typeName" />
   </resultMap>
+
   <sql id="Base_Column_List">
-    ID, ADD_TIME, NAME, PIRCTURE, STATUS, TYPE, UPDATE_TIME, ADDTIME, UPDATETIME
+    g.ID, g.NAME, g.FK_GOODTYPE, g.STATUS, g.PICTURE, g.CREATETIME, g.CREATEOR, g.UPDATETIME, g.UPDATEOR,
+    g.UPDATEOR_ID, g.CREATEOR_ID,t.NAME AS TYPENAME
+  </sql>
+
+  <sql id="Column_List">
+    ID, NAME, FK_GOODTYPE, STATUS, PICTURE,CREATETIME, CREATEOR, UPDATETIME, UPDATEOR,
+    UPDATEOR_ID,CREATEOR_ID
   </sql>
 
   <select id="listGoods" parameterType="java.util.Map" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from GOODS where status = 0
+    select  <include refid="Base_Column_List" />
+    from GOODS g ,GOODSTYPE t
+    where g.FK_GOODTYPE = t.ID
+    and t.STATUS = 0
+    and g.STATUS = 0
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from SYSTEM.GOODS
-    where ID = #{id,jdbcType=VARCHAR} and status = 0
+    select 
+    <include refid="Column_List" />
+    from GOODS
+    where ID = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    update set GOODS set status =2 where ID = #{id,jdbcType=VARCHAR}
+    delete from GOODS
+    where ID = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.waper.shoppingcenter.model.Goods">
-    insert into SYSTEM.GOODS (ID, ADD_TIME, NAME,
-      PIRCTURE, STATUS, TYPE,
-      UPDATE_TIME, ADDTIME, UPDATETIME
-      )
-    values (#{id,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
-      #{pircture,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=TIMESTAMP}, #{addtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
-      )
+    insert into GOODS (ID, NAME, FK_GOODTYPE, 
+      STATUS, PICTURE, CREATETIME, 
+      CREATEOR, UPDATETIME, UPDATEOR, 
+      UPDATEOR_ID, CREATEOR_ID)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{goodsTypId,jdbcType=DECIMAL},
+      #{status,jdbcType=DECIMAL}, #{picture,jdbcType=VARCHAR},SYSDATE,
+      #{createor,jdbcType=VARCHAR}, SYSDATE, #{updateor,jdbcType=VARCHAR},
+      #{updateorId,jdbcType=VARCHAR}, #{createorId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.waper.shoppingcenter.model.Goods">
-    insert into SYSTEM.GOODS
+    insert into GOODS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         ID,
       </if>
-      <if test="addTime != null">
-        ADD_TIME,
-      </if>
       <if test="name != null">
         NAME,
       </if>
-      <if test="pircture != null">
-        PIRCTURE,
+      <if test="goodsTypId != null">
+        goodsTypId,
       </if>
       <if test="status != null">
         STATUS,
       </if>
-      <if test="type != null">
-        TYPE,
+      <if test="picture != null">
+        PICTURE,
       </if>
-      <if test="updateTime != null">
-        UPDATE_TIME,
+      <if test="createtime != null">
+        CREATETIME,
       </if>
-      <if test="addtime != null">
-        ADDTIME,
+      <if test="createor != null">
+        CREATEOR,
       </if>
       <if test="updatetime != null">
         UPDATETIME,
+      </if>
+      <if test="updateor != null">
+        UPDATEOR,
+      </if>
+      <if test="updateorId != null">
+        UPDATEOR_ID,
+      </if>
+      <if test="createorId != null">
+        CREATEOR_ID,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null">
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="pircture != null">
-        #{pircture,jdbcType=VARCHAR},
+      <if test="fkGoodtype != null">
+        #{goodsTypId,jdbcType=DECIMAL},
       </if>
       <if test="status != null">
         #{status,jdbcType=DECIMAL},
       </if>
-      <if test="type != null">
-        #{type,jdbcType=VARCHAR},
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="addtime != null">
-        #{addtime,jdbcType=TIMESTAMP},
+      <if test="createor != null">
+        #{createor,jdbcType=VARCHAR},
       </if>
       <if test="updatetime != null">
         #{updatetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateor != null">
+        #{updateor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateorId != null">
+        #{updateorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createorId != null">
+        #{createorId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.waper.shoppingcenter.model.Goods">
-    update SYSTEM.GOODS
+    update GOODS
     <set>
-      <if test="addTime != null">
-        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="pircture != null">
-        PIRCTURE = #{pircture,jdbcType=VARCHAR},
+      <if test="goodsTypId != null">
+        FK_GOODTYPE = #{goodsTypId,jdbcType=DECIMAL},
       </if>
       <if test="status != null">
         STATUS = #{status,jdbcType=DECIMAL},
       </if>
-      <if test="type != null">
-        TYPE = #{type,jdbcType=VARCHAR},
+      <if test="picture != null">
+        PICTURE = #{picture,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="createtime != null">
+        CREATETIME = #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="addtime != null">
-        ADDTIME = #{addtime,jdbcType=TIMESTAMP},
+      <if test="createor != null">
+        CREATEOR = #{createor,jdbcType=VARCHAR},
       </if>
       <if test="updatetime != null">
         UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateor != null">
+        UPDATEOR = #{updateor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateorId != null">
+        UPDATEOR_ID = #{updateorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createorId != null">
+        CREATEOR_ID = #{createorId,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.waper.shoppingcenter.model.Goods">
-    update SYSTEM.GOODS
-    set ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
-      NAME = #{name,jdbcType=VARCHAR},
-      PIRCTURE = #{pircture,jdbcType=VARCHAR},
+    update GOODS
+    set NAME = #{name,jdbcType=VARCHAR},
+      FK_GOODTYPE = #{goodsTypId,jdbcType=DECIMAL},
       STATUS = #{status,jdbcType=DECIMAL},
-      TYPE = #{type,jdbcType=VARCHAR},
-      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      ADDTIME = #{addtime,jdbcType=TIMESTAMP},
-      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+      PICTURE = #{picture,jdbcType=VARCHAR},
+      CREATETIME = #{createtime,jdbcType=TIMESTAMP},
+      CREATEOR = #{createor,jdbcType=VARCHAR},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      UPDATEOR = #{updateor,jdbcType=VARCHAR},
+      UPDATEOR_ID = #{updateorId,jdbcType=VARCHAR},
+      CREATEOR_ID = #{createorId,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

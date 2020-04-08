@@ -20,7 +20,8 @@ export const deleteGoodsById = params =>{
 }
 // 添加商品
 export const insertOrUpdateGoods = params =>{
-  return axios.post('apis/shop/goods/insertOrUpdateGoods',qs.stringify(params),{headers:{'Content-Type':'application/json'}});
+  return axios.post('apis/shop/goods/insertOrUpdateGoods',qs.stringify(params));
+  // return axios.post('apis/shop/goods/insertOrUpdateGoods',qs.stringify(params),{headers:{'Content-Type':'application/json'}});
 }
 // 修改商品
 export const updateGoods = params =>{

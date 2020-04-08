@@ -46,6 +46,6 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public int updateById(Goods goods) {
-        return goodsMapper.updateByPrimaryKey(goods);
+        return goodsMapper.updateByPrimaryKeySelective(goods);
     }
 }

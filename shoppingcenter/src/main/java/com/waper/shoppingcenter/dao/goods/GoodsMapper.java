@@ -7,6 +7,11 @@ import java.util.Map;
 
 public interface GoodsMapper {
 
+    /**
+     * 商品列表
+     * @param paramMap
+     * @return
+     */
     List<Goods> listGoods(Map<String,Object> paramMap);
 
     int deleteByPrimaryKey(String id);

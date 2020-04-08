@@ -1,10 +1,8 @@
 package com.waper.shoppingcenter.model;
 
 import lombok.Data;
-import lombok.NonNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -24,9 +22,9 @@ public class GoodsType {
     private String name;
 
     private Integer status;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private String creator;

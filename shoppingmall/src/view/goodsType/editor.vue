@@ -56,7 +56,6 @@
               if(valide){
                 let params = {...this.form}
                 if (params.id == null) {
-
                   insertGoodsType(params).then(res =>{
                     if(res.data.success){
                       this.$message(res.data.msg)

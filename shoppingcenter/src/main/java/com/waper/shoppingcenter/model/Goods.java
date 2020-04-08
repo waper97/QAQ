@@ -1,33 +1,34 @@
 package com.waper.shoppingcenter.model;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
-
 @Data
 public class Goods {
-
     private String id;
-
-    private Date addTime;
 
     private String name;
 
-    private String pircture;
+    private String goodsTypId;
 
     private Integer status;
 
-    private String type;
+    private String picture;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createtime;
 
-    private Date updateTime;
-
-    private Date addtime;
-
+    private String createor;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
+
+    private String updateor;
+
+    private String updateorId;
+
+    private String createorId;
+
+    private String typeName;
 
 
 }

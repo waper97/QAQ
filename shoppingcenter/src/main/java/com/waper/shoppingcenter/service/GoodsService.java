@@ -2,7 +2,6 @@ package com.waper.shoppingcenter.service;
 
 import com.github.pagehelper.PageInfo;
 import com.waper.shoppingcenter.model.Goods;
-import org.springframework.data.domain.Page;
 
 import java.util.Map;
 

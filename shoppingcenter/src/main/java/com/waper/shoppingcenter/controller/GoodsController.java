@@ -5,7 +5,6 @@ import com.waper.shoppingcenter.common.UUIDUtil;
 import com.waper.shoppingcenter.model.Goods;
 import com.waper.shoppingcenter.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,19 +25,17 @@ public class GoodsController {
      * @return
      */
     @RequestMapping("shop/goods/insertOrUpdateGoods")
-    public Object insertOrUpdateGoods(@RequestBody Goods goods){
+    public Object insertOrUpdateGoods(Goods goods){
         if(goods.getId() == null || "".equals(goods.getId())){
             goods.setId(UUIDUtil.getUUID());
-            System.out.println(goods.getType());
             goods.setStatus(0);
             goodsService.insertGoods(goods);
         }else{
             Goods goodsFind = goodsService.selectGoodsById(goods.getId());
-            goodsFind.setName(goods.getName());
-            goodsFind.setStatus(goods.getStatus());
-            goodsFind.setPircture(goods.getPircture());
-            goodsFind.setType(goods.getType());
-            goodsService.insertGoods(goods);
+            if (goodsFind == null) {
+                return new BaseResponse("数据不存在!");
+            }
+            goodsService.updateById(goods);
         }
 
         return new BaseResponse(true,"操作成功");
