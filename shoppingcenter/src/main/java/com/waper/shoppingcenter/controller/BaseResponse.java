@@ -2,6 +2,8 @@ package com.waper.shoppingcenter.controller;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * create by  on 2019/5/20
  * *
@@ -16,6 +18,11 @@ public class BaseResponse {
      * 失败
      */
     public static final Integer FAILURE_CODE = 499;
+
+    /**
+     * 访问token过期
+    */
+    public static final Integer ACCSESS_TOKEN_EXPIRE_CODE = 402;
 
     /**
      * 成功消息
@@ -41,6 +48,11 @@ public class BaseResponse {
      * 数据
      */
     private Object data;
+
+    /**
+     * 其他数据
+     */
+    private Object otherData;
     /**
      * 总条数
      */
@@ -49,11 +61,24 @@ public class BaseResponse {
      * 每页大小
      */
     private Integer pageCount;
+    /**
+     * 当前时间
+     */
+    private Date now = new Date();
 
+    public BaseResponse(Object data, Object otherData) {
+        this.code = SUCCESS_CODE;
+        this.success = success;
+        this.msg = SUCCCESS_MESSAGE;
+        this.data = data;
+        this.otherData = otherData;
+    }
 
-
-
-
+    public BaseResponse(boolean success, Integer code, String msg) {
+        this.success = success;
+        this.code = code;
+        this.msg = msg;
+    }
 
     public BaseResponse(boolean success, String msg, Object data) {
         this.success = success;

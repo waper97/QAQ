@@ -17,6 +17,13 @@ public interface UserMapper {
 
     User getLogin(@Param("userName")String userName, @Param("password") String password);
 
+    /**
+     * 查询用户名是否存在
+     * @param userName
+     * @return
+     */
+    User findUserByUserName(String userName);
+
     int deleteByPrimaryKey(String id);
 
     int insert(User record);

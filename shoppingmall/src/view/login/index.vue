@@ -1,8 +1,9 @@
 <template>
     <div class="login">
+
       <el-form :model="loginForm" ref="loginForm" label-width="80px" :rules="rules" class="lf" >
         <el-form-item >
-          <span></span>
+          <span>用户登录</span>
         </el-form-item>
 
         <el-form-item label="用户名" prop="username" class="input">
@@ -28,8 +29,8 @@
             loginForm:{
               username:'',
               password:'',
-              isLoading:false
             },
+            isLoading:false,
             rules:{
               username: [
                 { required: true,message:'账号不能为空', trigger: 'blur' }
@@ -52,13 +53,15 @@
                     this.$refs[loginForm].resetFields()
                     if(res.data.success){
                       this.$router.replace('/home');
-
-                      var username = this.loginForm.username;
-                      var password = this.loginForm.password
-                      this.setCookies(this.loginForm.username,this.loginForm.password,7)
-                        getSession(params).then(res =>{
-console.log(res)
-                        })
+                      this.$router.replace('/home');
+                      this.$store.commit('SET_TOKEN',res.data.data.token)
+                      this.$store.commit('GET_USER',JSON.stringify(res.data.data))
+//                       var username = this.loginForm.username;
+//                       var password = this.loginForm.password
+//                       this.setCookies(this.loginForm.username,this.loginForm.password,7)
+//                         getSession(params).then(res =>{
+// console.log(res)
+//                         })
 
 
                     }

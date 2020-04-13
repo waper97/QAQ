@@ -1,17 +1,25 @@
 package com.waper.shoppingcenter.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.waper.shoppingcenter.common.UUIDUtil;
 import com.waper.shoppingcenter.model.User;
 import com.waper.shoppingcenter.service.UserService;
+import com.waper.shoppingcenter.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
+/**
+ *
+ * @author wangpeng
+ */
 @RestController
 public class UserController {
     @Autowired
@@ -19,10 +27,12 @@ public class UserController {
 
     /**
      * 用户登陆
+     * @param username 用户名
+     * @param password 密码
      * @return
      */
     @RequestMapping("shop/user/login")
-    public Object doLogin(String username, String password, HttpServletRequest request, HttpServletResponse response){
+    public Object doLogin(String username, String password, HttpServletRequest request){
         if(username == null || password == null){
             throw new RuntimeException("用户名或密码不能为空");
         }
@@ -35,7 +45,8 @@ public class UserController {
 
         }else{
             request.setAttribute("USER_SESSION",user);
-            return new BaseResponse(true,"登录成功",user);
+            String token = TokenUtil.createToken(user.getId(),"123456",60*60*1000);
+            return new BaseResponse(user, token);
         }
     }
     @RequestMapping("shop/user/getSession")
@@ -52,7 +63,11 @@ public class UserController {
     @RequestMapping("shop/user/userRegister")
     public Object userRegister(User user){
         if (user.getUsername() == null || user.getPassword() == null){
-            throw new RuntimeException("用户名或密码不能为空");
+            return  new BaseResponse("用户名或密码不能为空");
+        }
+        User existUser = userService.findUserByUserName(user.getUsername());
+        if (existUser != null) {
+            return new BaseResponse("用户名已存在");
         }
 
         // 密码加密
@@ -61,15 +76,17 @@ public class UserController {
         user.setPassword(md5Password);
         user.setRole(1);
         user.setStatus(0);
-        userService.save(user);
+        user.setName("用户"+new Random());
+        userService.insert(user);
         return  new BaseResponse(true,"添加成功");
     }
-    // 获取用户列表
+    /**
+     *   获取用户列表
+     */
     @RequestMapping("shop/user/getUserList")
     public Object getUserList(Integer pageNum, Integer pageSize){
-        pageNum = 1;
-        pageSize = 10;
-        Page<User> user = userService.getUseList(pageNum,pageSize);
+        Map<String,Object> paramMap = new HashMap<>(16);
+        PageInfo<User> user = userService.listUser(paramMap,pageNum,pageSize);
         return  new BaseResponse(true,user);
     }
 

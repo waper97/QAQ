@@ -185,6 +185,7 @@
 
         },
         mounted() {
+          alert(localStorage.getItem("token"))
           this.handleLogout()
         }
     }

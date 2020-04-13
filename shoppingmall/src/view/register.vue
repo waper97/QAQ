@@ -1,6 +1,10 @@
 <template>
     <div class="register">
-      <el-form ref="form" :model="form" label-width="100px" class="form" :rules="rules">
+      <el-form ref="form" :model="form" label-width="100px" class="form" :rules="rules" v-loading="loading">
+        <el-form-item >
+          <span>用户注册</span>
+        </el-form-item>
+
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
@@ -50,11 +54,13 @@
               rePassword: [
                 { validator:validatePass2, trigger: 'blur' },
               ],
-            }
+            },
+            loading:false
           }
         },
         methods:{
           handleRegister(form){
+              this.loading = true;
               this.$refs[form].validate((valide) =>{
                 if(valide){
                   let params = {
@@ -62,7 +68,14 @@
                       password : this.form.password
                   }
                   register(params).then(res =>{
-                      alert(res)
+                    if (res.data.success) {
+                      this.$message({message:"注册成功", type:"success"})
+                      this.loading = false
+                      this.$router.push({path:'/login'})
+                    }
+                      console.log(res)
+                  }).catch(res =>{
+                    this.loading = false
                   })
                 }
               })
