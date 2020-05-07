@@ -80,6 +80,41 @@
             <version>1.2.68</version>
         </dependency>
 
+<!--文件上传-->
+        <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+
+        <!-- 添加 JSTL（JSP Standard Tag Library，JSP标准标签库) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!--servlet依赖 -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+<!--        Tomcat内嵌的jsp引擎jasper依赖-->
+        <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+            <version>10.0.0-M4</version>
+        </dependency>
+
+
+
 
     </dependencies>
 
@@ -100,6 +135,7 @@
 
         </plugins>
         <resources>
+            <!--mybatis映射文件位置-->
             <resource>
                 <directory>src/main/java</directory>
                 <!-- 此配置不可缺，否则mybatis的Mapper.xml将会丢失 -->
@@ -107,9 +143,16 @@
                     <include>**/*.xml</include>
                 </includes>
             </resource>
+
             <!--指定资源的位置-->
             <resource>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
                 <includes>
                     <include>**/*</include>
                 </includes>

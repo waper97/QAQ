@@ -5,9 +5,9 @@ import Login from '../view/login/index'
 import Register from '../view/register'
 import Home from '../view/home'
 import GoodsType from  '../view/goodsType/index'
-import Home1 from  '../view/goodsType/home1'
 import Goods from '../view/goods/index'
 import User from '../view/user/index'
+import Upload from '../view/upload/index'
 Vue.use(Router)
 
 export default new Router({
@@ -65,9 +65,9 @@ export default new Router({
       name: 'goods',
       component: Goods
     } , {
-      path: '/home1',
-      name: 'home1',
-      component: Home1
+      path: '/upload',
+      name: 'upload',
+      component: Upload
     }
   ]
 })

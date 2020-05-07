@@ -54,3 +54,16 @@ export const getUserList = params =>{
 export const getSession = params =>{
   return axios.post('apis/shop/user/getSession',qs.stringify(params));
 }
+export const upload = params =>{
+  return axios.post('apis/shop/file/uploadFile',qs.stringify(params));
+}
+
+export const upload1 = params =>{
+  return axios.post('apis/shop/file/uploadFile',
+    {
+          headers:{
+            'Content-Type':'multipart/form-data'
+          },
+        },params
+  );
+}

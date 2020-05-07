@@ -20,7 +20,7 @@
         <el-form-item prop="pircture">
             <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://localhost:8078/file/file"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               list-type="picture-card">
@@ -29,7 +29,7 @@
             </el-upload>
         </el-form-item>
 
-
+<!--        action="https://jsonplaceholder.typicode.com/posts/"-->
 
         <el-form-item  prop="status">
           <el-switch
