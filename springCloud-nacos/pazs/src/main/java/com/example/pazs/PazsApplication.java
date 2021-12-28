@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +28,8 @@ public class PazsApplication {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-//    @Value("${user}")
-//    private String name;
+    @Value("${fuck.you}")
+    private String name;
     @RestController
     public class TestController {
 
@@ -40,9 +38,9 @@ public class PazsApplication {
         @Autowired
         public TestController(RestTemplate restTemplate) {this.restTemplate = restTemplate;}
 
-//        @RequestMapping(value = "test", method = RequestMethod.GET)
-//        public String echo() {
-////            return user;
-//        }
+        @RequestMapping(value = "test", method = RequestMethod.GET)
+        public String echo() {
+            return name;
+        }
     }
 }
