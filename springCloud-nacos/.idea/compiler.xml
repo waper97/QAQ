@@ -10,7 +10,13 @@
         <module name="common" />
         <module name="auth" />
         <module name="pazs" />
+        <module name="gateway" />
       </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="gateway" options="" />
+    </option>
   </component>
 </project>
