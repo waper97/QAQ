@@ -22,25 +22,4 @@ public class PazsApplication {
         SpringApplication.run(PazsApplication.class, args);
     }
 
-
-    @LoadBalanced
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-    @Value("${fuck.you}")
-    private String name;
-    @RestController
-    public class TestController {
-
-        private final RestTemplate restTemplate;
-
-        @Autowired
-        public TestController(RestTemplate restTemplate) {this.restTemplate = restTemplate;}
-
-        @RequestMapping(value = "test", method = RequestMethod.GET)
-        public String echo() {
-            return name;
-        }
-    }
 }
