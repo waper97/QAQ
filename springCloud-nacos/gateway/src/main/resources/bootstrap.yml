@@ -1,5 +1,22 @@
 spring:
   application:
     name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.8.128:8848
+    gateway:
+      discovery:
+        locator:
+          # 启用 DiscoveryClient 网关集成的标志
+          enabled: true
+      routes:
+        - id: order-service
+          uri: lb://pazs
+          order: 1
+          predicates:
+            - Path=/pazs/**
+          filters:
+            - StripPrefix=1
 server:
-  port: 8080
+  port: 8888
