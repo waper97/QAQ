@@ -4,7 +4,7 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 192.168.8.128:8848
+        server-addr: 192.168.31.131:8848
         file-extension: yaml
 server:
   port: 1111

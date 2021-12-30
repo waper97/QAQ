@@ -8,4 +8,4 @@ spring:
         file-extension: yaml
 
 server:
-  port: 8042
+  port: 8082
