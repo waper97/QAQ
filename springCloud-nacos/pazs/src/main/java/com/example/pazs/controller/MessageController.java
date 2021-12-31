@@ -16,6 +16,6 @@ public class MessageController {
 
     @GetMapping("getMessage")
     public Object returnMessage() {
-        return "this is message";
+        return "this is pazs message";
     }
 }

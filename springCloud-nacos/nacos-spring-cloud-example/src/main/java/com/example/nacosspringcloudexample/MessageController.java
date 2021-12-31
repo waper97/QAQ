@@ -1,4 +1,4 @@
-package com.example.auth.controller;
+package com.example.nacosspringcloudexample;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +16,6 @@ public class MessageController {
 
     @GetMapping("getMessage")
     public Object returnMessage() {
-        return "this is auth message";
+        return "this is example message";
     }
 }

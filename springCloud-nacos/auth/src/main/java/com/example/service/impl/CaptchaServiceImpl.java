@@ -3,10 +3,14 @@ package com.example.service.impl;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
 import cn.hutool.captcha.ICaptcha;
+import cn.hutool.captcha.LineCaptcha;
 import com.example.service.CaptchaService;
 import org.springframework.stereotype.Service;
 
-import java.io.OutputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 /**
  * @ClassName CaptchaServiceImpl
@@ -16,29 +20,45 @@ import java.io.OutputStream;
  */
 @Service
 public class CaptchaServiceImpl  implements CaptchaService ,ICaptcha{
-    public Object createCaptcha() {
 
-        return null;
-    }
-
-    public void createCode() {
-        CircleCaptcha circleCaptcha = CaptchaUtil.createCircleCaptcha(50, 60);
-    }
-
-    public String getCode() {
-        return null;
-    }
-
-    public boolean verify(String s) {
-        return false;
-    }
-
-    public void write(OutputStream outputStream) {
-
-    }
 
     public static void main(String[] args) {
         CircleCaptcha circleCaptcha = CaptchaUtil.createCircleCaptcha(50, 60);
         System.out.println(circleCaptcha.getCode());
+    }
+
+    @Override
+    public void createCode(){
+        //定义图形验证码的长和宽
+        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
+        try {
+            OutputStream outputStream = new ByteArrayOutputStream();
+            String code = lineCaptcha.getCode();
+            System.out.println("当前code:"+code);
+            lineCaptcha.write(outputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public String getCode() {
+        return null;
+    }
+
+    @Override
+    public boolean verify(String s) {
+        return false;
+    }
+
+    @Override
+    public void write(OutputStream outputStream) {
+
+    }
+
+    @Override
+    public Object createCaptcha() {
+        return null;
     }
 }

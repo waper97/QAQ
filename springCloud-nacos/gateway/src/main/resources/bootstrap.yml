@@ -8,15 +8,17 @@ spring:
     gateway:
       discovery:
         locator:
-          # 启用 DiscoveryClient 网关集成的标志
+          # 启用 DiscoveryClient 网关集成的标志, 开启动态路由，就不用手动写需要路由的服务，直接根据启动的服务名自动去路由
           enabled: true
-      routes:
-        - id: order-service
-          uri: lb://pazs
-          order: 1
-          predicates:
-            - Path=/pazs/**
-          filters:
-            - StripPrefix=1
+          #是否将服务名称转换小写
+          lower-case-service-id: true
+#      routes:
+#        - id: order-service
+#          uri: lb://pazs
+#          order: 1
+#          predicates:
+#            - Path=/pazs/**
+#          filters:
+#            - StripPrefix=1
 server:
   port: 8888
