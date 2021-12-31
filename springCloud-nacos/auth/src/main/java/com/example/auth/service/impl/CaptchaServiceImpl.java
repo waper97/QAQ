@@ -1,15 +1,12 @@
-package com.example.service.impl;
+package com.example.auth.service.impl;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
 import cn.hutool.captcha.ICaptcha;
 import cn.hutool.captcha.LineCaptcha;
-import com.example.service.CaptchaService;
+import com.example.auth.service.CaptchaService;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**

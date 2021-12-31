@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,10 +53,15 @@ public class CaptchaController {
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(120, 40);
         String code = lineCaptcha.getCode();
         lineCaptcha.write(response.getOutputStream());
-        boolean result = redisTemplate.delete("captcha");
-        if (result) {
-            redisTemplate.opsForValue().set("captcha", lineCaptcha.getCode());
+        String olderCode  = (String) redisTemplate.opsForValue().get("captcha");
+
+        if (olderCode != null) {
+            redisTemplate.delete("captcha");
         }
+//        redisTemplate.setKeySerializer(new StringRedisSerializer());
+//        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.opsForValue().set("captcha", code);
         System.out.println("code:"+code);
+        System.out.println("redis cache code:"+redisTemplate.opsForValue().get("captcha"));
     }
 }
