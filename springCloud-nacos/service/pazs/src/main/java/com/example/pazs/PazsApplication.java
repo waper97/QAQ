@@ -1,17 +1,17 @@
-package com.example.nacosspringcloudexample;
+package com.example.pazs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-import java.util.Properties;
-
 @SpringBootApplication
 @EnableDiscoveryClient
-public class NacosSpringCloudExampleApplication {
+public class PazsApplication {
+
+
 
     public static void main(String[] args) {
-        SpringApplication.run(NacosSpringCloudExampleApplication.class, args);
+        SpringApplication.run(PazsApplication.class, args);
     }
 
 }

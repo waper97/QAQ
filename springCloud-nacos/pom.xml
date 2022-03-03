@@ -15,31 +15,40 @@
     <properties>
         <java.version>1.8</java.version>
 
-        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+<!--        Spring Cloud Alibaba Version-->
         <spring-cloud.alibaba.version>2.2.7.RELEASE</spring-cloud.alibaba.version>
+<!--        Spring Cloud Version-->
+        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+<!--        Spring Boot Version-->
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+
+        <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
+
 <!--        <spring-cloud.version>2021.0.0</spring-cloud.version>-->
 <!--        <spring-boot.version>2.6.2</spring-boot.version>-->
     </properties>
 
 
     <modules>
-        <module>nacos-spring-cloud-example</module>
-        <module>pazs</module>
+
         <module>common</module>
         <module>auth</module>
         <module>gateway</module>
+        <module>service-api</module>
+        <module>service</module>
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-config</artifactId>-->
+<!--            <version>${spring-cloud.version}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -70,15 +79,17 @@
 
 
     </dependencies>
-    <dependencyManagement>
+        <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud.alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -87,13 +98,28 @@
                 <scope>import</scope>
             </dependency>
 
+
+
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud.alibaba.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>2.6.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -102,6 +128,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>
