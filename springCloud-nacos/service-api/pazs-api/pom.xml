@@ -3,49 +3,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-      <artifactId>springCloud-nacos</artifactId>
+        <artifactId>service-api</artifactId>
         <groupId>com.example</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-
     <groupId>com.example</groupId>
-    <artifactId>common</artifactId>
+    <artifactId>pazs-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>common</name>
-    <description>common</description>
-
-
+    <name>pazs-api</name>
+    <description>pazs-api</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.79</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.13.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.13.1</version>
-        </dependency>
-
-
-    </dependencies>
 
     <build>
         <plugins>
